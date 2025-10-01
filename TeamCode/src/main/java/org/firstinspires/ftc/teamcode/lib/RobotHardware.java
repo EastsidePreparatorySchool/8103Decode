@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.lib;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 public class RobotHardware {
     private static RobotHardware instance;
@@ -12,12 +13,12 @@ public class RobotHardware {
         }
         return instance;
     }
-    public DcMotorEx dtFL;
-    public DcMotorEx dtFR;
-    public DcMotorEx dtBL;
-    public DcMotorEx dtBR;
+    public CachingDcMotorEx dtFL;
+    public CachingDcMotorEx dtFR;
+    public CachingDcMotorEx dtBL;
+    public CachingDcMotorEx dtBR;
     // shooter
-    public DcMotorEx flywheel;
+    public CachingDcMotorEx flywheel;
     public Servo hood;
     // turret
     public DcMotorEx turret;

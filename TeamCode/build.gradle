@@ -32,4 +32,5 @@ repositories {
 dependencies {
     implementation project(':FtcRobotController')
     implementation "org.solverslib:core:0.3.2"
+    implementation "dev.frozenmilk.dairy:CachingHardware:1.0.0"
 }
