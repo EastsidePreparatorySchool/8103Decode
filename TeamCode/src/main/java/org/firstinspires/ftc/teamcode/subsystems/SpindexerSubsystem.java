@@ -8,9 +8,9 @@ public class SpindexerSubsystem extends SubsystemBase{
         SLOT1,
         SLOT2,
         SLOT3,
-        COUNTERCLOCKWISE,
-        CLOCKWISE,
-        STOPPED
+        //COUNTERCLOCKWISE,
+        //CLOCKWISE,
+        //STOPPED
     }
 
     private RobotHardware robot;
@@ -29,23 +29,24 @@ public class SpindexerSubsystem extends SubsystemBase{
     public void updateHardware() {
         switch (state) {
             case SLOT1:
-                robot.spindexer.setPosition(Common.CLAW_SERVO_CLOSED);
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT1_DIRECTION);
                 break;
             case SLOT2:
-                robot.spindexer.setPosition(Common.CLAW_SERVO_OPEN);
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT2_DIRECTION);
                 break;
             case SLOT3:
-                robot.spindexer.setPosition(Common.CLAW_SERVO_WIDE);
-            case COUNTERCLOCKWISE:
-                robot.spindexer.setPower(-1.0);
-            case CLOCKWISE:
-                robot.spindexer.setPower(1.0);
-            case STOPPED:
-                robot.spindexer.setPower(0);
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT3_DIRECTION);
+            //case COUNTERCLOCKWISE:
+                //robot.spindexer.setPower(Common.SPINDEXER_COUNTERCLOCKWISE_POWER);
+            //case CLOCKWISE:
+                //robot.spindexer.setPower(Common.SPINDEXER_CLOCKWISE_POWER);
+            //case STOPPED:
+                //robot.spindexer.setPower(Common.SPINDEXER_NO_POWER);
             default:
                 break;
         }
     }
+
     public void periodic() {
         if(update) {
             updateHardware();

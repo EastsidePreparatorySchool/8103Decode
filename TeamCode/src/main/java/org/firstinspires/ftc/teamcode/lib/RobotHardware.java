@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.lib;
-import com.qualcomm.robotcore.hardware.CRServo;
+//import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -27,5 +27,5 @@ public class RobotHardware {
     // transfer
     public Servo transfer;
     // spindexer
-    public CRServo spindexer;
+    public Servo spindexer;
 
