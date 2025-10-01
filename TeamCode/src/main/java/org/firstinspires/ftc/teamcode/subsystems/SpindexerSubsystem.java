@@ -5,12 +5,12 @@ import org.firstinspires.ftc.teamcode.lib.Common;
 
 public class SpindexerSubsystem extends SubsystemBase{
     public enum SpindexerState {
-        SLOT1,
-        SLOT2,
-        SLOT3,
-        //COUNTERCLOCKWISE,
-        //CLOCKWISE,
-        //STOPPED
+        SLOT1TRANSFER,
+        SLOT1OPEN,
+        SLOT2TRANSFER,
+        SLOT2OPEN,
+        SLOT3TRANSFER,
+        SLOT3OPEN,
     }
 
     private RobotHardware robot;
@@ -28,20 +28,21 @@ public class SpindexerSubsystem extends SubsystemBase{
 
     public void updateHardware() {
         switch (state) {
-            case SLOT1:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT1_DIRECTION);
+            case SLOT1TRANSFER:
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT1TRANSFER_DIRECTION);
                 break;
-            case SLOT2:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT2_DIRECTION);
+            case SLOT1OPEN:
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT1OPEN_DIRECTION);
+            case SLOT2TRANSFER:
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT2TRANSFER_DIRECTION);
                 break;
-            case SLOT3:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT3_DIRECTION);
-            //case COUNTERCLOCKWISE:
-                //robot.spindexer.setPower(Common.SPINDEXER_COUNTERCLOCKWISE_POWER);
-            //case CLOCKWISE:
-                //robot.spindexer.setPower(Common.SPINDEXER_CLOCKWISE_POWER);
-            //case STOPPED:
-                //robot.spindexer.setPower(Common.SPINDEXER_NO_POWER);
+            case SLOT2OPEN:
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT2OPEN_DIRECTION);
+            case SLOT3TRANSFER:
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT3TRANSFER_DIRECTION);
+                break;
+            case SLOT3OPEN:
+                robot.spindexer.setPosition(Common.SPINDEXER_SLOT3OPEN_DIRECTION);
             default:
                 break;
         }
