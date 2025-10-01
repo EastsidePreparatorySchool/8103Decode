@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
-//import org.firstinspires.ftc.teamcode.lib.Common;
+import org.firstinspires.ftc.teamcode.lib.Common;
 
 public class TransferSubsystem extends SubsystemBase{
     public enum TransferState {
@@ -31,10 +31,10 @@ public class TransferSubsystem extends SubsystemBase{
         update = true;
         switch (transferState) {
             case UP:
-//                robot.transfer.setPosition(Common.TRANSFER_UP);
+                robot.transfer.setPosition(Common.TRANSFER_UP);
                 break;
             case DOWN:
-//                robot.transfer.setPosition(Common.TRANSFER_DOWN);
+                robot.transfer.setPosition(Common.TRANSFER_DOWN);
                 break;
         }
     }
@@ -42,10 +42,10 @@ public class TransferSubsystem extends SubsystemBase{
     public void updateHardware() {
         switch(transferState) {
             case UP:
-//                robot.transfer.setPosition(Common.TRANSFER_UP);
+                robot.transfer.setPosition(Common.TRANSFER_UP);
                 break;
             case DOWN:
-//                robot.transfer.setPosition(Common.TRANSFER_DOWN);
+                robot.transfer.setPosition(Common.TRANSFER_DOWN);
                 break;
         }
     }
