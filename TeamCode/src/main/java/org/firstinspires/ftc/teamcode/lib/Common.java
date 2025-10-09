@@ -12,4 +12,6 @@ public class Common {
     public static double SPINDEXER_SLOT2OPEN_DIRECTION = 0.0;
     public static double SPINDEXER_SLOT3TRANSFER_DIRECTION = 0.0;
     public static double SPINDEXER_SLOT3OPEN_DIRECTION = 0.0;
+    public static double TRANSFER_DOWN = 0; // idk what to set to rn
+    public static double TRANSFER_UP = 0;
 }
