@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.lib;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogSensor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.List;
 
+import dev.frozenmilk.dairy.cachinghardware.CachingCRServo;
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 public class RobotHardware {
@@ -41,8 +45,8 @@ public class RobotHardware {
     // transfer
     public Servo transfer;
     // spindexer
-    public Servo spindexer;
-
+    public CRServo spindexer;
+    public AnalogInput spindexerAnalog;
     public List<LynxModule> modules;
     public LynxModule CONTROL_HUB;
     public LynxModule EXPANSION_HUB;
@@ -70,6 +74,19 @@ public class RobotHardware {
         dtFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void initTurret() {
+        turret = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "turret"));
+        turret.setDirection(DcMotorSimple.Direction.FORWARD);
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void initSpindexer() {
+        spindexer = new CachingCRServo(hardwareMap.get(CRServo.class, "spindexer"));
+        spindexerAnalog = hardwareMap.get(AnalogInput.class, "spindexerAnalog");
     }
 
     public void initLynx() {
