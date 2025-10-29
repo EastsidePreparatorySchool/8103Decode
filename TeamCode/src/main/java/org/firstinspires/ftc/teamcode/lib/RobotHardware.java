@@ -11,6 +11,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.List;
@@ -83,6 +89,13 @@ public class RobotHardware {
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+
+    // subsystems
+    public IntakeSubsystem intakeSubsystem;
+    public ShooterSubsystem shooterSubsystem;
+    public SpindexerSubsystem spindexerSubsystem;
+    public TransferSubsystem transferSubsystem;
+    public TurretSubsystem turretSubsystem;
 
     public void initSpindexer() {
         spindexer = new CachingCRServo(hardwareMap.get(CRServo.class, "spindexer"));

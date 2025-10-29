@@ -27,4 +27,6 @@ public class Common {
 
     public static double TRANSFER_DOWN = 0;
     public static double TRANSFER_UP = 0;
+    public static double FLYWHEEL_ON = 1.0;
+
 }
