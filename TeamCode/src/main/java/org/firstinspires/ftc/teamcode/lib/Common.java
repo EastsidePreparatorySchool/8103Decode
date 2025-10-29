@@ -14,7 +14,7 @@ public class Common {
     public static double SPINDEXER_KF = 0.0;
     public static double INTAKE_FORWARD_POWER = 1.0;
     public static double INTAKE_BACKWARD_POWER = -1.0;
-
+  
     public static double SLOWMODE_MULTIPLIER = 0.4;
     public static double AXON_ANALOG_RANGE = 3.3;
     public static double AXON_DEGREE_RANGE = 360;
