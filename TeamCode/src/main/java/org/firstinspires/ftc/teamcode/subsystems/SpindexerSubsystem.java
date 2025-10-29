@@ -1,58 +1,66 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import org.firstinspires.ftc.teamcode.lib.RobotHardware;
-import org.firstinspires.ftc.teamcode.lib.Common;
+import com.seattlesolvers.solverslib.controller.PIDFController;
+import com.seattlesolvers.solverslib.util.MathUtils;
 
-public class SpindexerSubsystem extends SubsystemBase{
+import org.firstinspires.ftc.teamcode.lib.Common;
+import org.firstinspires.ftc.teamcode.lib.RobotHardware;
+
+public class SpindexerSubsystem extends SubsystemBase {
     public enum SpindexerState {
-        SLOT1TRANSFER,
-        SLOT1OPEN,
-        SLOT2TRANSFER,
-        SLOT2OPEN,
-        SLOT3TRANSFER,
-        SLOT3OPEN,
+        INTAKE_ONE,
+        INTAKE_TWO,
+        INTAKE_THREE,
+        OUTTAKE_ONE,
+        OUTTAKE_TWO,
+        OUTTAKE_THREE
     }
 
     private RobotHardware robot;
-    public boolean update = false;
     public volatile SpindexerState state;
-
+    public PIDFController spindexerPIDF;
+    public double pos;
+    public double target;
+    public double power;
     public SpindexerSubsystem() {
         robot = RobotHardware.getInstance();
+        setSpindexerState(SpindexerState.INTAKE_ONE);
+        spindexerPIDF = new PIDFController(Common.SPINDEXER_KP, Common.SPINDEXER_KI, Common.SPINDEXER_KD, Common.SPINDEXER_KF);
     }
 
     public void setSpindexerState(SpindexerState spindexerState) {
-        update = true;
         state = spindexerState;
     }
 
     public void updateHardware() {
-        switch (state) {
-            case SLOT1TRANSFER:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT1TRANSFER_DIRECTION);
-                break;
-            case SLOT1OPEN:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT1OPEN_DIRECTION);
-            case SLOT2TRANSFER:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT2TRANSFER_DIRECTION);
-                break;
-            case SLOT2OPEN:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT2OPEN_DIRECTION);
-            case SLOT3TRANSFER:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT3TRANSFER_DIRECTION);
-                break;
-            case SLOT3OPEN:
-                robot.spindexer.setPosition(Common.SPINDEXER_SLOT3OPEN_DIRECTION);
-            default:
-                break;
-        }
+        pos = robot.spindexerAnalog.getVoltage();
+        power = MathUtils.clamp(spindexerPIDF.calculate(pos, target), -1 ,1);
+        robot.spindexer.setPower(power);
+        robot.telemetry.addData("spindexer pos", pos);
+        robot.telemetry.addData("spindexer target", target);
     }
 
     public void periodic() {
-        if(update) {
-            updateHardware();
-            update = false;
+        switch(state) {
+            case INTAKE_ONE:
+                target = Common.SPINDEXER_INTAKE_ONE;
+                break;
+            case INTAKE_TWO:
+                target = Common.SPINDEXER_INTAKE_TWO;
+                break;
+            case INTAKE_THREE:
+                target = Common.SPINDEXER_INTAKE_THREE;
+                break;
+            case OUTTAKE_ONE:
+                target = Common.SPINDEXER_OUTTAKE_ONE;
+                break;
+            case OUTTAKE_TWO:
+                target = Common.SPINDEXER_OUTTAKE_TWO;
+                break;
+            case OUTTAKE_THREE:
+                target = Common.SPINDEXER_OUTTAKE_THREE;
+                break;
         }
+        updateHardware();
     }
-
 }

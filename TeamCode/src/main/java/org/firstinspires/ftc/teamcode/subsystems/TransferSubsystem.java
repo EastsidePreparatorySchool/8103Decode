@@ -2,58 +2,41 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.Common;
+import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 
-public class TransferSubsystem extends SubsystemBase{
+public class TransferSubsystem extends SubsystemBase {
     public enum TransferState {
-        UP,
-        DOWN
+        DOWN,
+        UP
     }
 
     private RobotHardware robot;
-    public volatile TransferState transferState;
-
-    public boolean locked = false;
-    public boolean update = false;
-
+    public volatile TransferState state;
+    public boolean update;
     public TransferSubsystem() {
         robot = RobotHardware.getInstance();
         setTransferState(TransferState.DOWN);
+        update = true;
     }
 
     public void setTransferState(TransferState transferState) {
-        this.transferState = transferState;
+        state = transferState;
         update = true;
-    }
-
-    public void toggleTransferState() {
-        update = true;
-        switch (transferState) {
-            case UP:
-                robot.transfer.setPosition(Common.TRANSFER_UP);
-                break;
-            case DOWN:
-                robot.transfer.setPosition(Common.TRANSFER_DOWN);
-                break;
-        }
     }
 
     public void updateHardware() {
-        switch(transferState) {
-            case UP:
-                robot.transfer.setPosition(Common.TRANSFER_UP);
-                break;
+        switch(state) {
             case DOWN:
                 robot.transfer.setPosition(Common.TRANSFER_DOWN);
-                break;
+            case UP:
+                robot.transfer.setPosition(Common.TRANSFER_UP);
         }
     }
 
     public void periodic() {
         if(update) {
             updateHardware();
-            update = false;
         }
     }
 }
