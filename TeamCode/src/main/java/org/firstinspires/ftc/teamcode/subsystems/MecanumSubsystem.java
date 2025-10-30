@@ -15,17 +15,16 @@ public class MecanumSubsystem extends SubsystemBase {
         robot = RobotHardware.getInstance();
     }
 
-    public void drive(double forward, double strafe, double turn, double multiplier) {
-        double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1.0);
-        lastFL = multiplier * (forward + strafe + turn) / denominator;
-        lastFR = multiplier * (forward - strafe - turn) / denominator;
-        lastBL = multiplier * (forward - strafe + turn) / denominator;
-        lastBR = multiplier * (forward + strafe - turn) / denominator;
-        robot.powerMotors(lastFL, lastFR, lastBL, lastBR);
+    public void setMotorPowers(double powerFL, double powerFR, double powerBL, double powerBR) {
+        lastFL = powerFL;
+        lastFR = powerFR;
+        lastBL = powerBL;
+        lastBR = powerBR;
+        robot.powerMotors(powerFL, powerFR, powerBL, powerBR);
     }
 
     public void stop() {
-        drive(0.0, 0.0, 0.0, 0.0);
+        setMotorPowers(0.0, 0.0, 0.0, 0.0);
     }
 
     public double getLastFL() {

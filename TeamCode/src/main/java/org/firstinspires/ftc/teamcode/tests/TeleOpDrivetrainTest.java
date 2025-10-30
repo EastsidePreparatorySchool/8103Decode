@@ -16,7 +16,8 @@ public class TeleOpDrivetrainTest extends CommandOpMode {
     @Override
     public void initialize() {
         robot.init(hardwareMap, telemetry);
-        mecanumSubsystem = new MecanumSubsystem();
+        robot.initDrivetrain();
+        mecanumSubsystem = robot.mecanumSubsystem;
         register(mecanumSubsystem);
 
         DriveWithJoysticksCommand driveCommand = new DriveWithJoysticksCommand(

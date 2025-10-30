@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.TurretSetTargetCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -14,6 +15,8 @@ public class AimTurretAtPointCommand extends CommandBase {
     private final TurretSubsystem turret;
     private final DoubleSupplier targetXSupplier;
     private final DoubleSupplier targetYSupplier;
+    private final TurretSetTargetCommand setTargetCommand;
+    private double desiredTargetDegrees;
 
     public AimTurretAtPointCommand(PinpointSubsystem odometry,
                                    TurretSubsystem turret,
@@ -23,6 +26,7 @@ public class AimTurretAtPointCommand extends CommandBase {
         this.turret = turret;
         this.targetXSupplier = targetXSupplier;
         this.targetYSupplier = targetYSupplier;
+        setTargetCommand = new TurretSetTargetCommand(turret, () -> desiredTargetDegrees);
         addRequirements(turret);
     }
 
@@ -42,8 +46,8 @@ public class AimTurretAtPointCommand extends CommandBase {
         }
 
         double fieldAngleDeg = Math.toDegrees(Math.atan2(deltaY, deltaX));
-        double turretTargetDeg = fieldAngleDeg - robotHeadingDeg;
-        turret.setTarget(turretTargetDeg);
+        desiredTargetDegrees = fieldAngleDeg - robotHeadingDeg;
+        setTargetCommand.runNow();
     }
 
     @Override

@@ -42,15 +42,13 @@ public class PinpointTurretTeleOp extends CommandOpMode {
 
         multiTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot.init(hardwareMap, multiTelemetry);
+        robot.initDrivetrain();
         robot.initTurret();
         robot.initPinpoint();
 
-        mecanumSubsystem = new MecanumSubsystem();
-        turretSubsystem = new TurretSubsystem();
-        pinpointSubsystem = new PinpointSubsystem();
-
-        robot.turretSubsystem = turretSubsystem;
-        robot.pinpointSubsystem = pinpointSubsystem;
+        mecanumSubsystem = robot.mecanumSubsystem;
+        turretSubsystem = robot.turretSubsystem;
+        pinpointSubsystem = robot.pinpointSubsystem;
 
         register(mecanumSubsystem, turretSubsystem, pinpointSubsystem);
 

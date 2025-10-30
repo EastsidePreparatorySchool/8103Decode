@@ -68,7 +68,6 @@ public class RobotHardware {
     public void init(HardwareMap hwMap, Telemetry tele) {
         this.hardwareMap = hwMap;
         this.telemetry = tele;
-        initDrivetrain();
     }
 
     public void initDrivetrain() {
@@ -88,6 +87,7 @@ public class RobotHardware {
         dtFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mecanumSubsystem = new MecanumSubsystem();
     }
 
     public void initTurret() {
@@ -96,11 +96,13 @@ public class RobotHardware {
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        turretSubsystem = new TurretSubsystem();
     }
 
     public void initSpindexer() {
         spindexer = new CachingCRServo(hardwareMap.get(CRServo.class, "spindexer"));
         spindexerAnalog = hardwareMap.get(AnalogInput.class, "spindexerAnalog");
+        spindexerSubsystem = new SpindexerSubsystem();
     }
 
     public void initPinpoint() {
@@ -118,6 +120,7 @@ public class RobotHardware {
             pinpoint.resetPosAndIMU();
             pinpoint.setPosition(startPose);
         }
+        pinpointSubsystem = new PinpointSubsystem();
     }
 
     private void configurePinpoint() {

@@ -39,10 +39,8 @@ public class TurretSpindexerTuning extends LinearOpMode {
         robot.initTurret();
         robot.initSpindexer();
 
-        turretSubsystem = new TurretSubsystem();
-        spindexerSubsystem = new SpindexerSubsystem();
-        robot.turretSubsystem = turretSubsystem;
-        robot.spindexerSubsystem = spindexerSubsystem;
+        turretSubsystem = robot.turretSubsystem;
+        spindexerSubsystem = robot.spindexerSubsystem;
 
         turretSubsystem.setTurretState(TurretSubsystem.TurretState.RUNNING);
         spindexerSubsystem.setSpindexerState(SpindexerSubsystem.SpindexerState.INTAKE_ONE);
