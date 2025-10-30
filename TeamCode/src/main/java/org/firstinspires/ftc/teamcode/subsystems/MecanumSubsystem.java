@@ -1,36 +1,46 @@
-package org.firstinspires.ftc.teamcode.subsystems;//package nullrobotics.subsystems;
-
-import com.seattlesolvers.solverslib.util.MathUtils;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 
 public class MecanumSubsystem extends SubsystemBase {
-    RobotHardware robot;
+    private final RobotHardware robot;
+    private double lastFL;
+    private double lastFR;
+    private double lastBL;
+    private double lastBR;
+
     public MecanumSubsystem() {
         robot = RobotHardware.getInstance();
     }
 
-    public void powerMotors(double powerFL, double powerFR, double powerBL, double powerBR) {
-        robot.dtFL.setPower(powerFL);
-        robot.dtFR.setPower(powerFR);
-        robot.dtBL.setPower(powerBL);
-        robot.dtBR.setPower(powerBR);
+    public void drive(double forward, double strafe, double turn, double multiplier) {
+        double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1.0);
+        lastFL = multiplier * (forward + strafe + turn) / denominator;
+        lastFR = multiplier * (forward - strafe - turn) / denominator;
+        lastBL = multiplier * (forward - strafe + turn) / denominator;
+        lastBR = multiplier * (forward + strafe - turn) / denominator;
+        robot.powerMotors(lastFL, lastFR, lastBL, lastBR);
     }
 
-    // positive is forward
-    public void drive(double power) {
-        power = MathUtils.clamp(power, -1, 1);
-
+    public void stop() {
+        drive(0.0, 0.0, 0.0, 0.0);
     }
 
-    // positive is left
-    public void strafe(double power) {
-        power = MathUtils.clamp(power, -1, 1);
-        robot.dtFL.setPower(-power);
-        robot.dtFR.setPower(power);
-        robot.dtBL.setPower(power);
-        robot.dtBR.setPower(-power);
+    public double getLastFL() {
+        return lastFL;
+    }
+
+    public double getLastFR() {
+        return lastFR;
+    }
+
+    public double getLastBL() {
+        return lastBL;
+    }
+
+    public double getLastBR() {
+        return lastBR;
     }
 }

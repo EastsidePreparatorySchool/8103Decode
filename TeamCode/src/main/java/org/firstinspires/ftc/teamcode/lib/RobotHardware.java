@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.lib;
+
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.AnalogSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,12 +13,16 @@ import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import java.util.List;
 
@@ -27,7 +32,7 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 public class RobotHardware {
     private static RobotHardware instance;
     public ElapsedTime chassisElapsedTime = new ElapsedTime();
-    // drivetrain
+
     public static RobotHardware getInstance() {
         if (instance == null) {
             instance = new RobotHardware();
@@ -35,7 +40,7 @@ public class RobotHardware {
         return instance;
     }
 
-    public HardwareMap hardwareMap;;
+    public HardwareMap hardwareMap;
     public Telemetry telemetry;
     public CachingDcMotorEx dtFL;
     public CachingDcMotorEx dtFR;
@@ -53,6 +58,9 @@ public class RobotHardware {
     // spindexer
     public CRServo spindexer;
     public AnalogInput spindexerAnalog;
+    // odometry
+    public GoBildaPinpointDriver pinpoint;
+
     public List<LynxModule> modules;
     public LynxModule CONTROL_HUB;
     public LynxModule EXPANSION_HUB;
@@ -90,21 +98,53 @@ public class RobotHardware {
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public void initSpindexer() {
+        spindexer = new CachingCRServo(hardwareMap.get(CRServo.class, "spindexer"));
+        spindexerAnalog = hardwareMap.get(AnalogInput.class, "spindexerAnalog");
+    }
+
+    public void initPinpoint() {
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, Common.PINPOINT_HARDWARE_NAME);
+        configurePinpoint();
+        Pose2D startPose = new Pose2D(
+                DistanceUnit.INCH,
+                Common.PINPOINT_START_X_IN,
+                Common.PINPOINT_START_Y_IN,
+                AngleUnit.DEGREES,
+                Common.PINPOINT_START_HEADING_DEG
+        );
+        pinpoint.setPosition(startPose);
+        if (Common.PINPOINT_RESET_IMU_ON_INIT) {
+            pinpoint.resetPosAndIMU();
+            pinpoint.setPosition(startPose);
+        }
+    }
+
+    private void configurePinpoint() {
+        if (pinpoint == null) {
+            return;
+        }
+        pinpoint.setOffsets(Common.PINPOINT_X_OFFSET_MM, Common.PINPOINT_Y_OFFSET_MM, DistanceUnit.MM);
+        if (Common.PINPOINT_ENCODER_RESOLUTION_MM_PER_TICK > 0) {
+            pinpoint.setEncoderResolution(Common.PINPOINT_ENCODER_RESOLUTION_MM_PER_TICK, DistanceUnit.MM);
+        } else if (Common.PINPOINT_POD_TYPE != null) {
+            pinpoint.setEncoderResolution(Common.PINPOINT_POD_TYPE);
+        }
+        pinpoint.setEncoderDirections(Common.PINPOINT_X_DIRECTION, Common.PINPOINT_Y_DIRECTION);
+    }
+
     // subsystems
     public IntakeSubsystem intakeSubsystem;
     public ShooterSubsystem shooterSubsystem;
     public SpindexerSubsystem spindexerSubsystem;
     public TransferSubsystem transferSubsystem;
     public TurretSubsystem turretSubsystem;
-
-    public void initSpindexer() {
-        spindexer = new CachingCRServo(hardwareMap.get(CRServo.class, "spindexer"));
-        spindexerAnalog = hardwareMap.get(AnalogInput.class, "spindexerAnalog");
-    }
+    public MecanumSubsystem mecanumSubsystem;
+    public PinpointSubsystem pinpointSubsystem;
 
     public void initLynx() {
         modules = hardwareMap.getAll(LynxModule.class);
-        if(modules.get(0).isParent() && LynxConstants.isEmbeddedSerialNumber(modules.get(0).getSerialNumber())) {
+        if (modules.get(0).isParent() && LynxConstants.isEmbeddedSerialNumber(modules.get(0).getSerialNumber())) {
             CONTROL_HUB = modules.get(0);
             EXPANSION_HUB = modules.get(1);
         } else {
@@ -117,8 +157,12 @@ public class RobotHardware {
     }
 
     public void periodic() {
-        CONTROL_HUB.clearBulkCache();
-        EXPANSION_HUB.clearBulkCache();
+        if (CONTROL_HUB != null) {
+            CONTROL_HUB.clearBulkCache();
+        }
+        if (EXPANSION_HUB != null) {
+            EXPANSION_HUB.clearBulkCache();
+        }
     }
 
     public void powerMotors(double powerFL, double powerFR, double powerBL, double powerBR) {
