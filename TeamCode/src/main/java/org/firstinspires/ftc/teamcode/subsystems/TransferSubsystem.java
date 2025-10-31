@@ -29,8 +29,10 @@ public class TransferSubsystem extends SubsystemBase {
         switch(state) {
             case DOWN:
                 robot.transfer.setPosition(Common.TRANSFER_DOWN);
+                break;
             case UP:
                 robot.transfer.setPosition(Common.TRANSFER_UP);
+                break;
         }
     }
 
