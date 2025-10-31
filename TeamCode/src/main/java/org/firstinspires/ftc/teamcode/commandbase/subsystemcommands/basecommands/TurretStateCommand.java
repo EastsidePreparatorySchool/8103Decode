@@ -1,31 +1,20 @@
 package org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands;
 
-import com.seattlesolvers.solverslib.command.CommandBase;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 
+import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-public class TurretStateCommand extends CommandBase {
-    private final TurretSubsystem turretSubsystem;
-    private final TurretSubsystem.TurretState turretState;
-
+public class TurretStateCommand extends InstantCommand {
     public TurretStateCommand(TurretSubsystem turretSubsystem, TurretSubsystem.TurretState turretState) {
-        this.turretSubsystem = turretSubsystem;
-        this.turretState = turretState;
-        addRequirements(turretSubsystem);
+        super(() -> {
+            if (turretSubsystem != null) {
+                turretSubsystem.setTurretState(turretState);
+            }
+        });
     }
 
-    @Override
-    public void initialize() {
-        turretSubsystem.setTurretState(turretState);
-    }
-
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
-
-    public void runNow() {
-        initialize();
-        end(false);
+    public TurretStateCommand(TurretSubsystem.TurretState turretState) {
+        this(RobotHardware.getInstance().turretSubsystem, turretState);
     }
 }

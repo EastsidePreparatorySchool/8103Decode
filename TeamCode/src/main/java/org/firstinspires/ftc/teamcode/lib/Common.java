@@ -17,6 +17,7 @@ public class Common {
     public static double TURRET_DRIVING_PULLEY_TEETH = 38.0;
     public static double TURRET_DRIVEN_PULLEY_TEETH = 108.0;
     public static double TURRET_TOLERANCE_TICKS = 10.0;
+    public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 530.0;
     // Spindexer PIDF
     public static double SPINDEXER_KP = 0.001;
     public static double SPINDEXER_KI = 0.0;
@@ -38,11 +39,6 @@ public class Common {
     public static GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_POD_TYPE = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
     public static double PINPOINT_ENCODER_RESOLUTION_MM_PER_TICK = 0.0; // <= 0 to use pod type
     public static boolean PINPOINT_RESET_IMU_ON_INIT = true;
-    public static double PINPOINT_START_X_IN = 0.0;
-    public static double PINPOINT_START_Y_IN = 0.0;
-    public static double PINPOINT_START_HEADING_DEG = 0.0;
-    public static double PINPOINT_TARGET_X_IN = 0.0;
-    public static double PINPOINT_TARGET_Y_IN = 0.0;
     // Spindexer targets defined in degrees
     public static double SPINDEXER_INTAKE_ONE = 0.0;
     public static double SPINDEXER_INTAKE_TWO = 0.0;

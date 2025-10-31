@@ -16,7 +16,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     private RobotHardware robot;
     public volatile TurretState state;
-    public double deg; // turret should ALWAYS START facing forward, positive is counterclockwise relative to forward and negative is clockwise relative to forward as viewed from the top of the robot
+    public double deg; // positive is counterclockwise relative to forward, may range beyond +/-360 to describe unwrapped orientation
     public PIDFController turretPIDF;
     public int pos;
     public double target;
@@ -29,12 +29,17 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setTurretState(TurretState turretState) {
         state = turretState;
+        if (turretState == TurretState.STOPPED && robot.turret != null) {
+            robot.turret.setPower(0.0);
+        }
     }
 
     public void setTarget(double degrees) {
-        deg = normalizeDegrees(degrees);
+        double safeDegrees = selectSafeTargetDegrees(degrees);
+        deg = safeDegrees;
         double ticksPerRev = getTicksPerTurretRev();
-        target = wrapToRange(degreesToTicks(deg), ticksPerRev);
+        double normalizedDegrees = normalizeDegrees(safeDegrees);
+        target = wrapToRange(degreesToTicks(normalizedDegrees), ticksPerRev);
     }
 
     public boolean withinTolerance() {
@@ -88,6 +93,41 @@ public class TurretSubsystem extends SubsystemBase {
             wrapped += range;
         }
         return wrapped;
+    }
+
+    private double selectSafeTargetDegrees(double desiredDegrees) {
+        double limit = Math.abs(Common.TURRET_WIRE_WRAP_LIMIT_DEGREES);
+        if (limit <= 0 || robot.turret == null) {
+            return desiredDegrees;
+        }
+
+        double currentDegrees = ticksToDegrees(robot.turret.getCurrentPosition());
+        double fullRotation = Common.TURRET_FULL_ROTATION_DEGREES;
+        if (fullRotation <= 0) {
+            return Math.max(-limit, Math.min(limit, desiredDegrees));
+        }
+
+        double bestCandidate = desiredDegrees;
+        double bestCost = Double.POSITIVE_INFINITY;
+        int maxTurns = (int) Math.ceil((2.0 * limit) / fullRotation) + 1;
+
+        for (int offset = -maxTurns; offset <= maxTurns; offset++) {
+            double candidate = desiredDegrees + offset * fullRotation;
+            if (Math.abs(candidate) > limit) {
+                continue;
+            }
+            double cost = Math.abs(candidate - currentDegrees);
+            if (cost < bestCost) {
+                bestCost = cost;
+                bestCandidate = candidate;
+            }
+        }
+
+        if (bestCost == Double.POSITIVE_INFINITY) {
+            return Math.max(-limit, Math.min(limit, desiredDegrees));
+        }
+
+        return bestCandidate;
     }
 
     private double shortestError(double targetValue, double currentValue, double range) {

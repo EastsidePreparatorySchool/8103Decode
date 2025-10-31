@@ -1,31 +1,11 @@
 package org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands;
 
-import com.seattlesolvers.solverslib.command.CommandBase;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 
-public class SpindexerStateCommand extends CommandBase {
-    private final SpindexerSubsystem spindexerSubsystem;
-    private final SpindexerSubsystem.SpindexerState spindexerState;
-
+public class SpindexerStateCommand extends InstantCommand {
     public SpindexerStateCommand(SpindexerSubsystem spindexerSubsystem, SpindexerSubsystem.SpindexerState spindexerState) {
-        this.spindexerSubsystem = spindexerSubsystem;
-        this.spindexerState = spindexerState;
-        addRequirements(spindexerSubsystem);
-    }
-
-    @Override
-    public void initialize() {
-        spindexerSubsystem.setSpindexerState(spindexerState);
-    }
-
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
-
-    public void runNow() {
-        initialize();
-        end(false);
+        super(() -> spindexerSubsystem.setSpindexerState(spindexerState));
     }
 }

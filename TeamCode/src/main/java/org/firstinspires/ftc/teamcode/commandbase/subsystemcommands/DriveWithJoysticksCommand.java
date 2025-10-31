@@ -1,59 +1,44 @@
 package org.firstinspires.ftc.teamcode.commandbase.subsystemcommands;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.seattlesolvers.solverslib.command.CommandBase;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 
-import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.MecanumPowerMotorsCommand;
+import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
-
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 public class DriveWithJoysticksCommand extends CommandBase {
     private final MecanumSubsystem mecanumSubsystem;
-    private final DoubleSupplier forwardSupplier;
-    private final DoubleSupplier strafeSupplier;
-    private final DoubleSupplier turnSupplier;
-    private final BooleanSupplier slowModeSupplier;
-    private final MecanumPowerMotorsCommand powerCommand;
-    private double desiredFL;
-    private double desiredFR;
-    private double desiredBL;
-    private double desiredBR;
+    private final Gamepad gamepad;
 
-    public DriveWithJoysticksCommand(MecanumSubsystem mecanumSubsystem,
-                                     DoubleSupplier forwardSupplier,
-                                     DoubleSupplier strafeSupplier,
-                                     DoubleSupplier turnSupplier,
-                                     BooleanSupplier slowModeSupplier) {
+    public DriveWithJoysticksCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad) {
         this.mecanumSubsystem = mecanumSubsystem;
-        this.forwardSupplier = forwardSupplier;
-        this.strafeSupplier = strafeSupplier;
-        this.turnSupplier = turnSupplier;
-        this.slowModeSupplier = slowModeSupplier;
-        powerCommand = new MecanumPowerMotorsCommand(
-                mecanumSubsystem,
-                () -> desiredFL,
-                () -> desiredFR,
-                () -> desiredBL,
-                () -> desiredBR
-        );
+        this.gamepad = gamepad;
         addRequirements(mecanumSubsystem);
     }
 
     @Override
     public void execute() {
-        double forward = forwardSupplier.getAsDouble();
-        double strafe = strafeSupplier.getAsDouble();
-        double turn = turnSupplier.getAsDouble();
-        boolean slow = slowModeSupplier.getAsBoolean();
+        double forward = -gamepad.left_stick_y;
+        double strafe = gamepad.left_stick_x;
+        double turn = gamepad.right_stick_x;
+        boolean slow = gamepad.left_trigger > 0.2;
         double multiplier = slow ? Common.SLOWMODE_MULTIPLIER : 1.0;
         double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1.0);
-        desiredFL = multiplier * (forward + strafe + turn) / denominator;
-        desiredFR = multiplier * (forward - strafe - turn) / denominator;
-        desiredBL = multiplier * (forward - strafe + turn) / denominator;
-        desiredBR = multiplier * (forward + strafe - turn) / denominator;
-        powerCommand.runNow();
+        double powerFL = multiplier * (forward + strafe + turn) / denominator;
+        double powerFR = multiplier * (forward - strafe - turn) / denominator;
+        double powerBL = multiplier * (forward - strafe + turn) / denominator;
+        double powerBR = multiplier * (forward + strafe - turn) / denominator;
+        CommandScheduler.getInstance().schedule(
+                new MecanumPowerMotorsCommand(
+                        mecanumSubsystem,
+                        powerFL,
+                        powerFR,
+                        powerBL,
+                        powerBR
+                )
+        );
     }
 
     @Override

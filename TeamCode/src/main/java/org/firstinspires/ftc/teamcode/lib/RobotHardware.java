@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import com.seattlesolvers.solverslib.command.CommandScheduler;
+
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
@@ -22,7 +24,6 @@ import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import java.util.List;
 
@@ -88,6 +89,7 @@ public class RobotHardware {
         dtBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mecanumSubsystem = new MecanumSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(mecanumSubsystem);
     }
 
     public void initTurret() {
@@ -97,30 +99,27 @@ public class RobotHardware {
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         turretSubsystem = new TurretSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(turretSubsystem);
     }
 
     public void initSpindexer() {
         spindexer = new CachingCRServo(hardwareMap.get(CRServo.class, "spindexer"));
         spindexerAnalog = hardwareMap.get(AnalogInput.class, "spindexerAnalog");
         spindexerSubsystem = new SpindexerSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(spindexerSubsystem);
     }
 
     public void initPinpoint() {
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, Common.PINPOINT_HARDWARE_NAME);
         configurePinpoint();
-        Pose2D startPose = new Pose2D(
-                DistanceUnit.INCH,
-                Common.PINPOINT_START_X_IN,
-                Common.PINPOINT_START_Y_IN,
-                AngleUnit.DEGREES,
-                Common.PINPOINT_START_HEADING_DEG
-        );
-        pinpoint.setPosition(startPose);
         if (Common.PINPOINT_RESET_IMU_ON_INIT) {
             pinpoint.resetPosAndIMU();
-            pinpoint.setPosition(startPose);
         }
         pinpointSubsystem = new PinpointSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(pinpointSubsystem);
+        if (pinpointSubsystem != null) {
+            pinpointSubsystem.initializePose(0.0, 0.0, 0.0);
+        }
     }
 
     private void configurePinpoint() {

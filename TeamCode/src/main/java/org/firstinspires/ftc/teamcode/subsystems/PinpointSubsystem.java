@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -13,6 +12,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 public class PinpointSubsystem extends SubsystemBase {
     private final RobotHardware robot;
     private Pose2D pose = new Pose2D(DistanceUnit.INCH, 0.0, 0.0, AngleUnit.DEGREES, 0.0);
+    private double defaultXInches = 0.0;
+    private double defaultYInches = 0.0;
+    private double defaultHeadingDeg = 0.0;
 
     public PinpointSubsystem() {
         robot = RobotHardware.getInstance();
@@ -24,6 +26,9 @@ public class PinpointSubsystem extends SubsystemBase {
             robot.pinpoint.setPosition(startPose);
         }
         pose = startPose;
+        defaultXInches = xInches;
+        defaultYInches = yInches;
+        defaultHeadingDeg = headingDegrees;
     }
 
     public Pose2D getPose() {
@@ -61,6 +66,6 @@ public class PinpointSubsystem extends SubsystemBase {
     }
 
     public void resetToConfiguredStart() {
-        initializePose(Common.PINPOINT_START_X_IN, Common.PINPOINT_START_Y_IN, Common.PINPOINT_START_HEADING_DEG);
+        initializePose(defaultXInches, defaultYInches, defaultHeadingDeg);
     }
 }
