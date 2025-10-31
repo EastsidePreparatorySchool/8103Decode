@@ -41,10 +41,6 @@ public class SpindexerSubsystem extends SubsystemBase {
         double pidReference = posDegrees + error;
         power = MathUtils.clamp(spindexerPIDF.calculate(posDegrees, pidReference), -1 ,1);
         robot.spindexer.setPower(power);
-        robot.telemetry.addData("spindexer pos (deg)", posDegrees);
-        robot.telemetry.addData("spindexer pos (volts)", posVoltage);
-        robot.telemetry.addData("spindexer target (deg)", wrappedTarget);
-        robot.telemetry.addData("spindexer error (deg)", error);
     }
 
     public void periodic() {

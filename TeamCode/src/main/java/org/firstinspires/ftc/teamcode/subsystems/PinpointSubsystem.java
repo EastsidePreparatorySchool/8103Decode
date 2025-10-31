@@ -53,9 +53,6 @@ public class PinpointSubsystem extends SubsystemBase {
     public void periodic() {
         robot.pinpoint.update();
         pose = robot.pinpoint.getPosition();
-        robot.telemetry.addData("odo x (in)", pose.getX(DistanceUnit.INCH));
-        robot.telemetry.addData("odo y (in)", pose.getY(DistanceUnit.INCH));
-        robot.telemetry.addData("odo heading (deg)", pose.getHeading(AngleUnit.DEGREES));
     }
 
     public void resetToConfiguredStart() {

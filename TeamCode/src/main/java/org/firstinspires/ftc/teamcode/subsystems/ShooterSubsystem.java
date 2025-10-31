@@ -93,10 +93,6 @@ public class ShooterSubsystem extends SubsystemBase {
         // If off, ensure motor is stopped and keep telemetry
         if (state == ShooterState.OFF) {
             robot.flywheel.setPower(0.0);
-            robot.telemetry.addData("shooter/state", state);
-            robot.telemetry.addData("shooter/target rpm", 0.0);
-            robot.telemetry.addData("shooter/current rpm", 0.0);
-            robot.telemetry.addData("shooter/power", 0.0);
             return;
         }
 
@@ -141,12 +137,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         robot.flywheel.setPower(power);
 
-        // Telemetry
-        robot.telemetry.addData("shooter/state", state);
-        robot.telemetry.addData("shooter/target rpm", targetRpm);
-        robot.telemetry.addData("shooter/current rpm", currentRpm);
-        robot.telemetry.addData("shooter/error rpm", error);
-        robot.telemetry.addData("shooter/power", power);
+        // Telemetry moved to OpModes
 
         // Save time history
         lastTime = now;

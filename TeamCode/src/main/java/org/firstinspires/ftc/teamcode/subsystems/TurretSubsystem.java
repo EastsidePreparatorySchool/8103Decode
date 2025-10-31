@@ -55,11 +55,6 @@ public class TurretSubsystem extends SubsystemBase {
         double pidReference = pos + errorTicks;
         power = MathUtils.clamp(turretPIDF.calculate(pos, pidReference), -1, 1);
         robot.turret.setPower(power);
-        robot.telemetry.addData("turret pos", pos);
-        robot.telemetry.addData("turret pos (deg)", ticksToDegrees(pos));
-        robot.telemetry.addData("turret target", target);
-        robot.telemetry.addData("turret target (deg)", deg);
-        robot.telemetry.addData("turret error (ticks)", errorTicks);
     }
 
     public void periodic() {
