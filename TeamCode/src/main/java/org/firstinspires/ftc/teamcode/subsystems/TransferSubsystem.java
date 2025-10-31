@@ -34,6 +34,7 @@ public class TransferSubsystem extends SubsystemBase {
                 robot.transfer.setPosition(Common.TRANSFER_UP);
                 break;
         }
+        update = false;
     }
 
     public void periodic() {
