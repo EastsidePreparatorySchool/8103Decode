@@ -10,6 +10,7 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
+import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
@@ -33,6 +34,7 @@ public class TurretSpindexerTuning extends CommandOpMode {
     private MultipleTelemetry multiTelemetry;
     private TurretSubsystem turretSubsystem;
     private SpindexerSubsystem spindexerSubsystem;
+    private final LoopRateAverager loopRate = new LoopRateAverager(50);
 
     @Override
     public void initialize() {
@@ -103,15 +105,18 @@ public class TurretSpindexerTuning extends CommandOpMode {
     }
 
     private void publishPreStartTelemetry() {
+        loopRate.update();
         double turretStartTicks = robot.turret.getCurrentPosition();
         multiTelemetry.addData("turret/start pos (ticks)", turretStartTicks);
         multiTelemetry.addData("turret/start pos (deg)", turretSubsystem.ticksToDegrees(turretStartTicks));
         multiTelemetry.addData("spindexer/start deg", spindexerTargetDeg);
         multiTelemetry.addData("spindexer/current deg", spindexerSubsystem.posDegrees);
+        multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();
     }
 
     private void publishActiveTelemetry() {
+        loopRate.update();
         double turretError = turretSubsystem.turretPIDF.getPositionError();
         double spindexerError = spindexerSubsystem.spindexerPIDF.getPositionError();
 
@@ -124,6 +129,7 @@ public class TurretSpindexerTuning extends CommandOpMode {
         multiTelemetry.addData("spindexer/pos (volts)", spindexerSubsystem.posVoltage);
         multiTelemetry.addData("spindexer/target (deg)", spindexerTargetDeg);
         multiTelemetry.addData("spindexer/error (deg)", spindexerError);
+        multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();
     }
 

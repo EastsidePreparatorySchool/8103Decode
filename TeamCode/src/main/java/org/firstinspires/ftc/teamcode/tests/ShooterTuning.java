@@ -10,6 +10,7 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
+import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 @Config
@@ -28,6 +29,7 @@ public class ShooterTuning extends CommandOpMode {
     private CommandScheduler scheduler;
     private MultipleTelemetry multiTelemetry;
     private ShooterSubsystem shooterSubsystem;
+    private final LoopRateAverager loopRate = new LoopRateAverager(50);
 
     @Override
     public void initialize() {
@@ -86,11 +88,13 @@ public class ShooterTuning extends CommandOpMode {
     }
 
     private void publishTelemetry() {
+        loopRate.update();
         multiTelemetry.addData("shooter/target rpm", shooterTargetRpm);
         multiTelemetry.addData("shooter/current rpm", shooterSubsystem.currentRpm);
         multiTelemetry.addData("shooter/error rpm", shooterTargetRpm - shooterSubsystem.currentRpm);
         multiTelemetry.addData("shooter/power", shooterSubsystem.power);
         multiTelemetry.addData("hood/pos", hoodPosition);
+        multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();
     }
 

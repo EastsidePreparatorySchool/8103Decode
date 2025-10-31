@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.DriveWithJoysticksCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
+import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 
 @TeleOp(name = "TeleOpDrivetrainTest")
@@ -14,6 +15,7 @@ public class TeleOpDrivetrainTest extends CommandOpMode {
     private CommandScheduler scheduler;
     private MecanumSubsystem mecanumSubsystem;
     private DriveWithJoysticksCommand driveCommand;
+    private final LoopRateAverager loopRate = new LoopRateAverager(50);
 
     @Override
     public void initialize() {
@@ -34,6 +36,8 @@ public class TeleOpDrivetrainTest extends CommandOpMode {
     public void run() {
         robot.periodic();
         scheduler.run();
+        loopRate.update();
+        telemetry.addData("hz", loopRate.getHz());
         telemetry.addData("FL", mecanumSubsystem.getLastFL());
         telemetry.addData("FR", mecanumSubsystem.getLastFR());
         telemetry.addData("BL", mecanumSubsystem.getLastBL());

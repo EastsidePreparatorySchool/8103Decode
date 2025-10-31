@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.DriveWithJoy
 import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.PinpointInitializePoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
+import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 @Config
@@ -29,6 +30,7 @@ public class PinpointTurretTeleOp extends CommandOpMode {
 
     private AimTurretAtPointCommand aimCommand;
     private DriveWithJoysticksCommand driveCommand;
+    private final LoopRateAverager loopRate = new LoopRateAverager(50);
 
     @Override
     public void initialize() {
@@ -56,6 +58,8 @@ public class PinpointTurretTeleOp extends CommandOpMode {
         aimCommand.setTargetPoint(TARGET_X_IN, TARGET_Y_IN);
         multiTelemetry.addData("init target x (in)", TARGET_X_IN);
         multiTelemetry.addData("init target y (in)", TARGET_Y_IN);
+        loopRate.update();
+        multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();
     }
 
@@ -70,6 +74,8 @@ public class PinpointTurretTeleOp extends CommandOpMode {
         multiTelemetry.addData("robot y (in)", robot.pinpointSubsystem.getYInches());
         multiTelemetry.addData("robot heading (deg)", robot.pinpointSubsystem.getHeadingDegrees());
         multiTelemetry.addData("turret target (deg)", robot.turretSubsystem.deg);
+        loopRate.update();
+        multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();
     }
 }
