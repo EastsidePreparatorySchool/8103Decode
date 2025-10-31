@@ -29,7 +29,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setTurretState(TurretState turretState) {
         state = turretState;
-        if (turretState == TurretState.STOPPED && robot.turret != null) {
+        if (turretState == TurretState.STOPPED) {
             robot.turret.setPower(0.0);
         }
     }
@@ -97,7 +97,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     private double selectSafeTargetDegrees(double desiredDegrees) {
         double limit = Math.abs(Common.TURRET_WIRE_WRAP_LIMIT_DEGREES);
-        if (limit <= 0 || robot.turret == null) {
+        if (limit <= 0) {
             return desiredDegrees;
         }
 

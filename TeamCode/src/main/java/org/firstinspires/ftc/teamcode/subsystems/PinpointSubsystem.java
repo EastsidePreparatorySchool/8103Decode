@@ -22,9 +22,7 @@ public class PinpointSubsystem extends SubsystemBase {
 
     public void initializePose(double xInches, double yInches, double headingDegrees) {
         Pose2D startPose = new Pose2D(DistanceUnit.INCH, xInches, yInches, AngleUnit.DEGREES, headingDegrees);
-        if (robot.pinpoint != null) {
-            robot.pinpoint.setPosition(startPose);
-        }
+        robot.pinpoint.setPosition(startPose);
         pose = startPose;
         defaultXInches = xInches;
         defaultYInches = yInches;
@@ -53,16 +51,11 @@ public class PinpointSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (robot.pinpoint == null) {
-            return;
-        }
         robot.pinpoint.update();
         pose = robot.pinpoint.getPosition();
-        if (robot.telemetry != null) {
-            robot.telemetry.addData("odo x (in)", pose.getX(DistanceUnit.INCH));
-            robot.telemetry.addData("odo y (in)", pose.getY(DistanceUnit.INCH));
-            robot.telemetry.addData("odo heading (deg)", pose.getHeading(AngleUnit.DEGREES));
-        }
+        robot.telemetry.addData("odo x (in)", pose.getX(DistanceUnit.INCH));
+        robot.telemetry.addData("odo y (in)", pose.getY(DistanceUnit.INCH));
+        robot.telemetry.addData("odo heading (deg)", pose.getHeading(AngleUnit.DEGREES));
     }
 
     public void resetToConfiguredStart() {

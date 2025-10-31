@@ -7,11 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 public class TurretStateCommand extends InstantCommand {
     public TurretStateCommand(TurretSubsystem turretSubsystem, TurretSubsystem.TurretState turretState) {
-        super(() -> {
-            if (turretSubsystem != null) {
-                turretSubsystem.setTurretState(turretState);
-            }
-        });
+        super(() -> turretSubsystem.setTurretState(turretState));
     }
 
     public TurretStateCommand(TurretSubsystem.TurretState turretState) {

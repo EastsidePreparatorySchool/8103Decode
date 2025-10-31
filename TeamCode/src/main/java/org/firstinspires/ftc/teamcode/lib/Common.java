@@ -49,4 +49,17 @@ public class Common {
     public static double TRANSFER_DOWN = 0.0;
     public static double TRANSFER_UP = 0.0;
     public static double FLYWHEEL_ON = 1.0;
+
+    // Shooter velocity controller (RPM-based)
+    // Motor/geometry
+    public static double SHOOTER_TICKS_PER_MOTOR_REV = 28.0; // Built-in encoder CPR
+    public static double SHOOTER_GEAR_RATIO = 1.0;            // Motor:flywheel
+    public static double SHOOTER_MAX_RPM = 6000.0;            // Bare motor free speed
+    // Feedforward + feedback coefficients (power units)
+    public static double SHOOTER_KS = 0.0; // static friction offset (power)
+    public static double SHOOTER_KV = 0.0; // power per RPM
+    public static double SHOOTER_KA = 0.0; // power per (RPM/s)
+    public static double SHOOTER_KP = 0.0; // P on velocity error (RPM)
+    // Hood initial position
+    public static double HOOD_INITIAL_POS = 0.5;
 }

@@ -10,11 +10,7 @@ public class PinpointInitializePoseCommand extends InstantCommand {
                                          double xInches,
                                          double yInches,
                                          double headingDegrees) {
-        super(() -> {
-            if (pinpointSubsystem != null) {
-                pinpointSubsystem.initializePose(xInches, yInches, headingDegrees);
-            }
-        });
+        super(() -> pinpointSubsystem.initializePose(xInches, yInches, headingDegrees));
     }
 
     public PinpointInitializePoseCommand(double xInches,

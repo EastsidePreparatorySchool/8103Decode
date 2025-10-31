@@ -102,6 +102,25 @@ public class RobotHardware {
         CommandScheduler.getInstance().registerSubsystem(turretSubsystem);
     }
 
+    public void initShooter() {
+        flywheel = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "flywheel"));
+        hood = hardwareMap.get(Servo.class, "hood");
+
+        // Shooter must run forward
+        flywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+        // Use manual control; we compute velocity ourselves
+        flywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // Let flywheel coast
+        flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        shooterSubsystem = new ShooterSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(shooterSubsystem);
+
+        // Start hood at 0.5
+        hood.setPosition(Common.HOOD_INITIAL_POS);
+    }
+
     public void initSpindexer() {
         spindexer = new CachingCRServo(hardwareMap.get(CRServo.class, "spindexer"));
         spindexerAnalog = hardwareMap.get(AnalogInput.class, "spindexerAnalog");
@@ -117,15 +136,10 @@ public class RobotHardware {
         }
         pinpointSubsystem = new PinpointSubsystem();
         CommandScheduler.getInstance().registerSubsystem(pinpointSubsystem);
-        if (pinpointSubsystem != null) {
-            pinpointSubsystem.initializePose(0.0, 0.0, 0.0);
-        }
+        pinpointSubsystem.initializePose(0.0, 0.0, 0.0);
     }
 
     private void configurePinpoint() {
-        if (pinpoint == null) {
-            return;
-        }
         pinpoint.setOffsets(Common.PINPOINT_X_OFFSET_MM, Common.PINPOINT_Y_OFFSET_MM, DistanceUnit.MM);
         pinpoint.setEncoderResolution(Common.PINPOINT_POD_TYPE);
         pinpoint.setEncoderDirections(Common.PINPOINT_X_DIRECTION, Common.PINPOINT_Y_DIRECTION);
@@ -155,12 +169,8 @@ public class RobotHardware {
     }
 
     public void periodic() {
-        if (CONTROL_HUB != null) {
-            CONTROL_HUB.clearBulkCache();
-        }
-        if (EXPANSION_HUB != null) {
-            EXPANSION_HUB.clearBulkCache();
-        }
+        CONTROL_HUB.clearBulkCache();
+        EXPANSION_HUB.clearBulkCache();
     }
 
     public void powerMotors(double powerFL, double powerFR, double powerBL, double powerBR) {

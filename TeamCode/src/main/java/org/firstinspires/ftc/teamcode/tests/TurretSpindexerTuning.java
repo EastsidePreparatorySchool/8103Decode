@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.tests;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
@@ -74,7 +73,6 @@ public class TurretSpindexerTuning extends CommandOpMode {
         applyTargets();
         updateMechanisms();
         publishActiveTelemetry();
-        sendDashboardPacket();
     }
 
     @Override
@@ -126,18 +124,7 @@ public class TurretSpindexerTuning extends CommandOpMode {
         multiTelemetry.update();
     }
 
-    private void sendDashboardPacket() {
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("turretPosTicks", turretSubsystem.pos);
-        packet.put("turretTargetTicks", turretSubsystem.target);
-        packet.put("turretErrorTicks", turretSubsystem.turretPIDF.getPositionError());
-        packet.put("turretPosDeg", turretSubsystem.ticksToDegrees(turretSubsystem.pos));
-        packet.put("spindexerDeg", spindexerSubsystem.posDegrees);
-        packet.put("spindexerTargetDeg", spindexerTargetDeg);
-        packet.put("spindexerErrorDeg", spindexerSubsystem.spindexerPIDF.getPositionError());
-        packet.put("spindexerVolts", spindexerSubsystem.posVoltage);
-        FtcDashboard.getInstance().sendTelemetryPacket(packet);
-    }
+    
 
     private void updateTurretCoefficients() {
         if (turretSubsystem.turretPIDF.getP() != turretKp
