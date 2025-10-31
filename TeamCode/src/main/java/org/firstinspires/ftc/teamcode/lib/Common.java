@@ -17,7 +17,7 @@ public class Common {
     public static double TURRET_DRIVING_PULLEY_TEETH = 38.0;
     public static double TURRET_DRIVEN_PULLEY_TEETH = 108.0;
     public static double TURRET_TOLERANCE_TICKS = 10.0;
-    public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 530.0;
+    public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 200.0;
     // Spindexer PIDF
     public static double SPINDEXER_KP = 0.001;
     public static double SPINDEXER_KI = 0.0;

@@ -36,24 +36,19 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setTarget(double degrees) {
         double safeDegrees = selectSafeTargetDegrees(degrees);
-        deg = safeDegrees;
-        double ticksPerRev = getTicksPerTurretRev();
-        double normalizedDegrees = normalizeDegrees(safeDegrees);
-        target = wrapToRange(degreesToTicks(normalizedDegrees), ticksPerRev);
+        deg = safeDegrees; // keep unwrapped target for telemetry
+        // Use absolute (unwrapped) ticks so we can choose direction that respects wire wrap limit
+        target = degreesToTicks(safeDegrees);
     }
 
     public boolean withinTolerance() {
-        double ticksPerRev = getTicksPerTurretRev();
-        double errorTicks = shortestError(target, pos, ticksPerRev);
+        double errorTicks = target - pos;
         return Math.abs(errorTicks) < Common.TURRET_TOLERANCE_TICKS;
     }
 
     public void updateHardware() {
         pos = robot.turret.getCurrentPosition();
-        double ticksPerRev = getTicksPerTurretRev();
-        double errorTicks = shortestError(target, pos, ticksPerRev);
-        double pidReference = pos + errorTicks;
-        power = MathUtils.clamp(turretPIDF.calculate(pos, pidReference), -1, 1);
+        power = MathUtils.clamp(turretPIDF.calculate(pos, target), -1, 1);
         robot.turret.setPower(power);
     }
 
