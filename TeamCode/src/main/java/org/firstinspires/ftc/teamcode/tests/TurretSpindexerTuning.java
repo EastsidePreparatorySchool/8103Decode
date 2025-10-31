@@ -40,6 +40,7 @@ public class TurretSpindexerTuning extends CommandOpMode {
         multiTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         robot.init(hardwareMap, multiTelemetry);
+        robot.initLynx();
         robot.initTurret();
         robot.initSpindexer();
 
@@ -56,6 +57,7 @@ public class TurretSpindexerTuning extends CommandOpMode {
 
     @Override
     public void initialize_loop() {
+        robot.periodic();
         scheduler.run();
         initializeTargetsFromHardware();
         applyTargets();
@@ -65,6 +67,7 @@ public class TurretSpindexerTuning extends CommandOpMode {
 
     @Override
     public void run() {
+        robot.periodic();
         scheduler.run();
 
         updateTurretCoefficients();

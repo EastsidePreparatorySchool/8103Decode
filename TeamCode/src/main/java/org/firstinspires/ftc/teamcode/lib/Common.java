@@ -62,4 +62,7 @@ public class Common {
     public static double SHOOTER_KP = 0.0; // P on velocity error (RPM)
     // Hood initial position
     public static double HOOD_INITIAL_POS = 0.5;
+    // Voltage normalization
+    public static double NOMINAL_BATTERY_VOLTAGE = 12.0;
+    public static double BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC = 0.2;
 }

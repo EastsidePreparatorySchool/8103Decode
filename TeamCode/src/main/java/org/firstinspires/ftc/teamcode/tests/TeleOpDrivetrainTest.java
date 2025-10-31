@@ -19,6 +19,7 @@ public class TeleOpDrivetrainTest extends CommandOpMode {
     public void initialize() {
         scheduler = CommandScheduler.getInstance();
         robot.init(hardwareMap, telemetry);
+        robot.initLynx();
         robot.initDrivetrain();
         mecanumSubsystem = robot.mecanumSubsystem;
 
@@ -31,6 +32,7 @@ public class TeleOpDrivetrainTest extends CommandOpMode {
 
     @Override
     public void run() {
+        robot.periodic();
         scheduler.run();
         telemetry.addData("FL", mecanumSubsystem.getLastFL());
         telemetry.addData("FR", mecanumSubsystem.getLastFR());

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -61,6 +62,10 @@ public class RobotHardware {
     public AnalogInput spindexerAnalog;
     // odometry
     public GoBildaPinpointDriver pinpoint;
+    // Battery voltage
+    public java.util.List<VoltageSensor> voltageSensors;
+    private ElapsedTime voltageTimer;
+    private double cachedBatteryVoltage = 12.0;
 
     public List<LynxModule> modules;
     public LynxModule CONTROL_HUB;
@@ -69,6 +74,10 @@ public class RobotHardware {
     public void init(HardwareMap hwMap, Telemetry tele) {
         this.hardwareMap = hwMap;
         this.telemetry = tele;
+        // Prepare voltage sensors cache
+        this.voltageSensors = hardwareMap.getAll(VoltageSensor.class);
+        this.voltageTimer = new ElapsedTime();
+        this.cachedBatteryVoltage = readBatteryVoltageInstant();
     }
 
     public void initDrivetrain() {
@@ -171,6 +180,32 @@ public class RobotHardware {
     public void periodic() {
         CONTROL_HUB.clearBulkCache();
         EXPANSION_HUB.clearBulkCache();
+    }
+
+    // Battery voltage helpers (cached)
+    private double readBatteryVoltageInstant() {
+        double best = 0.0;
+        if (voltageSensors != null) {
+            for (VoltageSensor sensor : voltageSensors) {
+                double v = sensor.getVoltage();
+                if (v > best && v < 20.0) {
+                    best = v;
+                }
+            }
+        }
+        return (best > 0.0) ? best : Common.NOMINAL_BATTERY_VOLTAGE;
+    }
+
+    public double getBatteryVoltage() {
+        if (voltageTimer == null) {
+            voltageTimer = new ElapsedTime();
+        }
+        double now = voltageTimer.seconds();
+        if (now >= Common.BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC) {
+            cachedBatteryVoltage = readBatteryVoltageInstant();
+            voltageTimer.reset();
+        }
+        return cachedBatteryVoltage;
     }
 
     public void powerMotors(double powerFL, double powerFR, double powerBL, double powerBR) {

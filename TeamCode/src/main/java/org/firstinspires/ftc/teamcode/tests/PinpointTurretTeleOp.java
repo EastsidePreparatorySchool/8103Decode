@@ -35,6 +35,7 @@ public class PinpointTurretTeleOp extends CommandOpMode {
         scheduler = CommandScheduler.getInstance();
         multiTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot.init(hardwareMap, multiTelemetry);
+        robot.initLynx();
         robot.initDrivetrain();
         robot.initTurret();
         robot.initPinpoint();
@@ -51,6 +52,7 @@ public class PinpointTurretTeleOp extends CommandOpMode {
 
     @Override
     public void initialize_loop() {
+        robot.periodic();
         aimCommand.setTargetPoint(TARGET_X_IN, TARGET_Y_IN);
         multiTelemetry.addData("init target x (in)", TARGET_X_IN);
         multiTelemetry.addData("init target y (in)", TARGET_Y_IN);
@@ -59,6 +61,7 @@ public class PinpointTurretTeleOp extends CommandOpMode {
 
     @Override
     public void run() {
+        robot.periodic();
         scheduler.run();
         aimCommand.setTargetPoint(TARGET_X_IN, TARGET_Y_IN);
         multiTelemetry.addData("target x (in)", TARGET_X_IN);

@@ -35,6 +35,7 @@ public class ShooterTuning extends CommandOpMode {
         multiTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         robot.init(hardwareMap, multiTelemetry);
+        robot.initLynx();
         robot.initShooter();
 
         shooterSubsystem = robot.shooterSubsystem;
@@ -50,6 +51,7 @@ public class ShooterTuning extends CommandOpMode {
 
     @Override
     public void initialize_loop() {
+        robot.periodic();
         scheduler.run();
         applyTargets();
         updateMechanism();
@@ -58,6 +60,7 @@ public class ShooterTuning extends CommandOpMode {
 
     @Override
     public void run() {
+        robot.periodic();
         scheduler.run();
 
         // Live update of tuning values

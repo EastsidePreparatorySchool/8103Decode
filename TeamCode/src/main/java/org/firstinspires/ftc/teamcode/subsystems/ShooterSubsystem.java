@@ -125,8 +125,17 @@ public class ShooterSubsystem extends SubsystemBase {
         double error = targetRpm - currentRpm;
         double fb = kP * error;
 
-        // Combine and clamp to [0, 1] forward-only
+        // Combine
         power = ff + fb;
+
+        // Normalize to nominal voltage (12V) to compensate for battery sag
+        double vbat = robot.getBatteryVoltage();
+        if (vbat > 1e-3) {
+            double scale = Common.NOMINAL_BATTERY_VOLTAGE / vbat;
+            power *= scale;
+        }
+
+        // Clamp to [0, 1] forward-only
         if (power < 0.0) power = 0.0;
         if (power > 1.0) power = 1.0;
 
