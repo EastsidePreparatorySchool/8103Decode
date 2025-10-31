@@ -13,7 +13,7 @@ public class Common {
     // Turret geometry
     public static double TURRET_FULL_ROTATION_DEGREES = 360.0;
     public static double TURRET_TICKS_PER_MOTOR_REV = 28.0;
-    public static double TURRET_GEARBOX_RATIO = 3.7;
+    public static double TURRET_GEARBOX_RATIO = 13.7; // goBILDA 435 rpm (13.7:1)
     public static double TURRET_DRIVING_PULLEY_TEETH = 38.0;
     public static double TURRET_DRIVEN_PULLEY_TEETH = 108.0;
     public static double TURRET_TOLERANCE_TICKS = 10.0;
