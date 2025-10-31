@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.lib;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -28,7 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.List;
 
-import dev.frozenmilk.dairy.cachinghardware.CachingCRServo;
+ 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 public class RobotHardware {
@@ -57,9 +55,8 @@ public class RobotHardware {
     public CachingDcMotorEx intake;
     // transfer
     public Servo transfer;
-    // spindexer
-    public CRServo spindexer;
-    public AnalogInput spindexerAnalog;
+    // spindexer (standard servo mode)
+    public Servo spindexer;
     // odometry
     public GoBildaPinpointDriver pinpoint;
     // Battery voltage
@@ -131,10 +128,15 @@ public class RobotHardware {
     }
 
     public void initSpindexer() {
-        spindexer = new CachingCRServo(hardwareMap.get(CRServo.class, "spindexer"));
-        spindexerAnalog = hardwareMap.get(AnalogInput.class, "spindexerAnalog");
+        spindexer = hardwareMap.get(Servo.class, "spindexer");
         spindexerSubsystem = new SpindexerSubsystem();
         CommandScheduler.getInstance().registerSubsystem(spindexerSubsystem);
+    }
+
+    public void initTransfer() {
+        transfer = hardwareMap.get(Servo.class, "transfer");
+        transferSubsystem = new TransferSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(transferSubsystem);
     }
 
     public void initPinpoint() {
