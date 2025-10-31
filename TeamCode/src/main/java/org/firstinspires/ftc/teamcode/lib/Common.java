@@ -37,7 +37,6 @@ public class Common {
     public static GoBildaPinpointDriver.EncoderDirection PINPOINT_X_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     public static GoBildaPinpointDriver.EncoderDirection PINPOINT_Y_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     public static GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_POD_TYPE = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
-    public static double PINPOINT_ENCODER_RESOLUTION_MM_PER_TICK = 0.0; // <= 0 to use pod type
     public static boolean PINPOINT_RESET_IMU_ON_INIT = true;
     // Spindexer targets defined in degrees
     public static double SPINDEXER_INTAKE_ONE = 0.0;

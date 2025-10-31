@@ -94,7 +94,7 @@ public class RobotHardware {
 
     public void initTurret() {
         turret = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "turret"));
-        turret.setDirection(DcMotorSimple.Direction.FORWARD);
+        turret.setDirection(DcMotorSimple.Direction.REVERSE);
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -127,11 +127,7 @@ public class RobotHardware {
             return;
         }
         pinpoint.setOffsets(Common.PINPOINT_X_OFFSET_MM, Common.PINPOINT_Y_OFFSET_MM, DistanceUnit.MM);
-        if (Common.PINPOINT_ENCODER_RESOLUTION_MM_PER_TICK > 0) {
-            pinpoint.setEncoderResolution(Common.PINPOINT_ENCODER_RESOLUTION_MM_PER_TICK, DistanceUnit.MM);
-        } else if (Common.PINPOINT_POD_TYPE != null) {
-            pinpoint.setEncoderResolution(Common.PINPOINT_POD_TYPE);
-        }
+        pinpoint.setEncoderResolution(Common.PINPOINT_POD_TYPE);
         pinpoint.setEncoderDirections(Common.PINPOINT_X_DIRECTION, Common.PINPOINT_Y_DIRECTION);
     }
 
