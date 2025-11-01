@@ -128,6 +128,15 @@ public class RobotHardware {
         // Start hood at 0.5
         hood.setPosition(Common.HOOD_INITIAL_POS);
     }
+    
+    public void initIntake() {
+        intake = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "intake"));
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeSubsystem = new IntakeSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(intakeSubsystem);
+    }
 
     public void initSpindexer() {
         spindexer = hardwareMap.get(Servo.class, "spindexer");
@@ -142,7 +151,7 @@ public class RobotHardware {
     }
 
     public void initPinpoint() {
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, Common.PINPOINT_HARDWARE_NAME);
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
         configurePinpoint();
         if (Common.PINPOINT_RESET_IMU_ON_INIT) {
             pinpoint.resetPosAndIMU();

@@ -4,9 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -20,7 +17,6 @@ import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 @Config
 @TeleOp(name = "SystemsIntegrationTuning", group = "Tuning")
@@ -58,19 +54,14 @@ public class SystemsIntegrationTuning extends CommandOpMode {
         robot.initTurret();
         robot.initSpindexer();
         robot.initTransfer();
+        robot.initIntake();
 
         shooterSubsystem = robot.shooterSubsystem;
         turretSubsystem = robot.turretSubsystem;
         spindexerSubsystem = robot.spindexerSubsystem;
         transferSubsystem = robot.transferSubsystem;
 
-        // Intake is not initialized in RobotHardware; map and register it here.
-        robot.intake = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "intake"));
-        robot.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.intakeSubsystem = new IntakeSubsystem();
-        CommandScheduler.getInstance().registerSubsystem(robot.intakeSubsystem);
+        // Access intake subsystem via RobotHardware
         intakeSubsystem = robot.intakeSubsystem;
 
         // Enable mechanisms by default; states are driven by dashboard inputs
@@ -209,4 +200,3 @@ public class SystemsIntegrationTuning extends CommandOpMode {
         return Math.max(lo, Math.min(hi, v));
     }
 }
-

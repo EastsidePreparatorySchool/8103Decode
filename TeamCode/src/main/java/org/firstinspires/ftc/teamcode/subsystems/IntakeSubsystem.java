@@ -42,4 +42,10 @@ public class IntakeSubsystem extends SubsystemBase {
             update = false;
         }
     }
+
+    public void periodic() {
+        if (update) {
+            updateHardware();
+        }
+    }
 }

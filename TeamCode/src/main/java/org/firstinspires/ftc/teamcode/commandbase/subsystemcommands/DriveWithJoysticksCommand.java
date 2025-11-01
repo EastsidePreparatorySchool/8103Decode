@@ -7,6 +7,7 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.MecanumPowerMotorsCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
+import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 
 public class DriveWithJoysticksCommand extends CommandBase {
     private final MecanumSubsystem mecanumSubsystem;
@@ -16,6 +17,13 @@ public class DriveWithJoysticksCommand extends CommandBase {
         this.mecanumSubsystem = mecanumSubsystem;
         this.gamepad = gamepad;
         addRequirements(mecanumSubsystem);
+    }
+
+    public DriveWithJoysticksCommand(Gamepad gamepad) {
+        this(
+                RobotHardware.getInstance().mecanumSubsystem,
+                gamepad
+        );
     }
 
     @Override

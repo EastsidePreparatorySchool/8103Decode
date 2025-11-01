@@ -104,6 +104,7 @@ public class TurretTuning extends CommandOpMode {
         multiTelemetry.addData("turret/target (ticks)", turretSubsystem.target);
         multiTelemetry.addData("turret/target (deg)", turretTargetDeg);
         multiTelemetry.addData("turret/error (ticks)", turretError);
+        multiTelemetry.addData("turret/power", turretSubsystem.power);
         multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();
     }
