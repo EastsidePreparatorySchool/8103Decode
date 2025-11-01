@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 
@@ -27,8 +28,9 @@ public class TransferSpindexerServoTuning extends CommandOpMode {
         robot.init(hardwareMap, multiTelemetry);
         robot.initLynx();
         // Do NOT register spindexer/transfer subsystems here; we want direct servo control
-        robot.spindexer = hardwareMap.get(Servo.class, "spindexer");
-        robot.transfer = hardwareMap.get(Servo.class, "transfer");
+        // Wrap raw servos in CachingServo to match RobotHardware field types
+        robot.spindexer = new CachingServo(hardwareMap.get(Servo.class, "spindexer"));
+        robot.transfer = new CachingServo(hardwareMap.get(Servo.class, "transfer"));
 
         // Initialize hardware to requested positions
         applyPositions();

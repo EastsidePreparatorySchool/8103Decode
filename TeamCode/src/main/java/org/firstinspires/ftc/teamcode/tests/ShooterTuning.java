@@ -41,6 +41,7 @@ public class ShooterTuning extends CommandOpMode {
         robot.init(hardwareMap, multiTelemetry);
         robot.initLynx();
         robot.initShooter();
+        robot.initHood();
 
         shooterSubsystem = robot.shooterSubsystem;
         hoodSubsystem = robot.hoodSubsystem;

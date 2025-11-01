@@ -29,6 +29,7 @@ import java.util.List;
 
  
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
+import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 public class RobotHardware {
     private static RobotHardware instance;
@@ -49,15 +50,15 @@ public class RobotHardware {
     public CachingDcMotorEx dtBR;
     // shooter
     public CachingDcMotorEx flywheel;
-    public Servo hood;
+    public CachingServo hood;
     // turret
     public CachingDcMotorEx turret;
     // intake
     public CachingDcMotorEx intake;
     // transfer
-    public Servo transfer;
+    public CachingServo transfer;
     // spindexer (standard servo mode)
-    public Servo spindexer;
+    public CachingServo spindexer;
     // odometry
     public GoBildaPinpointDriver pinpoint;
     // Battery voltage
@@ -113,7 +114,6 @@ public class RobotHardware {
 
     public void initShooter() {
         flywheel = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "flywheel"));
-        hood = hardwareMap.get(Servo.class, "hood");
 
         // Shooter must run forward
         flywheel.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -125,8 +125,10 @@ public class RobotHardware {
 
         shooterSubsystem = new ShooterSubsystem();
         CommandScheduler.getInstance().registerSubsystem(shooterSubsystem);
+    }
 
-        // Create and register hood subsystem
+    public void initHood() {
+        hood = new CachingServo(hardwareMap.get(Servo.class, "hood"));
         hoodSubsystem = new HoodSubsystem();
         CommandScheduler.getInstance().registerSubsystem(hoodSubsystem);
         hoodSubsystem.setHoodPosition(Common.HOOD_INITIAL_POS);
@@ -142,13 +144,13 @@ public class RobotHardware {
     }
 
     public void initSpindexer() {
-        spindexer = hardwareMap.get(Servo.class, "spindexer");
+        spindexer = new CachingServo(hardwareMap.get(Servo.class, "spindexer"));
         spindexerSubsystem = new SpindexerSubsystem();
         CommandScheduler.getInstance().registerSubsystem(spindexerSubsystem);
     }
 
     public void initTransfer() {
-        transfer = hardwareMap.get(Servo.class, "transfer");
+        transfer = new CachingServo(hardwareMap.get(Servo.class, "transfer"));
         transferSubsystem = new TransferSubsystem();
         CommandScheduler.getInstance().registerSubsystem(transferSubsystem);
     }

@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
@@ -36,6 +37,7 @@ public class SystemsIntegrationTuning extends CommandOpMode {
 
     // Subsystems
     private ShooterSubsystem shooterSubsystem;
+    private HoodSubsystem hoodSubsystem;
     private TurretSubsystem turretSubsystem;
     private SpindexerSubsystem spindexerSubsystem;
     private TransferSubsystem transferSubsystem;
@@ -51,12 +53,14 @@ public class SystemsIntegrationTuning extends CommandOpMode {
 
         // Initialize and register subsystems available via RobotHardware helpers
         robot.initShooter();
+        robot.initHood();
         robot.initTurret();
         robot.initSpindexer();
         robot.initTransfer();
         robot.initIntake();
 
         shooterSubsystem = robot.shooterSubsystem;
+        hoodSubsystem = robot.hoodSubsystem;
         turretSubsystem = robot.turretSubsystem;
         spindexerSubsystem = robot.spindexerSubsystem;
         transferSubsystem = robot.transferSubsystem;
@@ -123,7 +127,7 @@ public class SystemsIntegrationTuning extends CommandOpMode {
 
         // Hood: clamp to [0, 1]
         double clampedHood = clamp(hoodPosition, 0.0, 1.0);
-        shooterSubsystem.setHoodPosition(clampedHood);
+        hoodSubsystem.setHoodPosition(clampedHood);
 
         // Turret: set target degrees (wire-wrap limit handled in subsystem)
         turretSubsystem.setTarget(turretTargetDeg);
