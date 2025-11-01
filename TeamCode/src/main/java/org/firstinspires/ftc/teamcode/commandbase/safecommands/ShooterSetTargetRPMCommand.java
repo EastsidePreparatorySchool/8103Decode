@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commandbase.safecommands;
+package org.firstinspires.ftc.teamcode.commandbase.unsafebasecommands;
 
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
