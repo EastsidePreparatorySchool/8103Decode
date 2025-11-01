@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
@@ -125,8 +126,10 @@ public class RobotHardware {
         shooterSubsystem = new ShooterSubsystem();
         CommandScheduler.getInstance().registerSubsystem(shooterSubsystem);
 
-        // Start hood at 0.5
-        hood.setPosition(Common.HOOD_INITIAL_POS);
+        // Create and register hood subsystem
+        hoodSubsystem = new HoodSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(hoodSubsystem);
+        hoodSubsystem.setHoodPosition(Common.HOOD_INITIAL_POS);
     }
     
     public void initIntake() {
@@ -170,6 +173,7 @@ public class RobotHardware {
     // subsystems
     public IntakeSubsystem intakeSubsystem;
     public ShooterSubsystem shooterSubsystem;
+    public HoodSubsystem hoodSubsystem;
     public SpindexerSubsystem spindexerSubsystem;
     public TransferSubsystem transferSubsystem;
     public TurretSubsystem turretSubsystem;

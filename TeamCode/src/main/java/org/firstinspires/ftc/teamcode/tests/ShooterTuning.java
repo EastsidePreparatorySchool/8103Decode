@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
 
 @Config
 @TeleOp(name = "ShooterTuning", group = "Tuning")
@@ -29,6 +30,7 @@ public class ShooterTuning extends CommandOpMode {
     private CommandScheduler scheduler;
     private MultipleTelemetry multiTelemetry;
     private ShooterSubsystem shooterSubsystem;
+    private HoodSubsystem hoodSubsystem;
     private final LoopRateAverager loopRate = new LoopRateAverager(50);
 
     @Override
@@ -41,6 +43,7 @@ public class ShooterTuning extends CommandOpMode {
         robot.initShooter();
 
         shooterSubsystem = robot.shooterSubsystem;
+        hoodSubsystem = robot.hoodSubsystem;
         shooterSubsystem.setShooterState(ShooterSubsystem.ShooterState.ON);
 
         // Initialize targets from hardware
@@ -80,7 +83,7 @@ public class ShooterTuning extends CommandOpMode {
 
     private void applyTargets() {
         shooterSubsystem.setTargetRpm(shooterTargetRpm);
-        shooterSubsystem.setHoodPosition(hoodPosition);
+        hoodSubsystem.setHoodPosition(hoodPosition);
     }
 
     private void updateMechanism() {

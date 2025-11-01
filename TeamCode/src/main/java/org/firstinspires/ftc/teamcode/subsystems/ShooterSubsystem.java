@@ -15,9 +15,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private final RobotHardware robot;
     public volatile ShooterState state;
 
-    // Hood servo position [0.0, 1.0]
-    public double hoodPos;
-
     // Velocity control (RPM)
     public double targetRpm = 0.0;
     public double currentRpm = 0.0;
@@ -37,7 +34,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem() {
         robot = RobotHardware.getInstance();
         setShooterState(ShooterState.OFF);
-        hoodPos = Common.HOOD_INITIAL_POS;
         // initialize timer baseline
         timer.reset();
         lastTime = timer.seconds();
@@ -54,14 +50,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setTargetRpm(double rpm) {
         targetRpm = Math.max(0.0, rpm); // forward only
-    }
-
-    public void setHoodPosition(double pos) {
-        hoodPos = pos;
-    }
-
-    public void tickServoPosition(int inc) {
-        hoodPos += inc;
     }
 
     public void applyVelocityCoefficients(double kS, double kV, double kA, double kP) {
@@ -87,9 +75,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void updateHardware() {
-        // Update servo each loop
-        robot.hood.setPosition(hoodPos);
-
         // If off, ensure motor is stopped and keep telemetry
         if (state == ShooterState.OFF) {
             robot.flywheel.setPower(0.0);
