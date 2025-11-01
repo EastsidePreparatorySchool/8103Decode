@@ -17,15 +17,7 @@ public class Common {
     public static double TURRET_DRIVING_PULLEY_TEETH = 38.0;
     public static double TURRET_DRIVEN_PULLEY_TEETH = 108.0;
     public static double TURRET_TOLERANCE_TICKS = 10.0;
-    public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 200.0;
-    // Spindexer PIDF
-    public static double SPINDEXER_KP = 0.035;
-    public static double SPINDEXER_KI = 0.0;
-    public static double SPINDEXER_KD = 0.001;
-    public static double SPINDEXER_KF = 0.0;
-    // Spindexer measurements
-    public static double AXON_ANALOG_RANGE = 3.3;
-    public static double AXON_DEGREE_RANGE = 360.0;
+    public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 90.0;
     // Drivetrain
     public static double INTAKE_FORWARD_POWER = 1.0;
     public static double INTAKE_BACKWARD_POWER = -1.0;
@@ -54,12 +46,12 @@ public class Common {
     public static double SHOOTER_GEAR_RATIO = 1.0;            // Motor:flywheel
     public static double SHOOTER_MAX_RPM = 6000.0;            // Bare motor free speed
     // Feedforward + feedback coefficients (power units)
-    public static double SHOOTER_KS = 0.0; // static friction offset (power)
-    public static double SHOOTER_KV = 0.0; // power per RPM
+    public static double SHOOTER_KS = 0.13; // static friction offset (power)
+    public static double SHOOTER_KV = 0.00018; // power per RPM
     public static double SHOOTER_KA = 0.0; // power per (RPM/s)
-    public static double SHOOTER_KP = 0.0; // P on velocity error (RPM)
+    public static double SHOOTER_KP = 0.00015; // P on velocity error (RPM)
     // Hood initial position
-    public static double HOOD_INITIAL_POS = 0.5;
+    public static double HOOD_INITIAL_POS = 0.47;
     // Voltage normalization
     public static double NOMINAL_BATTERY_VOLTAGE = 12.0;
     public static double BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC = 0.5;
