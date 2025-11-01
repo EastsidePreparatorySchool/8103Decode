@@ -7,10 +7,10 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.AimTurretAtPointCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.DriveWithJoysticksCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithJoysticksCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
-import org.firstinspires.ftc.teamcode.commandbase.basecommands.TurretStateCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;

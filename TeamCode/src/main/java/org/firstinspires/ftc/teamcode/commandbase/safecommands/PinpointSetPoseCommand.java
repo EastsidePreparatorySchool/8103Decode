@@ -11,6 +11,7 @@ public class PinpointSetPoseCommand extends InstantCommand {
                                   double yInches,
                                   double headingDegrees) {
         super(() -> pinpointSubsystem.initializePose(xInches, yInches, headingDegrees));
+        addRequirements(pinpointSubsystem);
     }
 
     public PinpointSetPoseCommand(double xInches,

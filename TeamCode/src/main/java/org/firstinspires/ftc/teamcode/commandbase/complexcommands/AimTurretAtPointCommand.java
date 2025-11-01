@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.commandbase.safecommands;
+package org.firstinspires.ftc.teamcode.commandbase.complexcommands;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 
-import org.firstinspires.ftc.teamcode.commandbase.basecommands.TurretSetTargetCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
 import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;

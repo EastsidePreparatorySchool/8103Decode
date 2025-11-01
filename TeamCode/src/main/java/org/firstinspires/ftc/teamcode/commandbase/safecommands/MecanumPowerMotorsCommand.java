@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commandbase.unsafebasecommands;
+package org.firstinspires.ftc.teamcode.commandbase.safecommands;
 
 import com.seattlesolvers.solverslib.command.InstantCommand;
 
@@ -12,6 +12,7 @@ public class MecanumPowerMotorsCommand extends InstantCommand {
                                      double powerBL,
                                      double powerBR) {
         super(() -> mecanumSubsystem.setMotorPowers(powerFL, powerFR, powerBL, powerBR));
+        addRequirements(mecanumSubsystem);
     }
 
     public MecanumPowerMotorsCommand(double powerFL,
