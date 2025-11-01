@@ -4,7 +4,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.DriveWithJoysticksCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.DriveWithJoysticksCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;

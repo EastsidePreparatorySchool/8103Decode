@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commandbase.subsystemcommands;
+package org.firstinspires.ftc.teamcode.commandbase.safecommands;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
-import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.TurretSetTargetCommand;
 
 public class AimTurretAtPointCommand extends CommandBase {
     private final PinpointSubsystem odometry;

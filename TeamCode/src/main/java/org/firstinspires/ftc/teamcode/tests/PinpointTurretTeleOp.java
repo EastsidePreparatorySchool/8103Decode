@@ -7,10 +7,10 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.AimTurretAtPointCommand;
-import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.DriveWithJoysticksCommand;
-import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.PinpointInitializePoseCommand;
-import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.TurretStateCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.AimTurretAtPointCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.DriveWithJoysticksCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
+import org.firstinspires.ftc.teamcode.commandbase.basecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
@@ -48,7 +48,7 @@ public class PinpointTurretTeleOp extends CommandOpMode {
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
-        schedule(new PinpointInitializePoseCommand(START_X_IN, START_Y_IN, START_HEADING_DEG));
+        schedule(new PinpointSetPoseCommand(START_X_IN, START_Y_IN, START_HEADING_DEG));
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
     }
 

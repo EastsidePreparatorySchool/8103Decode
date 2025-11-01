@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands;
+package org.firstinspires.ftc.teamcode.commandbase.safecommands;
 
 import com.seattlesolvers.solverslib.command.InstantCommand;
 

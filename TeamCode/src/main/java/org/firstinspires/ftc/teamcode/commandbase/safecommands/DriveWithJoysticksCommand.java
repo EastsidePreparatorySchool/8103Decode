@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.commandbase.subsystemcommands;
+package org.firstinspires.ftc.teamcode.commandbase.safecommands;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 
-import org.firstinspires.ftc.teamcode.commandbase.subsystemcommands.basecommands.MecanumPowerMotorsCommand;
+import org.firstinspires.ftc.teamcode.commandbase.basecommands.MecanumPowerMotorsCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
