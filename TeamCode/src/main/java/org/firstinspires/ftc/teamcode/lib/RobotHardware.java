@@ -104,7 +104,7 @@ public class RobotHardware {
         turret = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "turret"));
         // CCW-positive convention (viewed from above). With an open belt (38->108),
         // FORWARD makes CCW turret rotation yield increasing encoder counts.
-        turret.setDirection(DcMotorSimple.Direction.FORWARD);
+        turret.setDirection(DcMotorSimple.Direction.REVERSE);
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

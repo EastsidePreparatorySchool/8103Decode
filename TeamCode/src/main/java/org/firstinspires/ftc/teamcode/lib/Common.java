@@ -6,7 +6,7 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 @Config
 public class Common {
     // Turret PIDF
-    public static double TURRET_KP = 0.017;
+    public static double TURRET_KP = 0.02;
     public static double TURRET_KI = 0.0;
     public static double TURRET_KD = 0.0004;
     public static double TURRET_KF = 0.0;
@@ -58,7 +58,7 @@ public class Common {
     public static double NOMINAL_BATTERY_VOLTAGE = 12.0;
     public static double BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC = 0.5;
 
-    public static double HOOD_FAR_POS = 0.41;
+    public static double HOOD_FAR_POS = 0.42;
     public static double SHOOTER_FAR_RPM = 5700.0;
 
     public static double DRIVE_DEFAULT_MULT = 0.8;
@@ -67,7 +67,7 @@ public class Common {
     public static double START_X_IN = 0.0;
     public static double START_Y_IN = 0.0;
     public static double START_HEADING_DEG = 0.0;
-    public static double FIELD_TARGET_X_IN = 96.0;
-    public static double FIELD_TARGET_Y_IN = 0.0;
+    public static double FIELD_TARGET_X_IN = 132.0;
+    public static double FIELD_TARGET_Y_IN = -52.0;
     
 }
