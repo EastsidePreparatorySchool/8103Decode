@@ -58,7 +58,7 @@ public class Common {
     public static double NOMINAL_BATTERY_VOLTAGE = 12.0;
     public static double BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC = 0.5;
 
-    public static double HOOD_FAR_POS = 0.42;
+    public static double HOOD_FAR_POS = 0.41;
     public static double SHOOTER_FAR_RPM = 5700.0;
 
     public static double DRIVE_DEFAULT_MULT = 0.8;
@@ -67,7 +67,11 @@ public class Common {
     public static double START_X_IN = 0.0;
     public static double START_Y_IN = 0.0;
     public static double START_HEADING_DEG = 0.0;
-    public static double FIELD_TARGET_X_IN = 132.0;
-    public static double FIELD_TARGET_Y_IN = -52.0;
-    
+    public static double RIGHT_FIELD_TARGET_X_IN = 132.0;
+    public static double RIGHT_FIELD_TARGET_Y_IN = -52.0;
+    public static double LEFT_FIELD_TARGET_X_IN = 132.0;
+    public static double LEFT_FIELD_TARGET_Y_IN = 52.0;
+    // Selected field target used by opmodes; default to RIGHT
+    public static double SELECTED_FIELD_TARGET_X_IN = RIGHT_FIELD_TARGET_X_IN;
+    public static double SELECTED_FIELD_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
 }

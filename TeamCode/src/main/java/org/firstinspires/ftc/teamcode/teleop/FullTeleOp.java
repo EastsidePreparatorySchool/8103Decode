@@ -18,9 +18,9 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPosit
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
+import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 @TeleOp(name = "FullTeleOp", group = "Command")
@@ -59,28 +59,40 @@ public class FullTeleOp extends CommandOpMode {
         robot.initIntake();
         robot.initTransfer();
         robot.initSpindexer();
+        // If we have a saved pose from auto, avoid resetting IMU so heading stays consistent
+        Common.PINPOINT_RESET_IMU_ON_INIT = !PersistentState.hasSavedPose;
         robot.initPinpoint();
 
         driveCommand = new DriveWithGamepadCommand(gamepad1);
-        aimCommand = new AimTurretAtPointCommand(Common.FIELD_TARGET_X_IN, Common.FIELD_TARGET_Y_IN);
+        aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
-        schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
+        if (PersistentState.hasSavedPose) {
+            schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches, PersistentState.savedHeadingDeg));
+        } else {
+            schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
+        }
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
         schedule(new HoodSetPositionCommand(hoodPos));
         schedule(new ShooterSetTargetRPMCommand(0.0));
+        if (PersistentState.hasSavedTurret) {
+            // Nudge initial target to saved turret angle (auto-aim will take over)
+            org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand set =
+                    new org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand(PersistentState.savedTurretDegrees);
+            schedule(set);
+        }
     }
 
     @Override
     public void initialize_loop() {
         robot.periodic();
         // Keep aim target synced with dashboard constants during init
-        aimCommand.setTargetPoint(Common.FIELD_TARGET_X_IN, Common.FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
-        multiTelemetry.addData("aim target x (in)", Common.FIELD_TARGET_X_IN);
-        multiTelemetry.addData("aim target y (in)", Common.FIELD_TARGET_Y_IN);
+        multiTelemetry.addData("aim target x (in)", Common.SELECTED_FIELD_TARGET_X_IN);
+        multiTelemetry.addData("aim target y (in)", Common.SELECTED_FIELD_TARGET_Y_IN);
         multiTelemetry.update();
     }
 
@@ -90,7 +102,7 @@ public class FullTeleOp extends CommandOpMode {
         scheduler.run();
 
         // Keep aim target and offset updated each loop
-        aimCommand.setTargetPoint(Common.FIELD_TARGET_X_IN, Common.FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
         // Right stick button: toggle shooter target RPM between 0 and FAR
         boolean rsb = gamepad1.right_stick_button;
