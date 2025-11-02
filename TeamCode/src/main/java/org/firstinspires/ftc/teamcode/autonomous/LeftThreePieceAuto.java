@@ -14,15 +14,4 @@ public class LeftThreePieceAuto extends ThreePieceAuto {
         Common.SELECTED_FIELD_TARGET_Y_IN = Common.LEFT_FIELD_TARGET_Y_IN;
         super.initialize();
     }
-
-    @Override
-    public SequentialCommandGroup postShootingMovement() {
-        // Strafe right for 2s at 0.2 power, stop, then wait 1s
-        return new SequentialCommandGroup(
-                new MecanumPowerMotorsCommand(0.35, -0.35, -0.35, 0.35),
-                new WaitCommand(1500),
-                new MecanumPowerMotorsCommand(0.0, 0.0, 0.0, 0.0),
-                new WaitCommand(1000)
-        );
-    }
 }

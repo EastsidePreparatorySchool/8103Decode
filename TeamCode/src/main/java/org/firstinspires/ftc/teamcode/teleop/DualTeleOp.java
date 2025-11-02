@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TransferAndShootCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
@@ -42,9 +43,10 @@ public class DualTeleOp extends CommandOpMode {
     private double turretAngleOffsetDeg = 0.0;
 
     // Edge detection (gamepad2)
-    private boolean prevA, prevB, prevX, prevBack, prevStart;
+    private boolean prevA, prevBack, prevStart;
     // Gamepad1 A edge for intake toggle
     private boolean prevA1;
+    private boolean prevY1;
     private boolean prevRB, prevDpadUp, prevDpadDown, prevDpadLeft, prevDpadRight;
     private boolean prevStart1;
     private boolean prevLB2;
@@ -130,10 +132,14 @@ public class DualTeleOp extends CommandOpMode {
         }
         prevA1 = a1;
 
-        // Gamepad2 A/X/B: select slot 1/2/3 and move to intake if empty, else outtake
-        handleSlotButton(gamepad2.a, 0);
-        handleSlotButton(gamepad2.x, 1);
-        handleSlotButton(gamepad2.b, 2);
+        // Gamepad1 Y: cycle through intake positions 1 -> 2 -> 3 -> 1 ...
+        boolean y1 = gamepad1.y;
+        if (y1 && !prevY1) {
+            int currIdx = intakeIndexFromState(robot.spindexerSubsystem.state);
+            int nextIdx = (currIdx == -1) ? 0 : (currIdx + 1) % 3;
+            schedule(new SpindexerSetPositionCommand(intakeStateForSlot(nextIdx)));
+        }
+        prevY1 = y1;
 
         // Gamepad2 start: mark current intaking slot as full
         boolean start = gamepad2.start;
@@ -146,39 +152,12 @@ public class DualTeleOp extends CommandOpMode {
         }
         prevStart = start;
 
-        // Gamepad2 left bumper: transfer and shoot only if at OUTTAKE
+        // Gamepad2 left bumper: triple shot sequence (outtake slots 1,2,3)
         boolean lb2 = gamepad2.left_bumper;
         if (lb2 && !prevLB2) {
-            SpindexerSubsystem.SpindexerState s2 = robot.spindexerSubsystem.state;
-            if (s2 == SpindexerSubsystem.SpindexerState.OUTTAKE_ONE ||
-                s2 == SpindexerSubsystem.SpindexerState.OUTTAKE_TWO ||
-                s2 == SpindexerSubsystem.SpindexerState.OUTTAKE_THREE) {
-                schedule(new TransferAndShootCommand(() -> {
-                    int idx = outtakeIndexFromState(s2);
-                    if (idx != -1) {
-                        slotFull[idx] = false;
-                    }
-                }));
-            }
+            schedule(new TripleShotCommand(idx -> slotFull[idx] = false));
         }
         prevLB2 = lb2;
-
-        // Gamepad1 start: transfer and shoot only if spindexer is at an OUTTAKE slot
-        boolean start1 = gamepad1.start;
-        if (start1 && !prevStart1) {
-            SpindexerSubsystem.SpindexerState s = robot.spindexerSubsystem.state;
-            if (s == SpindexerSubsystem.SpindexerState.OUTTAKE_ONE ||
-                s == SpindexerSubsystem.SpindexerState.OUTTAKE_TWO ||
-                s == SpindexerSubsystem.SpindexerState.OUTTAKE_THREE) {
-                schedule(new TransferAndShootCommand(() -> {
-                    int idx = outtakeIndexFromState(s);
-                    if (idx != -1) {
-                        slotFull[idx] = false;
-                    }
-                }));
-            }
-        }
-        prevStart1 = start1;
 
         // Gamepad2 Dpad up/down: adjust hood position by +/-0.01
         boolean dUp = gamepad2.dpad_up;
@@ -219,30 +198,7 @@ public class DualTeleOp extends CommandOpMode {
         multiTelemetry.update();
     }
 
-    private void handleSlotButton(boolean pressed, int slotIdx) {
-        switch (slotIdx) {
-            case 0:
-                if (pressed && !prevA) onSlotPressed(slotIdx);
-                prevA = pressed;
-                break;
-            case 1:
-                if (pressed && !prevX) onSlotPressed(slotIdx);
-                prevX = pressed;
-                break;
-            case 2:
-                if (pressed && !prevB) onSlotPressed(slotIdx);
-                prevB = pressed;
-                break;
-        }
-    }
-
-    private void onSlotPressed(int slotIdx) {
-        boolean isFull = slotFull[slotIdx];
-        SpindexerSubsystem.SpindexerState targetState = isFull
-                ? outtakeStateForSlot(slotIdx)
-                : intakeStateForSlot(slotIdx);
-        schedule(new SpindexerSetPositionCommand(targetState));
-    }
+    // Slot button handlers removed; A cycles intake positions
 
     private static SpindexerSubsystem.SpindexerState intakeStateForSlot(int slotIdx) {
         switch (slotIdx) {
