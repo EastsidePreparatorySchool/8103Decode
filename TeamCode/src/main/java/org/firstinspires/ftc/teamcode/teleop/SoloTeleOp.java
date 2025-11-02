@@ -23,9 +23,9 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-@TeleOp(name = "FullTeleOp", group = "Command")
+@TeleOp(name = "SoloTeleOp", group = "Command")
 @Config
-public class FullTeleOp extends CommandOpMode {
+public class SoloTeleOp extends CommandOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     private CommandScheduler scheduler;
     private MultipleTelemetry multiTelemetry;
@@ -181,6 +181,9 @@ public class FullTeleOp extends CommandOpMode {
         prevDpadRight = dRight;
 
         // Telemetry summary
+        multiTelemetry.addData("pose x (in)", robot.pinpointSubsystem.getXInches());
+        multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
+        multiTelemetry.addData("heading (deg)", robot.pinpointSubsystem.getHeadingDegrees());
         multiTelemetry.addData("shooter rpm target", robot.shooterSubsystem.targetRpm);
         multiTelemetry.addData("hood pos", hoodPos);
         multiTelemetry.addData("turret offset (deg)", turretAngleOffsetDeg);

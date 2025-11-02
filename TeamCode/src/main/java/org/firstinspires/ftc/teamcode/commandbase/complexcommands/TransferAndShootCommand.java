@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.TransferSetPositi
 import org.firstinspires.ftc.teamcode.commandbase.unsafebasecommands.TransferStateCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 
 /**
@@ -23,7 +24,18 @@ public class TransferAndShootCommand extends SequentialCommandGroup {
     public TransferAndShootCommand(TransferSubsystem transferSubsystem,
                                    ShooterSubsystem shooterSubsystem,
                                    ShotCallback callback) {
-        addRequirements(transferSubsystem, shooterSubsystem);
+        addRequirements(transferSubsystem, shooterSubsystem, RobotHardware.getInstance().spindexerSubsystem);
+
+        // Block entire sequence if spindexer is in any intake state
+        SpindexerSubsystem spindexer = RobotHardware.getInstance().spindexerSubsystem;
+        if (spindexer != null) {
+            SpindexerSubsystem.SpindexerState s = spindexer.state;
+            if (s == SpindexerSubsystem.SpindexerState.INTAKE_ONE ||
+                s == SpindexerSubsystem.SpindexerState.INTAKE_TWO ||
+                s == SpindexerSubsystem.SpindexerState.INTAKE_THREE) {
+                return; // no-op; do not execute or call callback
+            }
+        }
 
         boolean shooterRunningAtStart = shooterSubsystem.targetRpm > 0.0;
 

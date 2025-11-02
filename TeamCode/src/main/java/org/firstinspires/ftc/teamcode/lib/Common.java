@@ -27,8 +27,8 @@ public class Common {
     public static double PINPOINT_X_OFFSET_MM = 184.15;
     // Robot 17" long (center to back edge = 8.5"). Y pod is 1.25" in from back => -7.25" => -184.15 mm
     public static double PINPOINT_Y_OFFSET_MM = -184.15;
-    public static GoBildaPinpointDriver.EncoderDirection PINPOINT_X_DIRECTION = GoBildaPinpointDriver.EncoderDirection.REVERSED;
-    public static GoBildaPinpointDriver.EncoderDirection PINPOINT_Y_DIRECTION = GoBildaPinpointDriver.EncoderDirection.REVERSED     ;
+    public static GoBildaPinpointDriver.EncoderDirection PINPOINT_X_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+    public static GoBildaPinpointDriver.EncoderDirection PINPOINT_Y_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     public static GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_POD_TYPE = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
     public static boolean PINPOINT_RESET_IMU_ON_INIT = true;
     // Spindexer targets defined as servo positions [0..1]

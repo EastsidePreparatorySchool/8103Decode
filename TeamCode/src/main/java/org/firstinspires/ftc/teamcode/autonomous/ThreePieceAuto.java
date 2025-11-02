@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TransferAndShootCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterSetTargetRPMCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
@@ -49,7 +50,12 @@ public class ThreePieceAuto extends CommandOpMode {
 
         aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
-
+        schedule(
+            new SequentialCommandGroup(
+                // Set start pose
+                new WaitCommand(500),
+                new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG)
+            ));
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
 
         // Build the 3-shot sequence
