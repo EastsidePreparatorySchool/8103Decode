@@ -6,9 +6,9 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 @Config
 public class Common {
     // Turret PIDF
-    public static double TURRET_KP = 0.035;
+    public static double TURRET_KP = 0.017;
     public static double TURRET_KI = 0.0;
-    public static double TURRET_KD = 0.002;
+    public static double TURRET_KD = 0.0004;
     public static double TURRET_KF = 0.0;
     // Turret geometry
     public static double TURRET_FULL_ROTATION_DEGREES = 360.0;
@@ -30,12 +30,12 @@ public class Common {
     public static GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_POD_TYPE = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
     public static boolean PINPOINT_RESET_IMU_ON_INIT = true;
     // Spindexer targets defined as servo positions [0..1]
-    public static double SPINDEXER_INTAKE_ONE = 0.0;
-    public static double SPINDEXER_INTAKE_TWO = 0.35;
-    public static double SPINDEXER_INTAKE_THREE = 0.73;
-    public static double SPINDEXER_OUTTAKE_ONE = 0.55;
-    public static double SPINDEXER_OUTTAKE_TWO = 0.9;
-    public static double SPINDEXER_OUTTAKE_THREE = 0.16;
+    public static double SPINDEXER_INTAKE_ONE = 0.16;
+    public static double SPINDEXER_INTAKE_TWO = 0.53;
+    public static double SPINDEXER_INTAKE_THREE = 0.90;
+    public static double SPINDEXER_OUTTAKE_ONE = 0.71;
+    public static double SPINDEXER_OUTTAKE_TWO = 0.0;
+    public static double SPINDEXER_OUTTAKE_THREE = 0.34;
     // Transfer / shooter
     public static double TRANSFER_DOWN = 0.5;
     public static double TRANSFER_UP = 0.27;
@@ -46,8 +46,8 @@ public class Common {
     public static double SHOOTER_GEAR_RATIO = 1.0;            // Motor:flywheel
     public static double SHOOTER_MAX_RPM = 6000.0;            // Bare motor free speed
     // Feedforward + feedback coefficients (power units)
-    public static double SHOOTER_KS = 0.13; // static friction offset (power)
-    public static double SHOOTER_KV = 0.00018; // power per RPM
+    public static double SHOOTER_KS = 0.09; // static friction offset (power)
+    public static double SHOOTER_KV = 0.00017; // power per RPM
     public static double SHOOTER_KA = 0.0; // power per (RPM/s)
     public static double SHOOTER_KP = 0.00015; // P on velocity error (RPM)
     // Hood initial position
@@ -55,4 +55,11 @@ public class Common {
     // Voltage normalization
     public static double NOMINAL_BATTERY_VOLTAGE = 12.0;
     public static double BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC = 0.5;
+
+    public static double HOOD_FAR_POS = 0.41;
+    public static double SHOOTER_FAR_RPM = 5700.0;
+
+    public static double DRIVE_DEFAULT_MULT = 0.8;
+    public static double DRIVE_SLOW_MULT = 0.5;
+    
 }

@@ -116,7 +116,7 @@ public class RobotHardware {
         flywheel = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "flywheel"));
 
         // Shooter must run forward
-        flywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
         // Use manual control; we compute velocity ourselves
         flywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

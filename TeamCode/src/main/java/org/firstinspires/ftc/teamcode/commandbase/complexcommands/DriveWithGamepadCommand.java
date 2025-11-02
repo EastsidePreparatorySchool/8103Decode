@@ -9,17 +9,17 @@ import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 
-public class DriveWithJoysticksCommand extends CommandBase {
+public class DriveWithGamepadCommand extends CommandBase {
     private final MecanumSubsystem mecanumSubsystem;
     private final Gamepad gamepad;
 
-    public DriveWithJoysticksCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad) {
+    public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad) {
         this.mecanumSubsystem = mecanumSubsystem;
         this.gamepad = gamepad;
         addRequirements(mecanumSubsystem);
     }
 
-    public DriveWithJoysticksCommand(Gamepad gamepad) {
+    public DriveWithGamepadCommand(Gamepad gamepad) {
         this(
                 RobotHardware.getInstance().mecanumSubsystem,
                 gamepad
@@ -30,10 +30,14 @@ public class DriveWithJoysticksCommand extends CommandBase {
     public void execute() {
         double forward = -gamepad.left_stick_y;
         double strafe = gamepad.left_stick_x;
-        double turn = gamepad.right_stick_x;
-        boolean slow = gamepad.left_trigger > 0.2;
-        double multiplier = slow ? Common.SLOWMODE_MULTIPLIER : 1.0;
-        double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1.0);
+        double turn = gamepad.right_trigger - gamepad.left_trigger; // trigger turning: right is +, left is -
+
+        // Cubed control for finer low-end response
+        forward = Math.pow(forward, 3);
+        strafe = Math.pow(strafe, 3);
+        turn = Math.pow(turn, 3) / 1.5; // reduce turning sensitivity a bit
+        double multiplier = Common.DRIVE_DEFAULT_MULT;
+        double denominator = Math.max(multiplier * (Math.abs(forward) + Math.abs(strafe) + Math.abs(turn)), 1.0);
         double powerFL = multiplier * (forward + strafe + turn) / denominator;
         double powerFR = multiplier * (forward - strafe - turn) / denominator;
         double powerBL = multiplier * (forward - strafe + turn) / denominator;

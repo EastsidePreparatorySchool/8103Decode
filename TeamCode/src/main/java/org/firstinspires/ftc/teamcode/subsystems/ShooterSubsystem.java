@@ -75,12 +75,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void updateHardware() {
-        // If off, ensure motor is stopped and keep telemetry
-        if (state == ShooterState.OFF) {
-            robot.flywheel.setPower(0.0);
-            return;
-        }
-
         // Measure dt and velocity from position deltas for robust measurement
         double now = timer.seconds();
         double dt = now - lastTime;
@@ -119,6 +113,10 @@ public class ShooterSubsystem extends SubsystemBase {
         // Clamp to [0, 1] forward-only
         if (power < 0.0) power = 0.0;
         if (power > 1.0) power = 1.0;
+
+        if (state == ShooterState.OFF) {
+            robot.flywheel.setPower(0.0);
+        }
 
         robot.flywheel.setPower(power);
 

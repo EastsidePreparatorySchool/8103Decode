@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterSetTargetRPMCommand;
 
 @Config
 @TeleOp(name = "ShooterTuning", group = "Tuning")
@@ -32,6 +34,10 @@ public class ShooterTuning extends CommandOpMode {
     private ShooterSubsystem shooterSubsystem;
     private HoodSubsystem hoodSubsystem;
     private final LoopRateAverager loopRate = new LoopRateAverager(50);
+
+    // Track previous dashboard values to avoid rescheduling every loop
+    private double prevShooterTargetRpm = Double.NaN;
+    private double prevHoodPos = Double.NaN;
 
     @Override
     public void initialize() {
@@ -59,8 +65,7 @@ public class ShooterTuning extends CommandOpMode {
     public void initialize_loop() {
         robot.periodic();
         scheduler.run();
-        applyTargets();
-        updateMechanism();
+        handleDashboardChanges();
         publishTelemetry();
     }
 
@@ -69,11 +74,10 @@ public class ShooterTuning extends CommandOpMode {
         robot.periodic();
         scheduler.run();
 
-        // Live update of tuning values
+        // Live update of tuning values (does not touch hardware state)
         updateShooterCoefficients();
 
-        applyTargets();
-        updateMechanism();
+        handleDashboardChanges();
         publishTelemetry();
     }
 
@@ -82,13 +86,19 @@ public class ShooterTuning extends CommandOpMode {
         shooterSubsystem.setShooterState(ShooterSubsystem.ShooterState.OFF);
     }
 
-    private void applyTargets() {
-        shooterSubsystem.setTargetRpm(shooterTargetRpm);
-        hoodSubsystem.setHoodPosition(hoodPosition);
-    }
+    private void handleDashboardChanges() {
+        // Clamp and schedule only on change
+        double clampedHood = Math.max(0.0, Math.min(1.0, hoodPosition));
+        if (clampedHood != prevHoodPos) {
+            prevHoodPos = clampedHood;
+            schedule(new HoodSetPositionCommand(clampedHood));
+        }
 
-    private void updateMechanism() {
-        shooterSubsystem.updateHardware();
+        double clampedRpm = Math.max(0.0, Math.min(Common.SHOOTER_MAX_RPM, shooterTargetRpm));
+        if (clampedRpm != prevShooterTargetRpm) {
+            prevShooterTargetRpm = clampedRpm;
+            schedule(new ShooterSetTargetRPMCommand(clampedRpm));
+        }
     }
 
     private void publishTelemetry() {

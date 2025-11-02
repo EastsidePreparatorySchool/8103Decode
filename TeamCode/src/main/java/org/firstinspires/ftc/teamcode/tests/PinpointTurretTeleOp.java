@@ -8,7 +8,7 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
-import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithJoysticksCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
@@ -29,7 +29,7 @@ public class PinpointTurretTeleOp extends CommandOpMode {
     private CommandScheduler scheduler;
 
     private AimTurretAtPointCommand aimCommand;
-    private DriveWithJoysticksCommand driveCommand;
+    private DriveWithGamepadCommand driveCommand;
     private final LoopRateAverager loopRate = new LoopRateAverager(50);
 
     @Override
@@ -42,7 +42,7 @@ public class PinpointTurretTeleOp extends CommandOpMode {
         robot.initTurret();
         robot.initPinpoint();
 
-        driveCommand = new DriveWithJoysticksCommand(gamepad1);
+        driveCommand = new DriveWithGamepadCommand(gamepad1);
         aimCommand = new AimTurretAtPointCommand(TARGET_X_IN, TARGET_Y_IN);
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
