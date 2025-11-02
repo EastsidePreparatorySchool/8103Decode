@@ -9,13 +9,14 @@ import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 
+import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 
 @Config
 @TeleOp(name = "TransferSpindexerServoTuning", group = "Tuning")
 public class TransferSpindexerServoTuning extends CommandOpMode {
-    public static double transferPos = 0.0; // default transfer position should be 0
+    public static double transferPos = Common.TRANSFER_DOWN; // default transfer position should be 0
     public static double spindexerPos = 0.0;
 
     private final RobotHardware robot = RobotHardware.getInstance();
