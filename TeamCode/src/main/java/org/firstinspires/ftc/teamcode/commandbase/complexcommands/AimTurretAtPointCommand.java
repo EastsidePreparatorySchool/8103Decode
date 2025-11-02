@@ -15,6 +15,7 @@ public class AimTurretAtPointCommand extends CommandBase {
     private final TurretSubsystem turret;
     private volatile double targetX;
     private volatile double targetY;
+    private volatile double angleOffsetDeg = 0.0;
 
     public AimTurretAtPointCommand(PinpointSubsystem odometry,
                                    TurretSubsystem turret,
@@ -41,6 +42,10 @@ public class AimTurretAtPointCommand extends CommandBase {
         this.targetY = targetY;
     }
 
+    public void setAngleOffsetDegrees(double angleOffsetDeg) {
+        this.angleOffsetDeg = angleOffsetDeg;
+    }
+
     @Override
     public void execute() {
         double robotX = odometry.getPose().getX(DistanceUnit.INCH);
@@ -57,7 +62,7 @@ public class AimTurretAtPointCommand extends CommandBase {
         }
 
         double fieldAngleDeg = Math.toDegrees(Math.atan2(deltaY, deltaX));
-        double turretTargetDeg = fieldAngleDeg - robotHeadingDeg;
+        double turretTargetDeg = fieldAngleDeg - robotHeadingDeg + angleOffsetDeg;
         CommandScheduler.getInstance().schedule(new TurretSetTargetCommand(turret, turretTargetDeg));
     }
 
