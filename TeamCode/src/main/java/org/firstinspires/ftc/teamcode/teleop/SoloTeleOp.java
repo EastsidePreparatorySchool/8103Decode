@@ -60,7 +60,7 @@ public class SoloTeleOp extends CommandOpMode {
         robot.initTransfer();
         robot.initSpindexer();
         // If we have a saved pose from auto, avoid resetting IMU so heading stays consistent
-        Common.PINPOINT_RESET_IMU_ON_INIT = !PersistentState.hasSavedPose;
+        Common.PINPOINT_RESET_IMU_ON_INIT = false;
         robot.initPinpoint();
 
         driveCommand = new DriveWithGamepadCommand(gamepad1);
@@ -142,15 +142,20 @@ public class SoloTeleOp extends CommandOpMode {
         }
         prevY = y;
 
-        // Start: Transfer and optionally mark current outtake slot empty if shooter running
+        // Start: Transfer and shoot only if spindexer is at an OUTTAKE slot
         boolean start = gamepad1.start;
         if (start && !prevStart) {
-            schedule(new TransferAndShootCommand(() -> {
-                int idx = outtakeIndexFromState(robot.spindexerSubsystem.state);
-                if (idx != -1) {
-                    slotFull[idx] = false;
-                }
-            }));
+            SpindexerSubsystem.SpindexerState s = robot.spindexerSubsystem.state;
+            if (s == SpindexerSubsystem.SpindexerState.OUTTAKE_ONE ||
+                s == SpindexerSubsystem.SpindexerState.OUTTAKE_TWO ||
+                s == SpindexerSubsystem.SpindexerState.OUTTAKE_THREE) {
+                schedule(new TransferAndShootCommand(() -> {
+                    int idx = outtakeIndexFromState(s);
+                    if (idx != -1) {
+                        slotFull[idx] = false;
+                    }
+                }));
+            }
         }
         prevStart = start;
 

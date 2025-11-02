@@ -26,17 +26,6 @@ public class TransferAndShootCommand extends SequentialCommandGroup {
                                    ShotCallback callback) {
         addRequirements(transferSubsystem, shooterSubsystem, RobotHardware.getInstance().spindexerSubsystem);
 
-        // Block entire sequence if spindexer is in any intake state
-        SpindexerSubsystem spindexer = RobotHardware.getInstance().spindexerSubsystem;
-        if (spindexer != null) {
-            SpindexerSubsystem.SpindexerState s = spindexer.state;
-            if (s == SpindexerSubsystem.SpindexerState.INTAKE_ONE ||
-                s == SpindexerSubsystem.SpindexerState.INTAKE_TWO ||
-                s == SpindexerSubsystem.SpindexerState.INTAKE_THREE) {
-                return; // no-op; do not execute or call callback
-            }
-        }
-
         boolean shooterRunningAtStart = shooterSubsystem.targetRpm > 0.0;
 
         addCommands(

@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TransferAndShootCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
@@ -21,7 +23,6 @@ import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
-
 @TeleOp(name = "DualTeleOp", group = "Command")
 @Config
 public class DualTeleOp extends CommandOpMode {
@@ -45,6 +46,8 @@ public class DualTeleOp extends CommandOpMode {
     // Gamepad1 A edge for intake toggle
     private boolean prevA1;
     private boolean prevRB, prevDpadUp, prevDpadDown, prevDpadLeft, prevDpadRight;
+    private boolean prevStart1;
+    private boolean prevLB2;
 
     @Override
     public void initialize() {
@@ -61,7 +64,7 @@ public class DualTeleOp extends CommandOpMode {
         robot.initTransfer();
         robot.initSpindexer();
         // Maintain IMU heading if we have a saved pose
-        Common.PINPOINT_RESET_IMU_ON_INIT = !PersistentState.hasSavedPose;
+        Common.PINPOINT_RESET_IMU_ON_INIT = false;
         robot.initPinpoint();
 
         driveCommand = new DriveWithGamepadCommand(gamepad1);
@@ -142,6 +145,40 @@ public class DualTeleOp extends CommandOpMode {
             }
         }
         prevStart = start;
+
+        // Gamepad2 left bumper: transfer and shoot only if at OUTTAKE
+        boolean lb2 = gamepad2.left_bumper;
+        if (lb2 && !prevLB2) {
+            SpindexerSubsystem.SpindexerState s2 = robot.spindexerSubsystem.state;
+            if (s2 == SpindexerSubsystem.SpindexerState.OUTTAKE_ONE ||
+                s2 == SpindexerSubsystem.SpindexerState.OUTTAKE_TWO ||
+                s2 == SpindexerSubsystem.SpindexerState.OUTTAKE_THREE) {
+                schedule(new TransferAndShootCommand(() -> {
+                    int idx = outtakeIndexFromState(s2);
+                    if (idx != -1) {
+                        slotFull[idx] = false;
+                    }
+                }));
+            }
+        }
+        prevLB2 = lb2;
+
+        // Gamepad1 start: transfer and shoot only if spindexer is at an OUTTAKE slot
+        boolean start1 = gamepad1.start;
+        if (start1 && !prevStart1) {
+            SpindexerSubsystem.SpindexerState s = robot.spindexerSubsystem.state;
+            if (s == SpindexerSubsystem.SpindexerState.OUTTAKE_ONE ||
+                s == SpindexerSubsystem.SpindexerState.OUTTAKE_TWO ||
+                s == SpindexerSubsystem.SpindexerState.OUTTAKE_THREE) {
+                schedule(new TransferAndShootCommand(() -> {
+                    int idx = outtakeIndexFromState(s);
+                    if (idx != -1) {
+                        slotFull[idx] = false;
+                    }
+                }));
+            }
+        }
+        prevStart1 = start1;
 
         // Gamepad2 Dpad up/down: adjust hood position by +/-0.01
         boolean dUp = gamepad2.dpad_up;
@@ -230,6 +267,15 @@ public class DualTeleOp extends CommandOpMode {
             case INTAKE_ONE: return 0;
             case INTAKE_TWO: return 1;
             case INTAKE_THREE: return 2;
+            default: return -1;
+        }
+    }
+
+    private static int outtakeIndexFromState(SpindexerSubsystem.SpindexerState state) {
+        switch (state) {
+            case OUTTAKE_ONE: return 0;
+            case OUTTAKE_TWO: return 1;
+            case OUTTAKE_THREE: return 2;
             default: return -1;
         }
     }

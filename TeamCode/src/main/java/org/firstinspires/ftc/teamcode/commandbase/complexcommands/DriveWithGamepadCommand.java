@@ -33,8 +33,8 @@ public class DriveWithGamepadCommand extends CommandBase {
         double turn = gamepad.right_trigger - gamepad.left_trigger; // trigger turning: right is +, left is -
 
         // Cubed control for finer low-end response
-        forward = Math.pow(forward, 3);
-        strafe = Math.pow(strafe, 3);
+        forward = -Math.pow(forward, 3);
+        strafe = -Math.pow(strafe, 3);
         turn = Math.pow(turn, 3) / 1.5; // reduce turning sensitivity a bit
         double multiplier = Common.DRIVE_DEFAULT_MULT;
         double denominator = Math.max(multiplier * (Math.abs(forward) + Math.abs(strafe) + Math.abs(turn)), 1.0);

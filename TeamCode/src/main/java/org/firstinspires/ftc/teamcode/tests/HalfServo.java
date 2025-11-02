@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
-
+@Disabled
 @Autonomous(name="half servo")
 public class HalfServo extends OpMode {
     Servo s;

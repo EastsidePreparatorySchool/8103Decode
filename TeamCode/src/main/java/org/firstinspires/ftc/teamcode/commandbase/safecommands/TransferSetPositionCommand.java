@@ -11,13 +11,6 @@ import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 public class TransferSetPositionCommand extends SequentialCommandGroup {
     public TransferSetPositionCommand(SpindexerSubsystem spindexerSubsystem, TransferSubsystem transferSubsystem, TransferSubsystem.TransferState state) {
         addRequirements(spindexerSubsystem, transferSubsystem);
-        // If the spindexer is in any intake state, do not allow transfer commands to run
-        SpindexerSubsystem.SpindexerState s = spindexerSubsystem.state;
-        if (s == SpindexerSubsystem.SpindexerState.INTAKE_ONE ||
-            s == SpindexerSubsystem.SpindexerState.INTAKE_TWO ||
-            s == SpindexerSubsystem.SpindexerState.INTAKE_THREE) {
-            return; // no-op
-        }
         addCommands(
                 new TransferStateCommand(transferSubsystem, state),
                 new WaitCommand(300)

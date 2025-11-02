@@ -69,8 +69,12 @@ public class Common {
     public static double START_HEADING_DEG = 0.0;
     public static double RIGHT_FIELD_TARGET_X_IN = 132.0;
     public static double RIGHT_FIELD_TARGET_Y_IN = -52.0;
+    public static double ALT_RIGHT_FIELD_TARGET_X_IN = 8;
+    public static double ALT_RIGHT_FIELD_TARGET_Y_IN = -52.0;
     public static double LEFT_FIELD_TARGET_X_IN = 132.0;
     public static double LEFT_FIELD_TARGET_Y_IN = 52.0;
+    public static double ALT_LEFT_FIELD_TARGET_X_IN = 8;
+    public static double ALT_LEFT_FIELD_TARGET_Y_IN = 52.0;
     // Selected field target used by opmodes; default to RIGHT
     public static double SELECTED_FIELD_TARGET_X_IN = RIGHT_FIELD_TARGET_X_IN;
     public static double SELECTED_FIELD_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
