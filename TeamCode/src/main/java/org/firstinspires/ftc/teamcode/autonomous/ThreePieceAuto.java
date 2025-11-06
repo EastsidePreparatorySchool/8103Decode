@@ -119,6 +119,11 @@ public class ThreePieceAuto extends CommandOpMode {
         multiTelemetry.addData("shooter target rpm", robot.shooterSubsystem.targetRpm);
         multiTelemetry.update();
     }
+
+    @Override
+    public void end() {
+        PersistentState.saveFromRobot();
+    }
 }
 
 

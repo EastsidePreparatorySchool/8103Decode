@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.MecanumPowerMotor
 import org.firstinspires.ftc.teamcode.lib.Common;
 
 @Autonomous(name = "RightThreePieceAuto", group = "Command")
-public class    RightThreePieceAuto extends ThreePieceAuto {
+public class RightThreePieceAuto extends ThreePieceAuto {
     @Override
     public void initialize() {
         Common.SELECTED_FIELD_TARGET_X_IN = Common.RIGHT_FIELD_TARGET_X_IN;

@@ -8,6 +8,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TransferAndShootCommand;
@@ -84,9 +85,7 @@ public class DualTeleOp extends CommandOpMode {
         schedule(new HoodSetPositionCommand(hoodPos));
         schedule(new ShooterSetTargetRPMCommand(0.0));
         if (PersistentState.hasSavedTurret) {
-            org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand set =
-                    new org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand(PersistentState.savedTurretDegrees);
-            schedule(set);
+            schedule(new TurretSetTargetCommand(PersistentState.savedTurretDegrees));
         }
     }
 
@@ -140,17 +139,6 @@ public class DualTeleOp extends CommandOpMode {
             schedule(new SpindexerSetPositionCommand(intakeStateForSlot(nextIdx)));
         }
         prevY1 = y1;
-
-        // Gamepad2 start: mark current intaking slot as full
-        boolean start = gamepad2.start;
-        if (start && !prevStart) {
-            SpindexerSubsystem.SpindexerState s = robot.spindexerSubsystem.state;
-            int idx = intakeIndexFromState(s);
-            if (idx != -1) {
-                slotFull[idx] = true;
-            }
-        }
-        prevStart = start;
 
         // Gamepad2 left bumper: triple shot sequence (outtake slots 1,2,3)
         boolean lb2 = gamepad2.left_bumper;
