@@ -65,15 +65,15 @@ public class ThreePieceAuto extends CommandOpMode {
 
                 new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.OUTTAKE_ONE),
                 new WaitCommand(5000),
-                new TransferAndShootCommand(() -> {}),
+                new TransferAndShootCommand(),
                 new WaitCommand(5000),
 
                 new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.OUTTAKE_TWO),
-                new TransferAndShootCommand(() -> {}),
+                new TransferAndShootCommand(),
                 new WaitCommand(5000),
 
                 new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.OUTTAKE_THREE),
-                new TransferAndShootCommand(() -> {}),
+                new TransferAndShootCommand(),
                 new WaitCommand(2000),
 
                 // Optional subclass-specific movement (e.g., strafe right/left)

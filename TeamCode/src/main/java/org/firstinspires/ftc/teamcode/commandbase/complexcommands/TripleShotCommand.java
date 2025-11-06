@@ -11,11 +11,9 @@ import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 
 /**
  * Switches spindexer to OUTTAKE slots 1, 2, 3 and performs a transfer+shoot for each.
+ * Any bookkeeping (e.g., marking slots empty) should be handled in the calling OpMode.
  */
 public class TripleShotCommand extends SequentialCommandGroup {
-    public interface SlotEmptiedListener {
-        void onSlotEmptied(int slotIdx); // 0,1,2
-    }
 
     private static SpindexerSubsystem.SpindexerState outtakeStateForSlot(int slotIdx) {
         switch (slotIdx) {
@@ -28,17 +26,14 @@ public class TripleShotCommand extends SequentialCommandGroup {
 
     public TripleShotCommand(SpindexerSubsystem spindexer,
                              TransferSubsystem transfer,
-                             ShooterSubsystem shooter,
-                             SlotEmptiedListener listener) {
+                             ShooterSubsystem shooter) {
         addRequirements(spindexer, transfer, shooter);
 
         for (int i = 0; i < 3; i++) {
             final int slotIdx = i;
             addCommands(
                     new SpindexerSetPositionCommand(outtakeStateForSlot(slotIdx)),
-                    new TransferAndShootCommand(() -> {
-                        if (listener != null) listener.onSlotEmptied(slotIdx);
-                    }),
+                    new TransferAndShootCommand(),
                     new WaitCommand(2000)
             );
         }
@@ -47,10 +42,9 @@ public class TripleShotCommand extends SequentialCommandGroup {
         addCommands(new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_ONE));
     }
 
-    public TripleShotCommand(SlotEmptiedListener listener) {
+    public TripleShotCommand() {
         this(RobotHardware.getInstance().spindexerSubsystem,
              RobotHardware.getInstance().transferSubsystem,
-             RobotHardware.getInstance().shooterSubsystem,
-             listener);
+             RobotHardware.getInstance().shooterSubsystem);
     }
 }

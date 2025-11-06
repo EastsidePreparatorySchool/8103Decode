@@ -143,7 +143,12 @@ public class DualTeleOp extends CommandOpMode {
         // Gamepad2 left bumper: triple shot sequence (outtake slots 1,2,3)
         boolean lb2 = gamepad2.left_bumper;
         if (lb2 && !prevLB2) {
-            schedule(new TripleShotCommand(idx -> slotFull[idx] = false));
+            if (robot.shooterSubsystem.targetRpm > 0.0) {
+                slotFull[0] = false;
+                slotFull[1] = false;
+                slotFull[2] = false;
+            }
+            schedule(new TripleShotCommand());
         }
         prevLB2 = lb2;
 

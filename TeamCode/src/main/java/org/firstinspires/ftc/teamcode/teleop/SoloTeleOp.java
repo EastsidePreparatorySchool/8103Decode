@@ -149,12 +149,13 @@ public class SoloTeleOp extends CommandOpMode {
             if (s == SpindexerSubsystem.SpindexerState.OUTTAKE_ONE ||
                 s == SpindexerSubsystem.SpindexerState.OUTTAKE_TWO ||
                 s == SpindexerSubsystem.SpindexerState.OUTTAKE_THREE) {
-                schedule(new TransferAndShootCommand(() -> {
+                if (robot.shooterSubsystem.targetRpm > 0.0) {
                     int idx = outtakeIndexFromState(s);
                     if (idx != -1) {
                         slotFull[idx] = false;
                     }
-                }));
+                }
+                schedule(new TransferAndShootCommand());
             }
         }
         prevStart = start;
