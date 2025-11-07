@@ -23,8 +23,8 @@ public class CameraSubsystem extends SubsystemBase {
         portal = new VisionPortal.Builder()
                 .addProcessor(aprilTagProcessor)
                 .setCamera(camera)
-                .setCameraResolution(new Size(640, 480))
-                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
+                .setCameraResolution(new Size(1280, 720))
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
                 .build();
 
