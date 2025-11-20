@@ -22,6 +22,12 @@ public class ShooterSubsystem extends SubsystemBase {
     public int lastTicks = 0;
     public double power = 0.0; // last commanded power
 
+    private static final int RPM_AVERAGE_WINDOW = 10;
+    private static final double RPM_TARGET_TOLERANCE = 50.0;
+    private final double[] rpmHistory = new double[RPM_AVERAGE_WINDOW];
+    private int rpmHistoryIndex = 0;
+    private int rpmHistoryCount = 0;
+
     // Feedforward + feedback (tunable via Common)
     private double kS = Common.SHOOTER_KS;
     private double kV = Common.SHOOTER_KV;
@@ -87,6 +93,12 @@ public class ShooterSubsystem extends SubsystemBase {
         int deltaTicks = ticks - lastTicks;
         double ticksPerSecond = deltaTicks / dt;
         currentRpm = ticksPerSecondToRpm(ticksPerSecond);
+        // Update rolling RPM history
+        rpmHistory[rpmHistoryIndex] = currentRpm;
+        rpmHistoryIndex = (rpmHistoryIndex + 1) % RPM_AVERAGE_WINDOW;
+        if (rpmHistoryCount < RPM_AVERAGE_WINDOW) {
+            rpmHistoryCount++;
+        }
 
         // Acceleration estimate (rpm/s)
         double accelRpmPerSec = (currentRpm - lastRpm) / dt;
@@ -132,6 +144,32 @@ public class ShooterSubsystem extends SubsystemBase {
         lastTime = now;
         lastTicks = ticks;
         lastRpm = currentRpm;
+    }
+
+    /**
+     * @return arithmetic mean of the most recent RPM samples (up to 10).
+     */
+    public double getAverageRecentRpm() {
+        if (rpmHistoryCount == 0) {
+            return 0.0;
+        }
+
+        double sum = 0.0;
+        for (int i = 0; i < rpmHistoryCount; i++) {
+            sum += rpmHistory[i];
+        }
+        return sum / rpmHistoryCount;
+    }
+
+    /**
+     * @return true if the rolling average RPM is within +/-50 of the target.
+     */
+    public boolean wthinTolerance() {
+        if (rpmHistoryCount == 0) {
+            return false;
+        }
+        double avg = getAverageRecentRpm();
+        return Math.abs(avg - targetRpm) <= RPM_TARGET_TOLERANCE;
     }
 
     public void periodic() {
