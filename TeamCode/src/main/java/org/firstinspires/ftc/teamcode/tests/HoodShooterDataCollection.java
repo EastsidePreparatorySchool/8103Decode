@@ -199,11 +199,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
             double dist = Math.hypot(
                     Common.SELECTED_FIELD_TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
                     Common.SELECTED_FIELD_TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
-            multiTelemetry.addLine("=== DATA POINT ===");
-            multiTelemetry.addData("Distance", dist);
-            multiTelemetry.addData("Hood Pos", hoodPos);
-            multiTelemetry.addData("Shooter RPM", targetRpm);
-            multiTelemetry.addLine("==================");
+            multiTelemetry.addLine(String.format("%f, %f, %f", dist, hoodPos, targetRpm));
         }
         prevX = x;
 
