@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCo
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterSetTargetRPMCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 @TeleOp(name = "HoodShooterDataCollection", group = "Tuning")
@@ -76,7 +78,8 @@ public class HoodShooterDataCollection extends CommandOpMode {
         // Initial subsystem states
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
         schedule(new HoodSetPositionCommand(hoodPos));
-        schedule(new ShooterSetTargetRPMCommand(0.0)); // Start off
+        schedule(new ShooterSetTargetRPMCommand(0.0));
+        schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
 
         // Restore saved pose/turret targets when available
         if (PersistentState.hasSavedPose) {
@@ -110,15 +113,16 @@ public class HoodShooterDataCollection extends CommandOpMode {
         aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
-        // Right bumper: toggle shooter target RPM between 0 and Tuned Value
+        // Right bumper: toggle shooter ON/OFF (target RPM managed separately)
         boolean rb = gamepad1.right_bumper;
         if (rb && !prevRB) {
-            double current = robot.shooterSubsystem.targetRpm;
-            if (current > 0.0) {
-                schedule(new ShooterSetTargetRPMCommand(0.0));
-            } else {
-                schedule(new ShooterSetTargetRPMCommand(targetRpm));
-            }
+            ShooterSubsystem.ShooterState next = (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
+                    ? ShooterSubsystem.ShooterState.OFF
+                    : ShooterSubsystem.ShooterState.ON;
+            schedule(new ShooterStateCommand(next));
+            // Keep target RPM aligned with the requested state
+            double rpmCommand = (next == ShooterSubsystem.ShooterState.ON) ? targetRpm : 0.0;
+            schedule(new ShooterSetTargetRPMCommand(rpmCommand));
         }
         prevRB = rb;
 
