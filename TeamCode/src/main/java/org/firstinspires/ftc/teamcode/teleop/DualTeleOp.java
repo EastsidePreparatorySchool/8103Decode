@@ -115,6 +115,8 @@ public class DualTeleOp extends CommandOpMode {
         robot.periodic();
         scheduler.run();
 
+        boolean shooterWithinTolerance = robot.shooterSubsystem.isAverageRpmWithinTolerance();
+
         // Keep aim target and offset updated each loop
         aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
@@ -151,12 +153,12 @@ public class DualTeleOp extends CommandOpMode {
         // Gamepad2 left bumper: triple shot sequence (outtake slots 1,2,3)
         boolean lb2 = gamepad2.left_bumper;
         if (lb2 && !prevLB2) {
-            if (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
+            if (shooterWithinTolerance && robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
                 slotFull[0] = false;
                 slotFull[1] = false;
                 slotFull[2] = false;
+                schedule(new TripleShotCommand());
             }
-            schedule(new TripleShotCommand());
         }
         prevLB2 = lb2;
 
@@ -191,6 +193,7 @@ public class DualTeleOp extends CommandOpMode {
         multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
         multiTelemetry.addData("heading (deg)", robot.pinpointSubsystem.getHeadingDegrees());
         multiTelemetry.addData("shooter rpm target", robot.shooterSubsystem.targetRpm);
+        multiTelemetry.addData("shooter within tolerance", shooterWithinTolerance);
         multiTelemetry.addData("hood pos", hoodPos);
         multiTelemetry.addData("turret offset (deg)", turretAngleOffsetDeg);
         multiTelemetry.addData("slot1 full", slotFull[0]);
