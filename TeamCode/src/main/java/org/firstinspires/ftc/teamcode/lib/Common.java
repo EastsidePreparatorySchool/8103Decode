@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.lib;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.seattlesolvers.solverslib.util.InterpLUT;
 
 @Config
 public class Common {
@@ -82,6 +83,6 @@ public class Common {
     public static double SELECTED_FIELD_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
 
     // Interpolation Tables
-    public static com.seattlesolvers.solverslib.util.InterpLUT shooterInterpLUT = ShooterHoodData.getShooterInterpLUT();
-    public static com.seattlesolvers.solverslib.util.InterpLUT hoodInterpLUT = ShooterHoodData.getHoodInterpLUT();
+    public static InterpLUT shooterInterpLUT = ShooterHoodData.getShooterInterpLUT();
+    public static InterpLUT hoodInterpLUT = ShooterHoodData.getHoodInterpLUT();
 }

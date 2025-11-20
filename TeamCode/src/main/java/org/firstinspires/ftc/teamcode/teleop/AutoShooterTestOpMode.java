@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoShooterRPM
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
@@ -88,9 +89,7 @@ public class AutoShooterTestOpMode extends CommandOpMode {
         }
 
         if (PersistentState.hasSavedTurret) {
-            // Nudge initial target to saved turret angle (auto-aim will take over)
-            org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand set = new org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand(
-                    PersistentState.savedTurretDegrees);
+            TurretSetTargetCommand set = new TurretSetTargetCommand(PersistentState.savedTurretDegrees);
             schedule(set);
         }
     }
