@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-
+@Disabled
 @Config
 @TeleOp(name = "SystemsIntegrationTuning", group = "Tuning")
 public class SystemsIntegrationTuning extends CommandOpMode {

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 
+@Disabled
 @Config
 @TeleOp(name = "Stuff On Top Of The Turret", group = "Tuning")
 public class OnTopOfTheTurret extends LinearOpMode {

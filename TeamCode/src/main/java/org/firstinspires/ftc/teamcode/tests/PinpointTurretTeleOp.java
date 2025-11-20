@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
+@Disabled
 @Config
 @TeleOp(name = "PinpointTurretTeleOp", group = "Command")
 public class PinpointTurretTeleOp extends CommandOpMode {
