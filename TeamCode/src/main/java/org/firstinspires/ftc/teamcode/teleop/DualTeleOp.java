@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+
 @TeleOp(name = "DualTeleOp", group = "Command")
 @Config
 public class DualTeleOp extends CommandOpMode {
@@ -79,7 +80,8 @@ public class DualTeleOp extends CommandOpMode {
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
         if (PersistentState.hasSavedPose) {
-            schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches, PersistentState.savedHeadingDeg));
+            schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches,
+                    PersistentState.savedHeadingDeg));
         } else {
             schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
         }
@@ -116,10 +118,9 @@ public class DualTeleOp extends CommandOpMode {
         // Gamepad2 right bumper: toggle shooter ON/OFF (target RPM set separately)
         boolean rb = gamepad2.right_bumper;
         if (rb && !prevRB) {
-            ShooterSubsystem.ShooterState next =
-                    (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
-                            ? ShooterSubsystem.ShooterState.OFF
-                            : ShooterSubsystem.ShooterState.ON;
+            ShooterSubsystem.ShooterState next = (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
+                    ? ShooterSubsystem.ShooterState.OFF
+                    : ShooterSubsystem.ShooterState.ON;
             schedule(new ShooterStateCommand(next));
         }
         prevRB = rb;
@@ -198,43 +199,59 @@ public class DualTeleOp extends CommandOpMode {
 
     private static SpindexerSubsystem.SpindexerState intakeStateForSlot(int slotIdx) {
         switch (slotIdx) {
-            case 0: return SpindexerSubsystem.SpindexerState.INTAKE_ONE;
-            case 1: return SpindexerSubsystem.SpindexerState.INTAKE_TWO;
-            case 2: return SpindexerSubsystem.SpindexerState.INTAKE_THREE;
+            case 0:
+                return SpindexerSubsystem.SpindexerState.INTAKE_ONE;
+            case 1:
+                return SpindexerSubsystem.SpindexerState.INTAKE_TWO;
+            case 2:
+                return SpindexerSubsystem.SpindexerState.INTAKE_THREE;
         }
         return SpindexerSubsystem.SpindexerState.INTAKE_ONE;
     }
 
     private static SpindexerSubsystem.SpindexerState outtakeStateForSlot(int slotIdx) {
         switch (slotIdx) {
-            case 0: return SpindexerSubsystem.SpindexerState.OUTTAKE_ONE;
-            case 1: return SpindexerSubsystem.SpindexerState.OUTTAKE_TWO;
-            case 2: return SpindexerSubsystem.SpindexerState.OUTTAKE_THREE;
+            case 0:
+                return SpindexerSubsystem.SpindexerState.OUTTAKE_ONE;
+            case 1:
+                return SpindexerSubsystem.SpindexerState.OUTTAKE_TWO;
+            case 2:
+                return SpindexerSubsystem.SpindexerState.OUTTAKE_THREE;
         }
         return SpindexerSubsystem.SpindexerState.OUTTAKE_ONE;
     }
 
     private static int intakeIndexFromState(SpindexerSubsystem.SpindexerState state) {
         switch (state) {
-            case INTAKE_ONE: return 0;
-            case INTAKE_TWO: return 1;
-            case INTAKE_THREE: return 2;
-            default: return -1;
+            case INTAKE_ONE:
+                return 0;
+            case INTAKE_TWO:
+                return 1;
+            case INTAKE_THREE:
+                return 2;
+            default:
+                return -1;
         }
     }
 
     private static int outtakeIndexFromState(SpindexerSubsystem.SpindexerState state) {
         switch (state) {
-            case OUTTAKE_ONE: return 0;
-            case OUTTAKE_TWO: return 1;
-            case OUTTAKE_THREE: return 2;
-            default: return -1;
+            case OUTTAKE_ONE:
+                return 0;
+            case OUTTAKE_TWO:
+                return 1;
+            case OUTTAKE_THREE:
+                return 2;
+            default:
+                return -1;
         }
     }
 
     private static double clamp01(double v) {
-        if (v < 0.0) return 0.0;
-        if (v > 1.0) return 1.0;
+        if (v < 0.0)
+            return 0.0;
+        if (v > 1.0)
+            return 1.0;
         return v;
     }
 }

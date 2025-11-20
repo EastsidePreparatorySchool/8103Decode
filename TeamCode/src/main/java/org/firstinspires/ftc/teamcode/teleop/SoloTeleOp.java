@@ -61,7 +61,8 @@ public class SoloTeleOp extends CommandOpMode {
         robot.initIntake();
         robot.initTransfer();
         robot.initSpindexer();
-        // If we have a saved pose from auto, avoid resetting IMU so heading stays consistent
+        // If we have a saved pose from auto, avoid resetting IMU so heading stays
+        // consistent
         Common.PINPOINT_RESET_IMU_ON_INIT = false;
         robot.initPinpoint();
 
@@ -72,7 +73,8 @@ public class SoloTeleOp extends CommandOpMode {
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
         if (PersistentState.hasSavedPose) {
-            schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches, PersistentState.savedHeadingDeg));
+            schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches,
+                    PersistentState.savedHeadingDeg));
         } else {
             schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
         }
@@ -83,8 +85,8 @@ public class SoloTeleOp extends CommandOpMode {
         schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
         if (PersistentState.hasSavedTurret) {
             // Nudge initial target to saved turret angle (auto-aim will take over)
-            org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand set =
-                    new org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand(PersistentState.savedTurretDegrees);
+            org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand set = new org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand(
+                    PersistentState.savedTurretDegrees);
             schedule(set);
         }
     }
@@ -112,10 +114,9 @@ public class SoloTeleOp extends CommandOpMode {
         // Right bumper: toggle shooter ON/OFF (target RPM set separately)
         boolean rb = gamepad1.right_bumper;
         if (rb && !prevRB) {
-            ShooterSubsystem.ShooterState next =
-                    (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
-                            ? ShooterSubsystem.ShooterState.OFF
-                            : ShooterSubsystem.ShooterState.ON;
+            ShooterSubsystem.ShooterState next = (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
+                    ? ShooterSubsystem.ShooterState.OFF
+                    : ShooterSubsystem.ShooterState.ON;
             schedule(new ShooterStateCommand(next));
         }
         prevRB = rb;
@@ -196,25 +197,34 @@ public class SoloTeleOp extends CommandOpMode {
 
     private static SpindexerSubsystem.SpindexerState intakeStateForSlot(int slotIdx) {
         switch (slotIdx) {
-            case 0: return SpindexerSubsystem.SpindexerState.INTAKE_ONE;
-            case 1: return SpindexerSubsystem.SpindexerState.INTAKE_TWO;
-            case 2: return SpindexerSubsystem.SpindexerState.INTAKE_THREE;
+            case 0:
+                return SpindexerSubsystem.SpindexerState.INTAKE_ONE;
+            case 1:
+                return SpindexerSubsystem.SpindexerState.INTAKE_TWO;
+            case 2:
+                return SpindexerSubsystem.SpindexerState.INTAKE_THREE;
         }
         return SpindexerSubsystem.SpindexerState.INTAKE_ONE;
     }
 
     private static int intakeIndexFromState(SpindexerSubsystem.SpindexerState state) {
         switch (state) {
-            case INTAKE_ONE: return 0;
-            case INTAKE_TWO: return 1;
-            case INTAKE_THREE: return 2;
-            default: return -1;
+            case INTAKE_ONE:
+                return 0;
+            case INTAKE_TWO:
+                return 1;
+            case INTAKE_THREE:
+                return 2;
+            default:
+                return -1;
         }
     }
 
     private static double clamp01(double v) {
-        if (v < 0.0) return 0.0;
-        if (v > 1.0) return 1.0;
+        if (v < 0.0)
+            return 0.0;
+        if (v > 1.0)
+            return 1.0;
         return v;
     }
 }
