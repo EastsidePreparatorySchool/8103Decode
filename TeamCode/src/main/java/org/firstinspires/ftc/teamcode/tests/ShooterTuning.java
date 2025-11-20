@@ -107,7 +107,7 @@ public class ShooterTuning extends CommandOpMode {
         multiTelemetry.addData("shooter/current rpm", shooterSubsystem.currentRpm);
         multiTelemetry.addData("shooter/error rpm", shooterTargetRpm - shooterSubsystem.currentRpm);
         multiTelemetry.addData("shooter/power", shooterSubsystem.power);
-        multiTelemetry.addData("shooter/within tolerance", shooterSubsystem.isAverageRpmWithinTolerance());
+        multiTelemetry.addData("shooter/within tolerance", shooterSubsystem.withinTolerance());
         multiTelemetry.addData("hood/pos", hoodPosition);
         multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();

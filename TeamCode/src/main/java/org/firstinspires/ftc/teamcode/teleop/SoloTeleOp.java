@@ -107,7 +107,7 @@ public class SoloTeleOp extends CommandOpMode {
         robot.periodic();
         scheduler.run();
 
-        boolean shooterWithinTolerance = robot.shooterSubsystem.isAverageRpmWithinTolerance();
+        boolean shooterWithinTolerance = robot.shooterSubsystem.withinTolerance();
 
         // Keep aim target and offset updated each loop
         aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);

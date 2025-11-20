@@ -164,7 +164,7 @@ public class ShooterSubsystem extends SubsystemBase {
     /**
      * @return true if the rolling average RPM is within +/-50 of the target.
      */
-    public boolean wthinTolerance() {
+    public boolean withinTolerance() {
         if (rpmHistoryCount == 0) {
             return false;
         }

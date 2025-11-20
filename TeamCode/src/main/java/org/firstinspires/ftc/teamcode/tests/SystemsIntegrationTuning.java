@@ -158,7 +158,7 @@ public class SystemsIntegrationTuning extends CommandOpMode {
         multiTelemetry.addData("shooter/target rpm", shooterTargetRpm);
         multiTelemetry.addData("shooter/current rpm", robot.shooterSubsystem.currentRpm);
         multiTelemetry.addData("shooter/power", robot.shooterSubsystem.power);
-        multiTelemetry.addData("shooter/within tolerance", robot.shooterSubsystem.isAverageRpmWithinTolerance());
+        multiTelemetry.addData("shooter/within tolerance", robot.shooterSubsystem.withinTolerance());
         multiTelemetry.addData("hood/pos", hoodPosition);
 
         // Turret
