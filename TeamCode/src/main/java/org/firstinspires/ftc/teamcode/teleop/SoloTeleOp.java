@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
-import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TransferAndShootCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
@@ -42,8 +42,8 @@ public class SoloTeleOp extends CommandOpMode {
     private double turretAngleOffsetDeg = 0.0;
 
     // Edge detection
-    private boolean prevA, prevB, prevX, prevY, prevBack, prevStart;
-    private boolean prevRSB, prevDpadUp, prevDpadDown, prevDpadLeft, prevDpadRight;
+    private boolean prevA, prevY, prevLB, prevRB;
+    private boolean prevDpadUp, prevDpadDown, prevDpadLeft, prevDpadRight;
 
     @Override
     public void initialize() {
@@ -104,9 +104,10 @@ public class SoloTeleOp extends CommandOpMode {
         // Keep aim target and offset updated each loop
         aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
-        // Right stick button: toggle shooter target RPM between 0 and FAR
-        boolean rsb = gamepad1.right_stick_button;
-        if (rsb && !prevRSB) {
+
+        // Right bumper: toggle shooter target RPM between 0 and FAR
+        boolean rb = gamepad1.right_bumper;
+        if (rb && !prevRB) {
             double current = robot.shooterSubsystem.targetRpm;
             if (current > 0.0) {
                 schedule(new ShooterSetTargetRPMCommand(0.0));
@@ -114,51 +115,38 @@ public class SoloTeleOp extends CommandOpMode {
                 schedule(new ShooterSetTargetRPMCommand(Common.SHOOTER_FAR_RPM));
             }
         }
-        prevRSB = rsb;
+        prevRB = rb;
 
-        // Back button: toggle intake on/off
-        boolean back = gamepad1.back;
-        if (back && !prevBack) {
+        // A: toggle intake on/off
+        boolean a = gamepad1.a;
+        if (a && !prevA) {
             IntakeSubsystem.IntakeState next = (robot.intakeSubsystem.state == IntakeSubsystem.IntakeState.FORWARD)
                     ? IntakeSubsystem.IntakeState.STOPPED
                     : IntakeSubsystem.IntakeState.FORWARD;
             schedule(new IntakeStateCommand(next));
         }
-        prevBack = back;
+        prevA = a;
 
-        // A/X/B: select slot 1/2/3 and move to intake if empty, else outtake
-        handleSlotButton(gamepad1.a, 0);
-        handleSlotButton(gamepad1.x, 1);
-        handleSlotButton(gamepad1.b, 2);
-
-        // Y: mark current intaking slot as full
+        // Y: cycle through intake positions 1 -> 2 -> 3 -> 1 ...
         boolean y = gamepad1.y;
         if (y && !prevY) {
-            SpindexerSubsystem.SpindexerState s = robot.spindexerSubsystem.state;
-            int idx = intakeIndexFromState(s);
-            if (idx != -1) {
-                slotFull[idx] = true;
-            }
+            int currIdx = intakeIndexFromState(robot.spindexerSubsystem.state);
+            int nextIdx = (currIdx == -1) ? 0 : (currIdx + 1) % 3;
+            schedule(new SpindexerSetPositionCommand(intakeStateForSlot(nextIdx)));
         }
         prevY = y;
 
-        // Start: Transfer and shoot only if spindexer is at an OUTTAKE slot
-        boolean start = gamepad1.start;
-        if (start && !prevStart) {
-            SpindexerSubsystem.SpindexerState s = robot.spindexerSubsystem.state;
-            if (s == SpindexerSubsystem.SpindexerState.OUTTAKE_ONE ||
-                s == SpindexerSubsystem.SpindexerState.OUTTAKE_TWO ||
-                s == SpindexerSubsystem.SpindexerState.OUTTAKE_THREE) {
-                if (robot.shooterSubsystem.targetRpm > 0.0) {
-                    int idx = outtakeIndexFromState(s);
-                    if (idx != -1) {
-                        slotFull[idx] = false;
-                    }
-                }
-                schedule(new TransferAndShootCommand());
+        // Left bumper: triple shot sequence (outtake slots 1,2,3)
+        boolean lb = gamepad1.left_bumper;
+        if (lb && !prevLB) {
+            if (robot.shooterSubsystem.targetRpm > 0.0) {
+                slotFull[0] = false;
+                slotFull[1] = false;
+                slotFull[2] = false;
             }
+            schedule(new TripleShotCommand());
         }
-        prevStart = start;
+        prevLB = lb;
 
         // Dpad up/down: adjust hood position by +/-0.01
         boolean dUp = gamepad1.dpad_up;
@@ -203,31 +191,6 @@ public class SoloTeleOp extends CommandOpMode {
         multiTelemetry.update();
     }
 
-    private void handleSlotButton(boolean pressed, int slotIdx) {
-        switch (slotIdx) {
-            case 0:
-                if (pressed && !prevA) onSlotPressed(slotIdx);
-                prevA = pressed;
-                break;
-            case 1:
-                if (pressed && !prevX) onSlotPressed(slotIdx);
-                prevX = pressed;
-                break;
-            case 2:
-                if (pressed && !prevB) onSlotPressed(slotIdx);
-                prevB = pressed;
-                break;
-        }
-    }
-
-    private void onSlotPressed(int slotIdx) {
-        boolean isFull = slotFull[slotIdx];
-        SpindexerSubsystem.SpindexerState targetState = isFull
-                ? outtakeStateForSlot(slotIdx)
-                : intakeStateForSlot(slotIdx);
-        schedule(new SpindexerSetPositionCommand(targetState));
-    }
-
     private static SpindexerSubsystem.SpindexerState intakeStateForSlot(int slotIdx) {
         switch (slotIdx) {
             case 0: return SpindexerSubsystem.SpindexerState.INTAKE_ONE;
@@ -237,29 +200,11 @@ public class SoloTeleOp extends CommandOpMode {
         return SpindexerSubsystem.SpindexerState.INTAKE_ONE;
     }
 
-    private static SpindexerSubsystem.SpindexerState outtakeStateForSlot(int slotIdx) {
-        switch (slotIdx) {
-            case 0: return SpindexerSubsystem.SpindexerState.OUTTAKE_ONE;
-            case 1: return SpindexerSubsystem.SpindexerState.OUTTAKE_TWO;
-            case 2: return SpindexerSubsystem.SpindexerState.OUTTAKE_THREE;
-        }
-        return SpindexerSubsystem.SpindexerState.OUTTAKE_ONE;
-    }
-
     private static int intakeIndexFromState(SpindexerSubsystem.SpindexerState state) {
         switch (state) {
             case INTAKE_ONE: return 0;
             case INTAKE_TWO: return 1;
             case INTAKE_THREE: return 2;
-            default: return -1;
-        }
-    }
-
-    private static int outtakeIndexFromState(SpindexerSubsystem.SpindexerState state) {
-        switch (state) {
-            case OUTTAKE_ONE: return 0;
-            case OUTTAKE_TWO: return 1;
-            case OUTTAKE_THREE: return 2;
             default: return -1;
         }
     }
