@@ -50,6 +50,7 @@ public class RobotHardware {
     public CachingDcMotorEx dtBR;
     // shooter
     public CachingDcMotorEx flywheel;
+    public CachingDcMotorEx flywheel2;
     public CachingServo hood;
     // turret
     public CachingDcMotorEx turret;
@@ -114,14 +115,20 @@ public class RobotHardware {
 
     public void initShooter() {
         flywheel = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "flywheel"));
+        flywheel2 = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "flywheel2"));
 
         // Shooter must run forward
         flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        // Second flywheel runs opposite direction of the first
+        flywheel2.setDirection(DcMotorSimple.Direction.FORWARD);
         // Use manual control; we compute velocity ourselves
         flywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flywheel2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        flywheel2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Let flywheel coast
         flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        flywheel2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         shooterSubsystem = new ShooterSubsystem();
         CommandScheduler.getInstance().registerSubsystem(shooterSubsystem);

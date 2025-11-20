@@ -40,11 +40,12 @@ public class ShooterSubsystem extends SubsystemBase {
         lastTicks = robot.flywheel.getCurrentPosition();
     }
 
-    public void setShooterState (ShooterState shooterState) {
+    public void setShooterState(ShooterState shooterState) {
         state = shooterState;
         if (state == ShooterState.OFF) {
             power = 0.0;
             robot.flywheel.setPower(0.0);
+            robot.flywheel2.setPower(0.0);
         }
     }
 
@@ -114,12 +115,13 @@ public class ShooterSubsystem extends SubsystemBase {
         if (power < 0.0) power = 0.0;
         if (power > 1.0) power = 1.0;
 
+        robot.flywheel.setPower(power);
+        robot.flywheel2.setPower(power);
+
         if (state == ShooterState.OFF) {
             robot.flywheel.setPower(0.0);
+            robot.flywheel2.setPower(0.0);
         }
-
-        robot.flywheel.setPower(power);
-
         // Telemetry moved to OpModes
 
         // Save time history
