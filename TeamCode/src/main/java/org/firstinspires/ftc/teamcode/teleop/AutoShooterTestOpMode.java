@@ -89,8 +89,7 @@ public class AutoShooterTestOpMode extends CommandOpMode {
         }
 
         if (PersistentState.hasSavedTurret) {
-            TurretSetTargetCommand set = new TurretSetTargetCommand(PersistentState.savedTurretDegrees);
-            schedule(set);
+            schedule(new TurretSetTargetCommand(PersistentState.savedTurretDegrees));
         }
     }
 
