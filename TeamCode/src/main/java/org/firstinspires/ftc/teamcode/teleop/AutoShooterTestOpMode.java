@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateComman
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.PersistentState;
@@ -34,6 +35,8 @@ public class AutoShooterTestOpMode extends CommandOpMode {
     // Default commands
     private AimTurretAtPointCommand aimCommand;
     private DriveWithGamepadCommand driveCommand;
+    private AutoShooterRPMCommand shooterRPMCommand;
+    private AutoHoodPositionCommand hoodPositionCommand;
 
     // Spindexer slot bookkeeping (1,2,3 => index 0..2)
     private final boolean[] slotFull = new boolean[] { false, false, false };
@@ -66,9 +69,16 @@ public class AutoShooterTestOpMode extends CommandOpMode {
 
         driveCommand = new DriveWithGamepadCommand(gamepad1);
         aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
-        
+        shooterRPMCommand = new AutoShooterRPMCommand(robot.shooterSubsystem, robot.pinpointSubsystem);
+        hoodPositionCommand = new AutoHoodPositionCommand(robot.hoodSubsystem, robot.pinpointSubsystem);
+
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
+        scheduler.setDefaultCommand(robot.shooterSubsystem, shooterRPMCommand);
+        scheduler.setDefaultCommand(robot.hoodSubsystem, hoodPositionCommand);
+
+        schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
+        schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
 
         if (PersistentState.hasSavedPose) {
             schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches,
@@ -76,16 +86,6 @@ public class AutoShooterTestOpMode extends CommandOpMode {
         } else {
             schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
         }
-        schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
-
-        // Enable Shooter (State ON, but RPM controlled by auto command)
-        robot.shooterSubsystem.setShooterState(ShooterSubsystem.ShooterState.ON);
-
-        // Set default commands for Shooter and Hood
-        scheduler.setDefaultCommand(robot.shooterSubsystem,
-                new AutoShooterRPMCommand(robot.shooterSubsystem, robot.pinpointSubsystem));
-        scheduler.setDefaultCommand(robot.hoodSubsystem,
-                new AutoHoodPositionCommand(robot.hoodSubsystem, robot.pinpointSubsystem));
 
         if (PersistentState.hasSavedTurret) {
             // Nudge initial target to saved turret angle (auto-aim will take over)

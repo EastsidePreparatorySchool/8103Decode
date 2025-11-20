@@ -66,7 +66,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double ticksPerSecondToRpm(double tps) {
         double ticksPerRev = getTicksPerFlywheelRev();
-        if (ticksPerRev == 0) return 0.0;
+        if (ticksPerRev == 0)
+            return 0.0;
         return (tps / ticksPerRev) * 60.0;
     }
 
@@ -79,7 +80,8 @@ public class ShooterSubsystem extends SubsystemBase {
         // Measure dt and velocity from position deltas for robust measurement
         double now = timer.seconds();
         double dt = now - lastTime;
-        if (dt <= 0) dt = 1e-3;
+        if (dt <= 0)
+            dt = 1e-3;
 
         int ticks = robot.flywheel.getCurrentPosition();
         int deltaTicks = ticks - lastTicks;
@@ -112,8 +114,10 @@ public class ShooterSubsystem extends SubsystemBase {
         }
 
         // Clamp to [0, 1] forward-only
-        if (power < 0.0) power = 0.0;
-        if (power > 1.0) power = 1.0;
+        if (power < 0.0)
+            power = 0.0;
+        if (power > 1.0)
+            power = 1.0;
 
         robot.flywheel.setPower(power);
         robot.flywheel2.setPower(power);
