@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCo
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterSetTargetRPMCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 @TeleOp(name = "DualTeleOp", group = "Command")
 @Config
 public class DualTeleOp extends CommandOpMode {
@@ -83,7 +85,9 @@ public class DualTeleOp extends CommandOpMode {
         }
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
         schedule(new HoodSetPositionCommand(hoodPos));
-        schedule(new ShooterSetTargetRPMCommand(0.0));
+        // Default shooter target RPM is FAR, but start with shooter OFF
+        schedule(new ShooterSetTargetRPMCommand(Common.SHOOTER_FAR_RPM));
+        schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
         if (PersistentState.hasSavedTurret) {
             schedule(new TurretSetTargetCommand(PersistentState.savedTurretDegrees));
         }
@@ -109,15 +113,14 @@ public class DualTeleOp extends CommandOpMode {
         aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
-        // Gamepad2 right bumper: toggle shooter target RPM between 0 and FAR
+        // Gamepad2 right bumper: toggle shooter ON/OFF (target RPM set separately)
         boolean rb = gamepad2.right_bumper;
         if (rb && !prevRB) {
-            double current = robot.shooterSubsystem.targetRpm;
-            if (current > 0.0) {
-                schedule(new ShooterSetTargetRPMCommand(0.0));
-            } else {
-                schedule(new ShooterSetTargetRPMCommand(Common.SHOOTER_FAR_RPM));
-            }
+            ShooterSubsystem.ShooterState next =
+                    (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
+                            ? ShooterSubsystem.ShooterState.OFF
+                            : ShooterSubsystem.ShooterState.ON;
+            schedule(new ShooterStateCommand(next));
         }
         prevRB = rb;
 
@@ -143,7 +146,7 @@ public class DualTeleOp extends CommandOpMode {
         // Gamepad2 left bumper: triple shot sequence (outtake slots 1,2,3)
         boolean lb2 = gamepad2.left_bumper;
         if (lb2 && !prevLB2) {
-            if (robot.shooterSubsystem.targetRpm > 0.0) {
+            if (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
                 slotFull[0] = false;
                 slotFull[1] = false;
                 slotFull[2] = false;

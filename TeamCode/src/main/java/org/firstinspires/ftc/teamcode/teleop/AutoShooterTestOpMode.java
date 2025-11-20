@@ -146,6 +146,16 @@ public class AutoShooterTestOpMode extends CommandOpMode {
         }
         prevLB = lb;
 
+        // Right bumper: toggle shooter on/off
+        boolean rb = gamepad1.right_bumper;
+        if (rb && !prevRB) {
+            ShooterSubsystem.ShooterState nextState = (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
+                    ? ShooterSubsystem.ShooterState.OFF
+                    : ShooterSubsystem.ShooterState.ON;
+            schedule(new ShooterStateCommand(nextState));
+        }
+        prevRB = rb;
+
         // Dpad left/right: adjust turret aim offset by 4 degrees
         boolean dLeft = gamepad1.dpad_left;
         boolean dRight = gamepad1.dpad_right;
