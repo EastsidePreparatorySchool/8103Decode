@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateComman
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterSetTargetRPMCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
@@ -51,6 +52,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
         scheduler = CommandScheduler.getInstance();
         multiTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        // Hardware bring-up
         robot.init(hardwareMap, multiTelemetry);
         robot.initLynx();
         robot.initDrivetrain();
@@ -60,31 +62,31 @@ public class HoodShooterDataCollection extends CommandOpMode {
         robot.initIntake();
         robot.initTransfer();
         robot.initSpindexer();
-        // If we have a saved pose from auto, avoid resetting IMU so heading stays
-        // consistent
+        // Keep IMU heading if we have a saved pose from auto
         Common.PINPOINT_RESET_IMU_ON_INIT = false;
         robot.initPinpoint();
 
+        // Default commands
         driveCommand = new DriveWithGamepadCommand(gamepad1);
         aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
+        // Initial subsystem states
+        schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
+        schedule(new HoodSetPositionCommand(hoodPos));
+        schedule(new ShooterSetTargetRPMCommand(0.0)); // Start off
+
+        // Restore saved pose/turret targets when available
         if (PersistentState.hasSavedPose) {
             schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches,
                     PersistentState.savedHeadingDeg));
         } else {
             schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
         }
-        schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
-        schedule(new HoodSetPositionCommand(hoodPos));
-        schedule(new ShooterSetTargetRPMCommand(0.0)); // Start off
         if (PersistentState.hasSavedTurret) {
-            // Nudge initial target to saved turret angle (auto-aim will take over)
-            org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand set = new org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand(
-                    PersistentState.savedTurretDegrees);
-            schedule(set);
+            schedule(new TurretSetTargetCommand(PersistentState.savedTurretDegrees));
         }
     }
 

@@ -60,6 +60,7 @@ public class DualTeleOp extends CommandOpMode {
         scheduler = CommandScheduler.getInstance();
         multiTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        // Hardware bring-up
         robot.init(hardwareMap, multiTelemetry);
         robot.initLynx();
         robot.initDrivetrain();
@@ -73,23 +74,26 @@ public class DualTeleOp extends CommandOpMode {
         Common.PINPOINT_RESET_IMU_ON_INIT = false;
         robot.initPinpoint();
 
+        // Default commands
         driveCommand = new DriveWithGamepadCommand(gamepad1);
         aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
+        // Initial subsystem states
+        schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
+        schedule(new ShooterSetTargetRPMCommand(Common.SHOOTER_FAR_RPM));
+        schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
+        schedule(new HoodSetPositionCommand(hoodPos));
+
+        // Restore saved pose/turret targets when available
         if (PersistentState.hasSavedPose) {
             schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches,
                     PersistentState.savedHeadingDeg));
         } else {
             schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
         }
-        schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
-        schedule(new HoodSetPositionCommand(hoodPos));
-        // Default shooter target RPM is FAR, but start with shooter OFF
-        schedule(new ShooterSetTargetRPMCommand(Common.SHOOTER_FAR_RPM));
-        schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
         if (PersistentState.hasSavedTurret) {
             schedule(new TurretSetTargetCommand(PersistentState.savedTurretDegrees));
         }

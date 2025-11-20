@@ -38,20 +38,23 @@ public class PinpointTurretTeleOp extends CommandOpMode {
     public void initialize() {
         scheduler = CommandScheduler.getInstance();
         multiTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        // Hardware bring-up
         robot.init(hardwareMap, multiTelemetry);
         robot.initLynx();
         robot.initDrivetrain();
         robot.initTurret();
         robot.initPinpoint();
 
+        // Default commands
         driveCommand = new DriveWithGamepadCommand(gamepad1);
         aimCommand = new AimTurretAtPointCommand(TARGET_X_IN, TARGET_Y_IN);
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
-        schedule(new PinpointSetPoseCommand(START_X_IN, START_Y_IN, START_HEADING_DEG));
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
+        schedule(new PinpointSetPoseCommand(START_X_IN, START_Y_IN, START_HEADING_DEG));
     }
 
     @Override
