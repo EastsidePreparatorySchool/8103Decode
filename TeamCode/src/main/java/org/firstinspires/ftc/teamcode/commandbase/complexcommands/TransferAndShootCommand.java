@@ -23,8 +23,7 @@ public class TransferAndShootCommand extends SequentialCommandGroup {
 
         addCommands(
                 new TransferSetPositionCommand(TransferSubsystem.TransferState.UP),
-                new WaitCommand(200),
-                // Use unsafe immediate drop to avoid an additional built-in wait
+                new WaitCommand(250),
                 new TransferStateCommand(transferSubsystem, TransferSubsystem.TransferState.DOWN)
         );
     }

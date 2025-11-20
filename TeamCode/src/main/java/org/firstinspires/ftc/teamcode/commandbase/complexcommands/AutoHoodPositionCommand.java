@@ -25,7 +25,7 @@ public class AutoHoodPositionCommand extends CommandBase {
 
         double targetHoodPos = Common.hoodInterpLUT.get(distance);
 
-        hoodSubsystem.setPosition(targetHoodPos);
+        hoodSubsystem.setHoodPosition(targetHoodPos);
     }
 
     @Override
