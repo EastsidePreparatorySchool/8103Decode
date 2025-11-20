@@ -82,6 +82,6 @@ public class Common {
     public static double SELECTED_FIELD_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
 
     // Interpolation Tables
-    public static com.seattlesolvers.solverslib.util.InterpLUT shooterInterpLUT = ShooterData.getShooterInterpLUT();
-    public static com.seattlesolvers.solverslib.util.InterpLUT hoodInterpLUT = ShooterData.getHoodInterpLUT();
+    public static com.seattlesolvers.solverslib.util.InterpLUT shooterInterpLUT = ShooterHoodData.getShooterInterpLUT();
+    public static com.seattlesolvers.solverslib.util.InterpLUT hoodInterpLUT = ShooterHoodData.getHoodInterpLUT();
 }

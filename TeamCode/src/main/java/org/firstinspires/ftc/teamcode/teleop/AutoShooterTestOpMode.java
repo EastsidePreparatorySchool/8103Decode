@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.AutoHoodPositionCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.AutoShooterRPMCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoHoodPositionCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoShooterRPMCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
@@ -66,7 +66,7 @@ public class AutoShooterTestOpMode extends CommandOpMode {
 
         driveCommand = new DriveWithGamepadCommand(gamepad1);
         aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
-
+        
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
@@ -163,7 +163,7 @@ public class AutoShooterTestOpMode extends CommandOpMode {
         multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
         multiTelemetry.addData("heading (deg)", robot.pinpointSubsystem.getHeadingDegrees());
         multiTelemetry.addData("shooter rpm target", robot.shooterSubsystem.targetRpm);
-        multiTelemetry.addData("hood pos", robot.hoodSubsystem.getPosition());
+        multiTelemetry.addData("hood pos", robot.hoodSubsystem.hoodPos);
         multiTelemetry.addData("turret offset (deg)", turretAngleOffsetDeg);
 
         double distance = Math.hypot(Common.SELECTED_FIELD_TARGET_X_IN - robot.pinpointSubsystem.getXInches(),

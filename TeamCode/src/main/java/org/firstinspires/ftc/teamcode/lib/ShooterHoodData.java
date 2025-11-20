@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.lib;
 
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
-public class ShooterData {
+public class ShooterHoodData {
 
     public static InterpLUT getShooterInterpLUT() {
         InterpLUT lut = new InterpLUT();
