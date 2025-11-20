@@ -23,9 +23,11 @@ public class Common {
     public static double INTAKE_BACKWARD_POWER = -1.0;
     public static double SLOWMODE_MULTIPLIER = 0.4;
     // Pinpoint odometry configuration
-    // Robot 16.5" wide (center to left edge = 8.25"). X pod is 1.0" in from left => +7.25" => +184.15 mm
+    // Robot 16.5" wide (center to left edge = 8.25"). X pod is 1.0" in from left =>
+    // +7.25" => +184.15 mm
     public static double PINPOINT_X_OFFSET_MM = 184.15;
-    // Robot 17" long (center to back edge = 8.5"). Y pod is 1.25" in from back => -7.25" => -184.15 mm
+    // Robot 17" long (center to back edge = 8.5"). Y pod is 1.25" in from back =>
+    // -7.25" => -184.15 mm
     public static double PINPOINT_Y_OFFSET_MM = -184.15;
     public static GoBildaPinpointDriver.EncoderDirection PINPOINT_X_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     public static GoBildaPinpointDriver.EncoderDirection PINPOINT_Y_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
@@ -45,8 +47,8 @@ public class Common {
     // Shooter velocity controller (RPM-based)
     // Motor/geometry
     public static double SHOOTER_TICKS_PER_MOTOR_REV = 28.0; // Built-in encoder CPR
-    public static double SHOOTER_GEAR_RATIO = 1.0;            // Motor:flywheel
-    public static double SHOOTER_MAX_RPM = 6000.0;            // Bare motor free speed
+    public static double SHOOTER_GEAR_RATIO = 1.0; // Motor:flywheel
+    public static double SHOOTER_MAX_RPM = 6000.0; // Bare motor free speed
     // Feedforward + feedback coefficients (power units)
     public static double SHOOTER_KS = 0.09; // static friction offset (power)
     public static double SHOOTER_KV = 0.00017; // power per RPM
@@ -78,4 +80,8 @@ public class Common {
     // Selected field target used by opmodes; default to RIGHT
     public static double SELECTED_FIELD_TARGET_X_IN = RIGHT_FIELD_TARGET_X_IN;
     public static double SELECTED_FIELD_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
+
+    // Interpolation Tables
+    public static com.seattlesolvers.solverslib.util.InterpLUT shooterInterpLUT = ShooterData.getShooterInterpLUT();
+    public static com.seattlesolvers.solverslib.util.InterpLUT hoodInterpLUT = ShooterData.getHoodInterpLUT();
 }
