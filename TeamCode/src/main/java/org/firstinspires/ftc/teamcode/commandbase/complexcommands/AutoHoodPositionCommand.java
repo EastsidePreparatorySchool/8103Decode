@@ -20,8 +20,8 @@ public class AutoHoodPositionCommand extends CommandBase {
         double currentX = pinpointSubsystem.getXInches();
         double currentY = pinpointSubsystem.getYInches();
 
-        double distance = Math.hypot(Common.SELECTED_FIELD_TARGET_X_IN - currentX,
-                Common.SELECTED_FIELD_TARGET_Y_IN - currentY);
+        double distance = Math.hypot(Common.TARGET_X_IN - currentX,
+                Common.TARGET_Y_IN - currentY);
 
         double targetHoodPos = Common.hoodInterpLUT.get(distance);
 

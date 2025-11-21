@@ -69,7 +69,7 @@ public class SoloTeleOp extends CommandOpMode {
 
         // Default commands
         driveCommand = new DriveWithGamepadCommand(gamepad1);
-        aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand = new AimTurretAtPointCommand(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
@@ -95,10 +95,10 @@ public class SoloTeleOp extends CommandOpMode {
     public void initialize_loop() {
         robot.periodic();
         // Keep aim target synced with dashboard constants during init
-        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
-        multiTelemetry.addData("aim target x (in)", Common.SELECTED_FIELD_TARGET_X_IN);
-        multiTelemetry.addData("aim target y (in)", Common.SELECTED_FIELD_TARGET_Y_IN);
+        multiTelemetry.addData("aim target x (in)", Common.TARGET_X_IN);
+        multiTelemetry.addData("aim target y (in)", Common.TARGET_Y_IN);
         multiTelemetry.update();
     }
 
@@ -110,7 +110,7 @@ public class SoloTeleOp extends CommandOpMode {
         boolean shooterWithinTolerance = robot.shooterSubsystem.withinTolerance();
 
         // Keep aim target and offset updated each loop
-        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
         // Right bumper: toggle shooter ON/OFF (target RPM set separately)
@@ -145,7 +145,7 @@ public class SoloTeleOp extends CommandOpMode {
         // Left bumper: triple shot sequence (outtake slots 1,2,3)
         boolean lb = gamepad1.left_bumper;
         if (lb && !prevLB) {
-            if (shooterWithinTolerance && robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
+            if (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
                 slotFull[0] = false;
                 slotFull[1] = false;
                 slotFull[2] = false;

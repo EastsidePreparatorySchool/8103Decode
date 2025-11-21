@@ -48,7 +48,7 @@ public class ThreePieceAuto extends CommandOpMode {
         Common.PINPOINT_RESET_IMU_ON_INIT = true;
         robot.initPinpoint();
 
-        aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand = new AimTurretAtPointCommand(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
         schedule(
             new SequentialCommandGroup(

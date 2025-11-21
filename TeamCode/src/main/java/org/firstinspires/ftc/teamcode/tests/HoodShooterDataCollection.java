@@ -70,7 +70,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
 
         // Default commands
         driveCommand = new DriveWithGamepadCommand(gamepad1);
-        aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand = new AimTurretAtPointCommand(Common.TARGET_X_IN, Common.TARGET_Y_IN);
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
@@ -97,10 +97,10 @@ public class HoodShooterDataCollection extends CommandOpMode {
     public void initialize_loop() {
         robot.periodic();
         // Keep aim target synced with dashboard constants during init
-        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
-        multiTelemetry.addData("aim target x (in)", Common.SELECTED_FIELD_TARGET_X_IN);
-        multiTelemetry.addData("aim target y (in)", Common.SELECTED_FIELD_TARGET_Y_IN);
+        multiTelemetry.addData("aim target x (in)", Common.TARGET_X_IN);
+        multiTelemetry.addData("aim target y (in)", Common.TARGET_Y_IN);
         multiTelemetry.update();
     }
 
@@ -110,7 +110,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
         scheduler.run();
 
         // Keep aim target and offset updated each loop
-        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
         // Right bumper: toggle shooter ON/OFF (target RPM managed separately)
@@ -197,8 +197,8 @@ public class HoodShooterDataCollection extends CommandOpMode {
         boolean x = gamepad1.x;
         if (x && !prevX) {
             double dist = Math.hypot(
-                    Common.SELECTED_FIELD_TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
-                    Common.SELECTED_FIELD_TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
+                    Common.TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
+                    Common.TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
             multiTelemetry.addLine(String.format("%f, %f, %f", dist, hoodPos, targetRpm));
         }
         prevX = x;
@@ -213,8 +213,8 @@ public class HoodShooterDataCollection extends CommandOpMode {
         multiTelemetry.addData("turret offset (deg)", turretAngleOffsetDeg);
 
         double currentDist = Math.hypot(
-                Common.SELECTED_FIELD_TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
-                Common.SELECTED_FIELD_TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
+                Common.TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
+                Common.TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
         multiTelemetry.addData("Distance to Goal", currentDist);
 
         multiTelemetry.update();

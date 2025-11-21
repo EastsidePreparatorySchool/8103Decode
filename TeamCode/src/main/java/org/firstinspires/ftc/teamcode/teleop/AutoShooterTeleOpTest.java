@@ -69,7 +69,7 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         robot.initPinpoint();
 
         driveCommand = new DriveWithGamepadCommand(gamepad1);
-        aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand = new AimTurretAtPointCommand(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         shooterRPMCommand = new AutoShooterRPMCommand(robot.shooterSubsystem, robot.pinpointSubsystem);
         hoodPositionCommand = new AutoHoodPositionCommand(robot.hoodSubsystem, robot.pinpointSubsystem);
 
@@ -97,10 +97,10 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
     public void initialize_loop() {
         robot.periodic();
         // Keep aim target synced with dashboard constants during init
-        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
-        multiTelemetry.addData("aim target x (in)", Common.SELECTED_FIELD_TARGET_X_IN);
-        multiTelemetry.addData("aim target y (in)", Common.SELECTED_FIELD_TARGET_Y_IN);
+        multiTelemetry.addData("aim target x (in)", Common.TARGET_X_IN);
+        multiTelemetry.addData("aim target y (in)", Common.TARGET_Y_IN);
         multiTelemetry.update();
     }
 
@@ -112,7 +112,7 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         boolean shooterWithinTolerance = robot.shooterSubsystem.withinTolerance();
 
         // Keep aim target and offset updated each loop
-        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
         // A: toggle intake on/off
@@ -177,8 +177,8 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         multiTelemetry.addData("hood pos", robot.hoodSubsystem.hoodPos);
         multiTelemetry.addData("turret offset (deg)", turretAngleOffsetDeg);
 
-        double distance = Math.hypot(Common.SELECTED_FIELD_TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
-                Common.SELECTED_FIELD_TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
+        double distance = Math.hypot(Common.TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
+                Common.TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
         multiTelemetry.addData("Distance to Goal", distance);
 
         // Turret debug

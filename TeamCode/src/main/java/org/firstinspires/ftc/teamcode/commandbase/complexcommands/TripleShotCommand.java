@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.commandbase.complexcommands;
 
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
@@ -33,8 +34,8 @@ public class TripleShotCommand extends SequentialCommandGroup {
             final int slotIdx = i;
             addCommands(
                     new SpindexerSetPositionCommand(outtakeStateForSlot(slotIdx)),
-                    new TransferAndShootCommand(),
-                    new WaitCommand(2000)
+                    new WaitUntilCommand(shooter::withinTolerance),
+                    new TransferAndShootCommand()
             );
         }
 

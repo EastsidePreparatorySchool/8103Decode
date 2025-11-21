@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
-import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TransferAndShootCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
@@ -76,7 +74,7 @@ public class DualTeleOp extends CommandOpMode {
 
         // Default commands
         driveCommand = new DriveWithGamepadCommand(gamepad1);
-        aimCommand = new AimTurretAtPointCommand(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand = new AimTurretAtPointCommand(Common.TARGET_X_IN, Common.TARGET_Y_IN);
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
@@ -103,10 +101,10 @@ public class DualTeleOp extends CommandOpMode {
     public void initialize_loop() {
         robot.periodic();
         // Keep aim target synced with dashboard constants during init
-        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
-        multiTelemetry.addData("aim target x (in)", Common.SELECTED_FIELD_TARGET_X_IN);
-        multiTelemetry.addData("aim target y (in)", Common.SELECTED_FIELD_TARGET_Y_IN);
+        multiTelemetry.addData("aim target x (in)", Common.TARGET_X_IN);
+        multiTelemetry.addData("aim target y (in)", Common.TARGET_Y_IN);
         multiTelemetry.update();
     }
 
@@ -118,7 +116,7 @@ public class DualTeleOp extends CommandOpMode {
         boolean shooterWithinTolerance = robot.shooterSubsystem.withinTolerance();
 
         // Keep aim target and offset updated each loop
-        aimCommand.setTargetPoint(Common.SELECTED_FIELD_TARGET_X_IN, Common.SELECTED_FIELD_TARGET_Y_IN);
+        aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
         // Gamepad2 right bumper: toggle shooter ON/OFF (target RPM set separately)
@@ -153,7 +151,7 @@ public class DualTeleOp extends CommandOpMode {
         // Gamepad2 left bumper: triple shot sequence (outtake slots 1,2,3)
         boolean lb2 = gamepad2.left_bumper;
         if (lb2 && !prevLB2) {
-            if (shooterWithinTolerance && robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
+            if (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
                 slotFull[0] = false;
                 slotFull[1] = false;
                 slotFull[2] = false;

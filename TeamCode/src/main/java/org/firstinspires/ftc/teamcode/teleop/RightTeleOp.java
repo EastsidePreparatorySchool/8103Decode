@@ -7,8 +7,8 @@ import org.firstinspires.ftc.teamcode.lib.Common;
 public class RightTeleOp extends SoloTeleOp {
     @Override
     public void initialize() {
-        Common.SELECTED_FIELD_TARGET_X_IN = Common.RIGHT_FIELD_TARGET_X_IN;
-        Common.SELECTED_FIELD_TARGET_Y_IN = Common.RIGHT_FIELD_TARGET_Y_IN;
+        Common.TARGET_X_IN = Common.RIGHT_FIELD_TARGET_X_IN;
+        Common.TARGET_Y_IN = Common.RIGHT_FIELD_TARGET_Y_IN;
         super.initialize();
     }
 }

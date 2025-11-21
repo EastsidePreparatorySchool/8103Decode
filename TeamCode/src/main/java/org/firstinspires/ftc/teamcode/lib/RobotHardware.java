@@ -143,7 +143,7 @@ public class RobotHardware {
     
     public void initIntake() {
         intake = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "intake"));
-        intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeSubsystem = new IntakeSubsystem();
