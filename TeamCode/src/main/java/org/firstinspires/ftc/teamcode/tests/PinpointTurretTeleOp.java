@@ -7,7 +7,11 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.seattlesolvers.solverslib.command.WaitCommand;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
@@ -17,7 +21,6 @@ import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-@Disabled
 @Config
 @TeleOp(name = "PinpointTurretTeleOp", group = "Command")
 public class PinpointTurretTeleOp extends CommandOpMode {
@@ -49,12 +52,12 @@ public class PinpointTurretTeleOp extends CommandOpMode {
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
-        schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
     }
 
     @Override
     public void initialize_loop() {
         robot.periodic();
+        robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, Common.START_X_IN, Common.START_Y_IN, AngleUnit.DEGREES, Common.START_HEADING_DEG));
         aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         multiTelemetry.addData("init target x (in)", Common.TARGET_X_IN);
         multiTelemetry.addData("init target y (in)", Common.TARGET_Y_IN);

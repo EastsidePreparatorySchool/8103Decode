@@ -21,7 +21,6 @@ public class TurretTuning extends CommandOpMode {
     public static double turretKi = Common.TURRET_KI;
     public static double turretKd = Common.TURRET_KD;
     public static double turretKf = Common.TURRET_KF;
-
     private final RobotHardware robot = RobotHardware.getInstance();
     private CommandScheduler scheduler;
     private MultipleTelemetry multiTelemetry;
@@ -115,8 +114,9 @@ public class TurretTuning extends CommandOpMode {
         if (turretSubsystem.turretPIDF.getP() != turretKp
                 || turretSubsystem.turretPIDF.getI() != turretKi
                 || turretSubsystem.turretPIDF.getD() != turretKd
-                || turretSubsystem.turretPIDF.getF() != turretKf) {
-            turretSubsystem.turretPIDF.setPIDF(turretKp, turretKi, turretKd, turretKf);
+                || turretSubsystem.kf != turretKf) {
+            turretSubsystem.turretPIDF.setPIDF(turretKp, turretKi, turretKd, 0);
+            turretSubsystem.kf = turretKf;
         }
     }
 

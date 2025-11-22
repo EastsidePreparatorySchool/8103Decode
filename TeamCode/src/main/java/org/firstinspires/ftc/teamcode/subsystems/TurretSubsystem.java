@@ -21,10 +21,12 @@ public class TurretSubsystem extends SubsystemBase {
     public int pos;
     public double target;
     public double power;
+    public double kf;
     public TurretSubsystem() {
         robot = RobotHardware.getInstance();
         setTurretState(TurretState.STOPPED);
-        turretPIDF = new PIDFController(Common.TURRET_KP, Common.TURRET_KI, Common.TURRET_KD, Common.TURRET_KF);
+        turretPIDF = new PIDFController(Common.TURRET_KP, Common.TURRET_KI, Common.TURRET_KD, 0);
+        kf = Common.TURRET_KF;
     }
 
     public void setTurretState(TurretState turretState) {
@@ -49,6 +51,7 @@ public class TurretSubsystem extends SubsystemBase {
     public void updateHardware() {
         pos = robot.turret.getCurrentPosition();
         power = MathUtils.clamp(turretPIDF.calculate(pos, target), -1, 1);
+        power += kf * Math.signum(turretPIDF.getPositionError());
         robot.turret.setPower(power);
     }
 

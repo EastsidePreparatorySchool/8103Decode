@@ -7,6 +7,9 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
@@ -64,8 +67,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
         robot.initIntake();
         robot.initTransfer();
         robot.initSpindexer();
-        // Keep IMU heading if we have a saved pose from auto
-        Common.PINPOINT_RESET_IMU_ON_INIT = false;
+        Common.PINPOINT_RESET_IMU_ON_INIT = true;
         robot.initPinpoint();
 
         // Default commands
@@ -80,22 +82,12 @@ public class HoodShooterDataCollection extends CommandOpMode {
         schedule(new HoodSetPositionCommand(hoodPos));
         schedule(new ShooterSetTargetRPMCommand(0.0));
         schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
-
-        // Restore saved pose/turret targets when available
-        if (PersistentState.hasSavedPose) {
-            schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches,
-                    PersistentState.savedHeadingDeg));
-        } else {
-            schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
-        }
-        if (PersistentState.hasSavedTurret) {
-            schedule(new TurretSetTargetCommand(PersistentState.savedTurretDegrees));
-        }
     }
 
     @Override
     public void initialize_loop() {
         robot.periodic();
+        robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, Common.START_X_IN, Common.START_Y_IN, AngleUnit.DEGREES, Common.START_HEADING_DEG));
         // Keep aim target synced with dashboard constants during init
         aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
