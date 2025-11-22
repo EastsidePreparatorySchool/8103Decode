@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamep
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
+import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 @Disabled
