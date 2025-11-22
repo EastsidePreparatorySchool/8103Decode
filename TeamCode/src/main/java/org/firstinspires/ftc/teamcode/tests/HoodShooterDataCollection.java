@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -15,18 +15,15 @@ import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamep
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterSetTargetRPMCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
-import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 @TeleOp(name = "HoodShooterDataCollection", group = "Tuning")
@@ -51,6 +48,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
     // Edge detection
     private boolean prevA, prevY, prevLB, prevRB, prevX;
     private boolean prevDpadUp, prevDpadDown, prevDpadLeft, prevDpadRight;
+    private boolean prevStart;
 
     @Override
     public void initialize() {
@@ -104,6 +102,29 @@ public class HoodShooterDataCollection extends CommandOpMode {
         // Keep aim target and offset updated each loop
         aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
+
+        boolean start = gamepad2.start;
+        if (start && !prevStart) {
+            targetRpm = Common.shooterInterpLUT.get(
+                    Math.hypot(
+                            144 - robot.turretSubsystem.turretX,
+                            144 - robot.turretSubsystem.turretY)
+            );
+            hoodPos = Common.hoodInterpLUT.get(
+                    Math.hypot(
+                            144 - robot.turretSubsystem.turretX,
+                            144 - robot.turretSubsystem.turretY)
+            );
+            schedule(new ShooterSetTargetRPMCommand(targetRpm));
+            schedule(new HoodSetPositionCommand(hoodPos));
+        }
+        
+        if(gamepad2.back) {
+            targetRpm = 5000;
+            hoodPos = 0.5;
+            schedule(new ShooterSetTargetRPMCommand(targetRpm));
+            schedule(new HoodSetPositionCommand(hoodPos));
+        }
 
         // Gamepad2 right bumper: toggle shooter ON/OFF (target RPM managed separately)
         boolean rb = gamepad2.right_bumper;

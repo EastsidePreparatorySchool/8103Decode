@@ -130,14 +130,11 @@ public class ShooterSubsystem extends SubsystemBase {
             power = 0.0;
         if (power > 1.0)
             power = 1.0;
-
+        if (state == ShooterState.OFF) {
+            power = 0;
+        }
         robot.flywheel.setPower(power);
         robot.flywheel2.setPower(power);
-
-        if (state == ShooterState.OFF) {
-            robot.flywheel.setPower(0.0);
-            robot.flywheel2.setPower(0.0);
-        }
         // Telemetry moved to OpModes
 
         // Save time history

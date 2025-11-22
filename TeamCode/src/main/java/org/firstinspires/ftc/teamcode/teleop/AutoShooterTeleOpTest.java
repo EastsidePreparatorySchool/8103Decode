@@ -150,10 +150,10 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         boolean dLeft = gamepad2.dpad_left;
         boolean dRight = gamepad2.dpad_right;
         if (dLeft && !prevDpadLeft) {
-            turretAngleOffsetDeg += 4.0;
+            turretAngleOffsetDeg += 2.0;
         }
         if (dRight && !prevDpadRight) {
-            turretAngleOffsetDeg -= 4.0;
+            turretAngleOffsetDeg -= 2.0;
         }
         prevDpadLeft = dLeft;
         prevDpadRight = dRight;

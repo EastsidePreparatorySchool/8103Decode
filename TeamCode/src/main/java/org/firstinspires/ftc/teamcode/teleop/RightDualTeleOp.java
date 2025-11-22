@@ -11,6 +11,8 @@ public class RightDualTeleOp extends DualTeleOp {
         Common.TARGET_Y_IN = Common.RIGHT_FIELD_TARGET_Y_IN;
         Common.START_X_IN = Common.RIGHT_FIELD_START_X_IN;
         Common.START_Y_IN = Common.RIGHT_FIELD_START_Y_IN;
+        Common.ACTUAL_TARGET_X_IN = Common.RIGHT_FIELD_ACTUAL_TARGET_X_IN;
+        Common.ACTUAL_TARGET_Y_IN = Common.RIGHT_FIELD_ACTUAL_TARGET_Y_IN;
         super.initialize();
     }
 }

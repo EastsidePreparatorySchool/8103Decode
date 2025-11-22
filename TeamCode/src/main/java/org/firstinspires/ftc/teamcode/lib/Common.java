@@ -7,10 +7,10 @@ import com.seattlesolvers.solverslib.util.InterpLUT;
 @Config
 public class Common {
     // Turret PIDF
-    public static double TURRET_KP = 0.027;
-    public static double TURRET_KI = 0.0;
-    public static double TURRET_KD = 0.00025;
-    public static double TURRET_KF = 0.08;
+    public static double TURRET_KP = 0.023;
+    public static double TURRET_KI = 0.02;
+    public static double TURRET_KD = 0.0002;
+    public static double TURRET_KF = 0.07;
     // Turret geometry
     public static double TURRET_FULL_ROTATION_DEGREES = 360.0;
     public static double TURRET_TICKS_PER_MOTOR_REV = 28.0;
@@ -75,16 +75,21 @@ public class Common {
     public static double LEFT_FIELD_START_X_IN = 57.0;
     public static double LEFT_FIELD_START_Y_IN = 8.5;
     public static double START_HEADING_DEG = 270.0;
-    public static double RIGHT_FIELD_TARGET_X_IN = 159.0;
+    public static double RIGHT_FIELD_TARGET_X_IN = 152.0;
     public static double RIGHT_FIELD_TARGET_Y_IN = 144.0;
-    public static double LEFT_FIELD_TARGET_X_IN = -15.0;
+    public static double RIGHT_FIELD_ACTUAL_TARGET_X_IN = 144.0;
+    public static double RIGHT_FIELD_ACTUAL_TARGET_Y_IN = 144.0;
+    public static double LEFT_FIELD_TARGET_X_IN = -8.0;
     public static double LEFT_FIELD_TARGET_Y_IN = 144.0;
+    public static double LEFT_FIELD_ACTUAL_TARGET_X_IN = 0;
+    public static double LEFT_FIELD_ACTUAL_TARGET_Y_IN = 144.0;
     // Selected field target used by opmodes; default to RIGHT
     public static double START_X_IN = RIGHT_FIELD_START_X_IN;
     public static double START_Y_IN = RIGHT_FIELD_START_Y_IN;
     public static double TARGET_X_IN = RIGHT_FIELD_TARGET_X_IN;
     public static double TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
-
+    public static double ACTUAL_TARGET_X_IN = RIGHT_FIELD_ACTUAL_TARGET_X_IN;
+    public static double ACTUAL_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
     // Interpolation Tables
     public static InterpLUT shooterInterpLUT = ShooterHoodData.getShooterInterpLUT();
     public static InterpLUT hoodInterpLUT = ShooterHoodData.getHoodInterpLUT();

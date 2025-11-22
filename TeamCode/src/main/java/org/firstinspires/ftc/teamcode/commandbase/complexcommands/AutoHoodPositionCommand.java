@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.commandbase.complexcommands;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.lib.Common;
+import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 
@@ -17,13 +18,15 @@ public class AutoHoodPositionCommand extends CommandBase {
 
     @Override
     public void execute() {
-        double currentX = pinpointSubsystem.getXInches();
-        double currentY = pinpointSubsystem.getYInches();
+        double distance = Math.hypot(Common.ACTUAL_TARGET_X_IN - RobotHardware.getInstance().turretSubsystem.turretX,
+                Common.ACTUAL_TARGET_Y_IN - RobotHardware.getInstance().turretSubsystem.turretY);
 
-        double distance = Math.hypot(Common.TARGET_X_IN - currentX,
-                Common.TARGET_Y_IN - currentY);
-
-        double targetHoodPos = Common.hoodInterpLUT.get(distance);
+        double targetHoodPos = Common.HOOD_INITIAL_POS;
+        try {
+            targetHoodPos = Common.hoodInterpLUT.get(distance);
+        } catch (Exception e) {
+            targetHoodPos = Common.HOOD_INITIAL_POS;
+        }
 
         hoodSubsystem.setHoodPosition(targetHoodPos);
     }
