@@ -189,8 +189,8 @@ public class HoodShooterDataCollection extends CommandOpMode {
         boolean x = gamepad1.x;
         if (x && !prevX) {
             double dist = Math.hypot(
-                    Common.TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
-                    Common.TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
+                    Common.TARGET_X_IN - robot.turretSubsystem.turretX,
+                    Common.TARGET_Y_IN - robot.turretSubsystem.turretY);
             multiTelemetry.addLine(String.format("%f, %f, %f", dist, hoodPos, targetRpm));
         }
         prevX = x;
@@ -200,15 +200,15 @@ public class HoodShooterDataCollection extends CommandOpMode {
         multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
         multiTelemetry.addData("turret x (in)", robot.turretSubsystem.turretX);
         multiTelemetry.addData("turret y (in)", robot.turretSubsystem.turretY);
+        multiTelemetry.addData("turret error (ticks)", Math.abs(robot.turretSubsystem.turretPIDF.getPositionError()));
         multiTelemetry.addData("heading (deg)", robot.pinpointSubsystem.getHeadingDegrees());
         multiTelemetry.addData("shooter rpm target", targetRpm);
         multiTelemetry.addData("shooter rpm actual", robot.shooterSubsystem.currentRpm);
         multiTelemetry.addData("hood pos", hoodPos);
-        multiTelemetry.addData("turret offset (deg)", turretAngleOffsetDeg);
 
         double currentDist = Math.hypot(
-                Common.TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
-                Common.TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
+                Common.TARGET_X_IN - robot.turretSubsystem.turretX,
+                Common.TARGET_Y_IN - robot.turretSubsystem.turretY);
         multiTelemetry.addData("Distance to Goal", currentDist);
 
         multiTelemetry.update();

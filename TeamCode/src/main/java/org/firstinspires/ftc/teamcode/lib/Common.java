@@ -7,10 +7,10 @@ import com.seattlesolvers.solverslib.util.InterpLUT;
 @Config
 public class Common {
     // Turret PIDF
-    public static double TURRET_KP = 0.024;
+    public static double TURRET_KP = 0.027;
     public static double TURRET_KI = 0.0;
-    public static double TURRET_KD = 0.0004;
-    public static double TURRET_KF = 0.06;
+    public static double TURRET_KD = 0.00025;
+    public static double TURRET_KF = 0.08;
     // Turret geometry
     public static double TURRET_FULL_ROTATION_DEGREES = 360.0;
     public static double TURRET_TICKS_PER_MOTOR_REV = 28.0;
@@ -71,13 +71,13 @@ public class Common {
     public static double DRIVE_SLOW_MULT = 0.5;
     // Field targeting and start pose (inches/degrees)
     public static double RIGHT_FIELD_START_X_IN = 87.0;
-    public static double RIGHT_FIELD_START_Y_IN = 12.0;
+    public static double RIGHT_FIELD_START_Y_IN = 8.5;
     public static double LEFT_FIELD_START_X_IN = 57.0;
-    public static double LEFT_FIELD_START_Y_IN = 12.0;
+    public static double LEFT_FIELD_START_Y_IN = 8.5;
     public static double START_HEADING_DEG = 270.0;
-    public static double RIGHT_FIELD_TARGET_X_IN = 148.0;
+    public static double RIGHT_FIELD_TARGET_X_IN = 159.0;
     public static double RIGHT_FIELD_TARGET_Y_IN = 144.0;
-    public static double LEFT_FIELD_TARGET_X_IN = -4.0;
+    public static double LEFT_FIELD_TARGET_X_IN = -15.0;
     public static double LEFT_FIELD_TARGET_Y_IN = 144.0;
     // Selected field target used by opmodes; default to RIGHT
     public static double START_X_IN = RIGHT_FIELD_START_X_IN;
