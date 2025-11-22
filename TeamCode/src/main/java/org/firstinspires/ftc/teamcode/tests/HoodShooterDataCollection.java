@@ -198,6 +198,8 @@ public class HoodShooterDataCollection extends CommandOpMode {
         // Telemetry summary
         multiTelemetry.addData("pose x (in)", robot.pinpointSubsystem.getXInches());
         multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
+        multiTelemetry.addData("turret x (in)", robot.turretSubsystem.turretX);
+        multiTelemetry.addData("turret y (in)", robot.turretSubsystem.turretY);
         multiTelemetry.addData("heading (deg)", robot.pinpointSubsystem.getHeadingDegrees());
         multiTelemetry.addData("shooter rpm target", targetRpm);
         multiTelemetry.addData("shooter rpm actual", robot.shooterSubsystem.currentRpm);

@@ -22,6 +22,8 @@ public class TurretSubsystem extends SubsystemBase {
     public double target;
     public double power;
     public double kf;
+    public double turretX;
+    public double turretY;
     public TurretSubsystem() {
         robot = RobotHardware.getInstance();
         setTurretState(TurretState.STOPPED);

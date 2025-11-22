@@ -62,6 +62,8 @@ public class AimTurretAtPointCommand extends CommandBase {
                 + Common.TURRET_OFFSET_X_IN * Math.cos(robotHeadingRad);
         double turretY = robotY
                 + Common.TURRET_OFFSET_X_IN * Math.sin(robotHeadingRad);
+        turret.turretX = turretX;
+        turret.turretY = turretY;
 
         double deltaX = targetX - turretX;
         double deltaY = targetY - turretY;
