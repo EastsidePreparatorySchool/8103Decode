@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.tests;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,8 +14,9 @@ import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 
+@Disabled
 @Config
-@TeleOp(name = "PinpointDriveTest", group = "Command")
+@TeleOp(name = "PinpointDriveTest", group = "Tuning")
 public class PinpointDriveTest extends CommandOpMode {
     public static double START_X_IN = 0.0;
     public static double START_Y_IN = 0.0;

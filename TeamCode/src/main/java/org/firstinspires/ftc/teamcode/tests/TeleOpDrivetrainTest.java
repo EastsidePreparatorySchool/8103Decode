@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 
-@TeleOp(name = "TeleOpDrivetrainTest")
+@TeleOp(name = "TeleOpDrivetrainTest", group = "Tuning")
 public class TeleOpDrivetrainTest extends CommandOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     private CommandScheduler scheduler;

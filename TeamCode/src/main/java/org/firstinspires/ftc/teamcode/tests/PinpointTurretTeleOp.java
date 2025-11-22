@@ -3,26 +3,24 @@ package org.firstinspires.ftc.teamcode.tests;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
-import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
+import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
-
+@Disabled
 @Config
-@TeleOp(name = "PinpointTurretTeleOp", group = "Command")
+@TeleOp(name = "PinpointTurretTeleOp", group = "Tuning")
 public class PinpointTurretTeleOp extends CommandOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     private MultipleTelemetry multiTelemetry;

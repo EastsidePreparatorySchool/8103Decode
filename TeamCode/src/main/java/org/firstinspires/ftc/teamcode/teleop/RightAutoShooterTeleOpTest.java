@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.lib.Common;
 
-@TeleOp(name = "RightAutoShooterTeleOpTest", group = "Testing")
+@TeleOp(name = "RightDualTeleOp", group = "Testing")
 public class RightAutoShooterTeleOpTest extends AutoShooterTeleOpTest {
     @Override
     public void initialize() {
