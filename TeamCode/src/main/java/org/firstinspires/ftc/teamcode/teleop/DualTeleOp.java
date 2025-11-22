@@ -1,30 +1,31 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.HoodSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterSetTargetRPMCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
-import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.PersistentState;
+import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 @TeleOp(name = "DualTeleOp", group = "Command")
 @Config
@@ -81,19 +82,15 @@ public class DualTeleOp extends CommandOpMode {
 
         // Initial subsystem states
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
-        schedule(new ShooterSetTargetRPMCommand(Common.SHOOTER_FAR_RPM));
+        schedule(new ShooterSetTargetRPMCommand(0.0));
         schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
         schedule(new HoodSetPositionCommand(hoodPos));
 
         // Restore saved pose/turret targets when available
         if (PersistentState.hasSavedPose) {
-            schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches,
-                    PersistentState.savedHeadingDeg));
-        } else {
-            schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
-        }
-        if (PersistentState.hasSavedTurret) {
-            schedule(new TurretSetTargetCommand(PersistentState.savedTurretDegrees));
+            Common.START_X_IN = PersistentState.savedXInches;
+            Common.START_Y_IN = PersistentState.savedYInches;
+            Common.START_HEADING_DEG = PersistentState.savedHeadingDeg;
         }
     }
 
@@ -101,6 +98,7 @@ public class DualTeleOp extends CommandOpMode {
     public void initialize_loop() {
         robot.periodic();
         // Keep aim target synced with dashboard constants during init
+        robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, Common.START_X_IN, Common.START_Y_IN, AngleUnit.DEGREES, Common.START_HEADING_DEG));
         aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
         multiTelemetry.addData("aim target x (in)", Common.TARGET_X_IN);

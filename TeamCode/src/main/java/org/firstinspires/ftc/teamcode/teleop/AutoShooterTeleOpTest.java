@@ -1,30 +1,30 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
-import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
-import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoHoodPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoShooterRPMCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.PinpointSetPoseCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
-import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 @TeleOp(name = "AutoShooterTestOpMode", group = "Testing")
 @Config
@@ -80,22 +80,12 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
 
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
         schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
-
-        if (PersistentState.hasSavedPose) {
-            schedule(new PinpointSetPoseCommand(PersistentState.savedXInches, PersistentState.savedYInches,
-                    PersistentState.savedHeadingDeg));
-        } else {
-            schedule(new PinpointSetPoseCommand(Common.START_X_IN, Common.START_Y_IN, Common.START_HEADING_DEG));
-        }
-
-        if (PersistentState.hasSavedTurret) {
-            schedule(new TurretSetTargetCommand(PersistentState.savedTurretDegrees));
-        }
     }
 
     @Override
     public void initialize_loop() {
         robot.periodic();
+        robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, Common.START_X_IN, Common.START_Y_IN, AngleUnit.DEGREES, Common.START_HEADING_DEG));
         // Keep aim target synced with dashboard constants during init
         aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
