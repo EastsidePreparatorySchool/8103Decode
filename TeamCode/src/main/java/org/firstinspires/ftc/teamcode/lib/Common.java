@@ -19,6 +19,9 @@ public class Common {
     public static double TURRET_DRIVEN_PULLEY_TEETH = 108.0;
     public static double TURRET_TOLERANCE_TICKS = 5.0;
     public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 90.0;
+    // Turret center offset from robot center
+    public static double TURRET_OFFSET_X_IN = -3.0;
+    public static double TURRET_OFFSET_Y_IN = 0.0;
     // Drivetrain
     public static double INTAKE_FORWARD_POWER = 1.0;
     public static double INTAKE_BACKWARD_POWER = -1.0;

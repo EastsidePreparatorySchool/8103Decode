@@ -7,8 +7,10 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.stopRobot;
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.telemetryM;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.ArrayList;
@@ -28,6 +30,9 @@ import java.util.ArrayList;
  * @author Baron Henderson - 20077 The Indubitables
  * @version 1.0, 3/13/2024
  */
+
+@Configurable
+@Autonomous(name="LateralVelocityTuner", group="pedro")
 public class LateralVelocityTuner extends OpMode {
     private final ArrayList<Double> velocities = new ArrayList<>();
 

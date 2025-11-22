@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 
 public class AimTurretAtPointCommand extends CommandBase {
@@ -51,12 +52,19 @@ public class AimTurretAtPointCommand extends CommandBase {
         double robotX = odometry.getPose().getX(DistanceUnit.INCH);
         double robotY = odometry.getPose().getY(DistanceUnit.INCH);
         double robotHeadingDeg = odometry.getPose().getHeading(AngleUnit.DEGREES);
+        double robotHeadingRad = Math.toRadians(robotHeadingDeg);
 
         double targetX = this.targetX;
         double targetY = this.targetY;
 
-        double deltaX = targetX - robotX;
-        double deltaY = targetY - robotY;
+        // Compute turret world position so aiming accounts for turret offset from robot center
+        double turretX = robotX
+                + Common.TURRET_OFFSET_X_IN * Math.cos(robotHeadingRad);
+        double turretY = robotY
+                + Common.TURRET_OFFSET_X_IN * Math.sin(robotHeadingRad);
+
+        double deltaX = targetX - turretX;
+        double deltaY = targetY - turretY;
         if (Math.hypot(deltaX, deltaY) < 1e-6) {
             return;
         }
