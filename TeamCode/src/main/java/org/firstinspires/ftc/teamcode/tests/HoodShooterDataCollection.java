@@ -105,8 +105,8 @@ public class HoodShooterDataCollection extends CommandOpMode {
         aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
-        // Right bumper: toggle shooter ON/OFF (target RPM managed separately)
-        boolean rb = gamepad1.right_bumper;
+        // Gamepad2 right bumper: toggle shooter ON/OFF (target RPM managed separately)
+        boolean rb = gamepad2.right_bumper;
         if (rb && !prevRB) {
             ShooterSubsystem.ShooterState next = (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
                     ? ShooterSubsystem.ShooterState.OFF
@@ -118,7 +118,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
         }
         prevRB = rb;
 
-        // A: toggle intake on/off
+        // Gamepad1 A: toggle intake on/off
         boolean a = gamepad1.a;
         if (a && !prevA) {
             IntakeSubsystem.IntakeState next = (robot.intakeSubsystem.state == IntakeSubsystem.IntakeState.FORWARD)
@@ -128,7 +128,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
         }
         prevA = a;
 
-        // Y: cycle through intake positions 1 -> 2 -> 3 -> 1 ...
+        // Gamepad1 Y: cycle through intake positions 1 -> 2 -> 3 -> 1 ...
         boolean y = gamepad1.y;
         if (y && !prevY) {
             int currIdx = intakeIndexFromState(robot.spindexerSubsystem.state);
@@ -137,8 +137,8 @@ public class HoodShooterDataCollection extends CommandOpMode {
         }
         prevY = y;
 
-        // Left bumper: triple shot sequence (outtake slots 1,2,3)
-        boolean lb = gamepad1.left_bumper;
+        // Gamepad2 left bumper: triple shot sequence (outtake slots 1,2,3)
+        boolean lb = gamepad2.left_bumper;
         if (lb && !prevLB) {
             if (robot.shooterSubsystem.targetRpm > 0.0) {
                 slotFull[0] = false;
@@ -149,23 +149,23 @@ public class HoodShooterDataCollection extends CommandOpMode {
         }
         prevLB = lb;
 
-        // Dpad up/down: adjust hood position by +/-0.01
-        boolean dUp = gamepad1.dpad_up;
-        boolean dDn = gamepad1.dpad_down;
+        // Gamepad2 Dpad up/down: adjust hood position by +/-0.01
+        boolean dUp = gamepad2.dpad_up;
+        boolean dDn = gamepad2.dpad_down;
         if (dUp && !prevDpadUp) {
-            hoodPos = clamp01(hoodPos - 0.01);
+            hoodPos = clamp01(hoodPos + 0.01);
             schedule(new HoodSetPositionCommand(hoodPos));
         }
         if (dDn && !prevDpadDown) {
-            hoodPos = clamp01(hoodPos + 0.01);
+            hoodPos = clamp01(hoodPos - 0.01);
             schedule(new HoodSetPositionCommand(hoodPos));
         }
         prevDpadUp = dUp;
         prevDpadDown = dDn;
 
-        // Dpad left/right: adjust shooter RPM by +/- 100
-        boolean dLeft = gamepad1.dpad_left;
-        boolean dRight = gamepad1.dpad_right;
+        // Gamepad2 Dpad left/right: adjust shooter RPM by +/- 100
+        boolean dLeft = gamepad2.dpad_left;
+        boolean dRight = gamepad2.dpad_right;
         if (dLeft && !prevDpadLeft) {
             targetRpm -= 100.0;
             if (targetRpm < 0)
@@ -189,8 +189,8 @@ public class HoodShooterDataCollection extends CommandOpMode {
         boolean x = gamepad1.x;
         if (x && !prevX) {
             double dist = Math.hypot(
-                    Common.TARGET_X_IN - robot.turretSubsystem.turretX,
-                    Common.TARGET_Y_IN - robot.turretSubsystem.turretY);
+                    144 - robot.turretSubsystem.turretX,
+                    144 - robot.turretSubsystem.turretY);
             multiTelemetry.addLine(String.format("%f, %f, %f", dist, hoodPos, targetRpm));
         }
         prevX = x;
@@ -200,15 +200,16 @@ public class HoodShooterDataCollection extends CommandOpMode {
         multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
         multiTelemetry.addData("turret x (in)", robot.turretSubsystem.turretX);
         multiTelemetry.addData("turret y (in)", robot.turretSubsystem.turretY);
-        multiTelemetry.addData("turret error (ticks)", Math.abs(robot.turretSubsystem.turretPIDF.getPositionError()));
+        multiTelemetry.addData("turret target (deg)", robot.turretSubsystem.deg);
+        multiTelemetry.addData("turret actual (deg)", robot.turretSubsystem.ticksToDegrees(robot.turretSubsystem.pos));
         multiTelemetry.addData("heading (deg)", robot.pinpointSubsystem.getHeadingDegrees());
         multiTelemetry.addData("shooter rpm target", targetRpm);
         multiTelemetry.addData("shooter rpm actual", robot.shooterSubsystem.currentRpm);
         multiTelemetry.addData("hood pos", hoodPos);
 
         double currentDist = Math.hypot(
-                Common.TARGET_X_IN - robot.turretSubsystem.turretX,
-                Common.TARGET_Y_IN - robot.turretSubsystem.turretY);
+                144 - robot.turretSubsystem.turretX,
+                144 - robot.turretSubsystem.turretY);
         multiTelemetry.addData("Distance to Goal", currentDist);
 
         multiTelemetry.update();

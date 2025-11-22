@@ -105,7 +105,7 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
-        // A: toggle intake on/off
+        // Gamepad1 A: toggle intake on/off
         boolean a = gamepad1.a;
         if (a && !prevA) {
             IntakeSubsystem.IntakeState next = (robot.intakeSubsystem.state == IntakeSubsystem.IntakeState.FORWARD)
@@ -115,7 +115,7 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         }
         prevA = a;
 
-        // Y: cycle through intake positions 1 -> 2 -> 3 -> 1 ...
+        // Gamepad1 Y: cycle through intake positions 1 -> 2 -> 3 -> 1 ...
         boolean y = gamepad1.y;
         if (y && !prevY) {
             int currIdx = intakeIndexFromState(robot.spindexerSubsystem.state);
@@ -124,8 +124,8 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         }
         prevY = y;
 
-        // Left bumper: triple shot sequence (outtake slots 1,2,3)
-        boolean lb = gamepad1.left_bumper;
+        // Gamepad2 left bumper: triple shot sequence (outtake slots 1,2,3)
+        boolean lb = gamepad2.left_bumper;
         if (lb && !prevLB) {
             if (shooterWithinTolerance && robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
                 slotFull[0] = false;
@@ -136,8 +136,8 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         }
         prevLB = lb;
 
-        // Right bumper: toggle shooter on/off
-        boolean rb = gamepad1.right_bumper;
+        // Gamepad2 right bumper: toggle shooter on/off
+        boolean rb = gamepad2.right_bumper;
         if (rb && !prevRB) {
             ShooterSubsystem.ShooterState nextState = (robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON)
                     ? ShooterSubsystem.ShooterState.OFF
@@ -146,9 +146,9 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         }
         prevRB = rb;
 
-        // Dpad left/right: adjust turret aim offset by 4 degrees
-        boolean dLeft = gamepad1.dpad_left;
-        boolean dRight = gamepad1.dpad_right;
+        // Gamepad2 Dpad left/right: adjust turret aim offset by 4 degrees
+        boolean dLeft = gamepad2.dpad_left;
+        boolean dRight = gamepad2.dpad_right;
         if (dLeft && !prevDpadLeft) {
             turretAngleOffsetDeg += 4.0;
         }
