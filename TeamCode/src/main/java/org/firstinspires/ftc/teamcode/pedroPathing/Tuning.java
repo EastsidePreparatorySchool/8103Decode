@@ -21,9 +21,9 @@ import com.pedropathing.math.*;
 import com.pedropathing.paths.*;
 import com.pedropathing.telemetry.SelectableOpMode;
 import com.pedropathing.util.*;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,21 +56,7 @@ public class Tuning extends SelectableOpMode {
                 l.add("Lateral Tuner", LateralTuner::new);
                 l.add("Turn Tuner", TurnTuner::new);
             });
-            s.folder("Automatic", a -> {
-                a.add("Forward Velocity Tuner", ForwardVelocityTuner::new);
-                a.add("Lateral Velocity Tuner", LateralVelocityTuner::new);
-                a.add("Forward Zero Power Acceleration Tuner", ForwardZeroPowerAccelerationTuner::new);
-                a.add("Lateral Zero Power Acceleration Tuner", LateralZeroPowerAccelerationTuner::new);
-            });
-            s.folder("Manual", p -> {
-                p.add("Translational Tuner", TranslationalTuner::new);
-                p.add("Heading Tuner", HeadingTuner::new);
-                p.add("Drive Tuner", DriveTuner::new);
-                p.add("Line Tuner", Line::new);
-                p.add("Centripetal Tuner", CentripetalTuner::new);
-            });
             s.folder("Tests", p -> {
-                p.add("Line", Line::new);
                 p.add("Triangle", Triangle::new);
                 p.add("Circle", Circle::new);
             });
@@ -80,23 +66,22 @@ public class Tuning extends SelectableOpMode {
     @Override
     public void onSelect() {
         if (follower == null) {
-            follower = Constants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
-        } else {
-            follower = Constants.createFollower(hardwareMap);
         }
 
+        initializeFollower(hardwareMap);
         follower.setStartingPose(new Pose());
-
-        poseHistory = follower.getPoseHistory();
-
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-
-        Drawing.init();
     }
 
     @Override
     public void onLog(List<String> lines) {}
+
+    public static void initializeFollower(HardwareMap hardwareMap) {
+        follower = Constants.createFollower(hardwareMap);
+        poseHistory = follower.getPoseHistory();
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        Drawing.init();
+    }
 
     public static void drawOnlyCurrent() {
         try {
@@ -310,144 +295,6 @@ class TurnTuner extends OpMode {
         telemetryM.update(telemetry);
 
         draw();
-    }
-}
-
-/**
- * This is the Line Test Tuner OpMode. It will drive the robot forward and back
- * The user should push the robot laterally and angular to test out the drive, heading, and translational PIDFs.
- *
- * @author Baron Henderson - 20077 The Indubitables
- * @author Anyi Lin - 10158 Scott's Bots
- * @author Aaron Yang - 10158 Scott's Bots
- * @author Harrison Womack - 10158 Scott's Bots
- * @version 1.0, 3/12/2024
- */
-class Line extends OpMode {
-    public static double DISTANCE = 40;
-    private boolean forward = true;
-
-    private Path forwards;
-    private Path backwards;
-
-    @Override
-    public void init() {
-        follower.setStartingPose(new Pose(72, 72));
-    }
-
-    /** This initializes the Follower and creates the forward and backward Paths. */
-    @Override
-    public void init_loop() {
-        telemetryM.debug("This will activate all the PIDF(s)");
-        telemetryM.debug("The robot will go forward and backward continuously along the path while correcting.");
-        telemetryM.debug("You can adjust the PIDF values to tune the robot's drive PIDF(s).");
-        telemetryM.update(telemetry);
-        follower.update();
-        drawOnlyCurrent();
-    }
-
-    @Override
-    public void start() {
-        follower.activateAllPIDFs();
-        forwards = new Path(new BezierLine(new Pose(72,72), new Pose(DISTANCE + 72,72)));
-        forwards.setConstantHeadingInterpolation(0);
-        backwards = new Path(new BezierLine(new Pose(DISTANCE + 72,72), new Pose(72,72)));
-        backwards.setConstantHeadingInterpolation(0);
-        follower.followPath(forwards);
-    }
-
-    /** This runs the OpMode, updating the Follower as well as printing out the debug statements to the Telemetry */
-    @Override
-    public void loop() {
-        follower.update();
-        draw();
-
-        if (!follower.isBusy()) {
-            if (forward) {
-                forward = false;
-                follower.followPath(backwards);
-            } else {
-                forward = true;
-                follower.followPath(forwards);
-            }
-        }
-
-        telemetryM.debug("Driving Forward?: " + forward);
-        telemetryM.update(telemetry);
-    }
-}
-
-/**
- * This is the Centripetal Tuner OpMode. It runs the robot in a specified distance
- * forward and to the left. On reaching the end of the forward Path, the robot runs the backward
- * Path the same distance back to the start. Rinse and repeat! This is good for testing a variety
- * of Vectors, like the drive Vector, the translational Vector, the heading Vector, and the
- * centripetal Vector.
- *
- * @author Baron Henderson - 20077 The Indubitables
- * @author Anyi Lin - 10158 Scott's Bots
- * @author Aaron Yang - 10158 Scott's Bots
- * @author Harrison Womack - 10158 Scott's Bots
- * @version 1.0, 3/13/2024
- */
-class   CentripetalTuner extends OpMode {
-    public static double DISTANCE = 20;
-    private boolean forward = true;
-
-    private Path forwards;
-    private Path backwards;
-
-    @Override
-    public void init() {
-        follower.setStartingPose(new Pose(72, 72));
-    }
-
-    /**
-     * This initializes the Follower and creates the forward and backward Paths.
-     * Additionally, this initializes the Panels telemetry.
-     */
-    @Override
-    public void init_loop() {
-        telemetryM.debug("This will run the robot in a curve going " + DISTANCE + " inches to the left and the same number of inches forward.");
-        telemetryM.debug("The robot will go continuously along the path.");
-        telemetryM.debug("Make sure you have enough room.");
-        telemetryM.update(telemetry);
-        follower.update();
-        drawOnlyCurrent();
-    }
-
-    @Override
-    public void start() {
-        follower.activateAllPIDFs();
-        forwards = new Path(new BezierCurve(new Pose(72,72), new Pose(Math.abs(DISTANCE) + 72,72), new Pose(Math.abs(DISTANCE) + 72,DISTANCE + 72)));
-        backwards = new Path(new BezierCurve(new Pose(Math.abs(DISTANCE) + 72,DISTANCE + 72), new Pose(Math.abs(DISTANCE) + 72,72), new Pose(72,72)));
-
-        backwards.setTangentHeadingInterpolation();
-        backwards.reverseHeadingInterpolation();
-
-        follower.followPath(forwards);
-    }
-
-    /**
-     * This runs the OpMode, updating the Follower as well as printing out the debug statements to
-     * the Telemetry, as well as the Panels.
-     */
-    @Override
-    public void loop() {
-        follower.update();
-        draw();
-        if (!follower.isBusy()) {
-            if (forward) {
-                forward = false;
-                follower.followPath(backwards);
-            } else {
-                forward = true;
-                follower.followPath(forwards);
-            }
-        }
-
-        telemetryM.debug("Driving away from the origin along the curve?: " + forward);
-        telemetryM.update(telemetry);
     }
 }
 
