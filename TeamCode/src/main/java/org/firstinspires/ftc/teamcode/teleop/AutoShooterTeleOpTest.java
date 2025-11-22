@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateComma
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
+import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -39,15 +40,12 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
     private AutoShooterRPMCommand shooterRPMCommand;
     private AutoHoodPositionCommand hoodPositionCommand;
 
-    // Spindexer slot bookkeeping (1,2,3 => index 0..2)
-    private final boolean[] slotFull = new boolean[] { false, false, false };
-
     // Turret offset
     private double turretAngleOffsetDeg = 0.0;
-
+    private double hoodOffset = 0.0;
     // Edge detection
     private boolean prevA, prevY, prevLB, prevRB;
-    private boolean prevDpadLeft, prevDpadRight;
+    private boolean prevDpadLeft, prevDpadRight, prevDpadUp, prevDpadDown;
 
     @Override
     public void initialize() {
@@ -80,6 +78,12 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
 
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
         schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
+
+        if (PersistentState.hasSavedPose) {
+            Common.START_X_IN = PersistentState.savedXInches;
+            Common.START_Y_IN = PersistentState.savedYInches;
+            Common.START_HEADING_DEG = PersistentState.savedHeadingDeg;
+        }
     }
 
     @Override
@@ -128,9 +132,6 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         boolean lb = gamepad2.left_bumper;
         if (lb && !prevLB) {
             if (shooterWithinTolerance && robot.shooterSubsystem.state == ShooterSubsystem.ShooterState.ON) {
-                slotFull[0] = false;
-                slotFull[1] = false;
-                slotFull[2] = false;
                 schedule(new TripleShotCommand());
             }
         }
@@ -158,6 +159,19 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         prevDpadLeft = dLeft;
         prevDpadRight = dRight;
 
+        boolean dUp = gamepad2.dpad_up;
+        boolean dDn = gamepad2.dpad_down;
+        if (dUp && !prevDpadUp) {
+            Common.HOOD_INITIAL_POS += 0.005;
+            hoodOffset += 0.005;
+        }
+        if (dDn && !prevDpadDown) {
+            Common.HOOD_INITIAL_POS -= 0.005;
+            hoodOffset -= 0.005;
+        }
+        prevDpadUp = dUp;
+        prevDpadDown = dDn;
+
         // Telemetry summary
         multiTelemetry.addData("pose x (in)", robot.pinpointSubsystem.getXInches());
         multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
@@ -166,6 +180,7 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         multiTelemetry.addData("shooter within tolerance", shooterWithinTolerance);
         multiTelemetry.addData("hood pos", robot.hoodSubsystem.hoodPos);
         multiTelemetry.addData("turret offset (deg)", turretAngleOffsetDeg);
+        multiTelemetry.addData("hood offset", hoodOffset);
 
         double distance = Math.hypot(Common.TARGET_X_IN - robot.pinpointSubsystem.getXInches(),
                 Common.TARGET_Y_IN - robot.pinpointSubsystem.getYInches());
@@ -175,9 +190,6 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         multiTelemetry.addData("turret target (deg)", robot.turretSubsystem.deg);
         multiTelemetry.addData("turret actual (deg)", robot.turretSubsystem.ticksToDegrees(robot.turretSubsystem.pos));
         multiTelemetry.addData("turret power calc", robot.turretSubsystem.power);
-        multiTelemetry.addData("slot1 full", slotFull[0]);
-        multiTelemetry.addData("slot2 full", slotFull[1]);
-        multiTelemetry.addData("slot3 full", slotFull[2]);
         multiTelemetry.update();
     }
 

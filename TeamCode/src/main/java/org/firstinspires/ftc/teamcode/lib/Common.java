@@ -43,7 +43,7 @@ public class Common {
     public static double SPINDEXER_INTAKE_THREE = 0.8;
     public static double SPINDEXER_OUTTAKE_ONE = 0.61;
     public static double SPINDEXER_OUTTAKE_TWO = 0.98;
-    public static double SPINDEXER_OUTTAKE_THREE = 0.23;
+    public static double SPINDEXER_OUTTAKE_THREE = 0.24;
     // Transfer / shooter
     public static double TRANSFER_DOWN = 0.49;
     public static double TRANSFER_UP = 0.3;
@@ -59,12 +59,12 @@ public class Common {
     public static double SHOOTER_KA = 0.0; // power per (RPM/s)
     public static double SHOOTER_KP = 0.002; // P on velocity error (RPM)
     // Hood initial position
-    public static double HOOD_INITIAL_POS = 0.5;
+    public static double HOOD_INITIAL_POS = 0.47;
     // Voltage normalization
     public static double NOMINAL_BATTERY_VOLTAGE = 12.0;
     public static double BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC = 0.5;
 
-    public static double HOOD_FAR_POS = 0.5;
+    public static double HOOD_FAR_POS = 0.54;
     public static double SHOOTER_FAR_RPM = 5700.0;
 
     public static double DRIVE_DEFAULT_MULT = 0.8;
@@ -75,11 +75,11 @@ public class Common {
     public static double LEFT_FIELD_START_X_IN = 57.0;
     public static double LEFT_FIELD_START_Y_IN = 8.5;
     public static double START_HEADING_DEG = 270.0;
-    public static double RIGHT_FIELD_TARGET_X_IN = 152.0;
+    public static double RIGHT_FIELD_TARGET_X_IN = 144.0;
     public static double RIGHT_FIELD_TARGET_Y_IN = 144.0;
     public static double RIGHT_FIELD_ACTUAL_TARGET_X_IN = 144.0;
     public static double RIGHT_FIELD_ACTUAL_TARGET_Y_IN = 144.0;
-    public static double LEFT_FIELD_TARGET_X_IN = -8.0;
+    public static double LEFT_FIELD_TARGET_X_IN = 0.0;
     public static double LEFT_FIELD_TARGET_Y_IN = 144.0;
     public static double LEFT_FIELD_ACTUAL_TARGET_X_IN = 0;
     public static double LEFT_FIELD_ACTUAL_TARGET_Y_IN = 144.0;
