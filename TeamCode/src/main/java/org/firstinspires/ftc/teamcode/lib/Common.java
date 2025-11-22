@@ -7,29 +7,29 @@ import com.seattlesolvers.solverslib.util.InterpLUT;
 @Config
 public class Common {
     // Turret PIDF
-    public static double TURRET_KP = 0.02;
+    public static double TURRET_KP = 0.024;
     public static double TURRET_KI = 0.0;
     public static double TURRET_KD = 0.0004;
-    public static double TURRET_KF = 0.05;
+    public static double TURRET_KF = 0.06;
     // Turret geometry
     public static double TURRET_FULL_ROTATION_DEGREES = 360.0;
     public static double TURRET_TICKS_PER_MOTOR_REV = 28.0;
     public static double TURRET_GEARBOX_RATIO = 13.7; // goBILDA 435 rpm (13.7:1)
     public static double TURRET_DRIVING_PULLEY_TEETH = 38.0;
     public static double TURRET_DRIVEN_PULLEY_TEETH = 108.0;
-    public static double TURRET_TOLERANCE_TICKS = 10.0;
+    public static double TURRET_TOLERANCE_TICKS = 5.0;
     public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 90.0;
     // Drivetrain
     public static double INTAKE_FORWARD_POWER = 1.0;
     public static double INTAKE_BACKWARD_POWER = -1.0;
     public static double SLOWMODE_MULTIPLIER = 0.4;
     // Pinpoint odometry configuration
-    // Robot 16.5" wide (center to left edge = 8.25"). X pod is 1.0" in from left =>
-    // +7.25" => +184.15 mm
-    public static double PINPOINT_X_OFFSET_MM = 126;
-    // Robot 17" long (center to back edge = 8.5"). Y pod is 1.25" in from back =>
-    // -7.25" => -184.15 mm
-    public static double PINPOINT_Y_OFFSET_MM = -106;
+    // Robot 16.5" wide (center to left edge = 8.25"). X pod is 3.1" in from left =>
+    // +
+    public static double PINPOINT_X_OFFSET_MM = 131;
+    // Robot 16.5" long (center to back edge = 8.25"). Y pod is 1.4" in from back =>
+    // -6.85 => -174mm
+    public static double PINPOINT_Y_OFFSET_MM = -174;
     public static GoBildaPinpointDriver.EncoderDirection PINPOINT_X_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     public static GoBildaPinpointDriver.EncoderDirection PINPOINT_Y_DIRECTION = GoBildaPinpointDriver.EncoderDirection.REVERSED;
     public static GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_POD_TYPE = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
