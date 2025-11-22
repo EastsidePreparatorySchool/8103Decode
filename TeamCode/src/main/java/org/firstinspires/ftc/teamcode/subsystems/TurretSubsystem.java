@@ -24,6 +24,7 @@ public class TurretSubsystem extends SubsystemBase {
     public double kf;
     public double turretX;
     public double turretY;
+    private double encoderOffset = 0.0;
     public TurretSubsystem() {
         robot = RobotHardware.getInstance();
         setTurretState(TurretState.STOPPED);
@@ -45,13 +46,26 @@ public class TurretSubsystem extends SubsystemBase {
         target = degreesToTicks(safeDegrees);
     }
 
+    public void setTurretAngle(double degrees) {
+        // We want the current position to be read as 'degrees'
+        // currentPos = rawPos + offset
+        // degreesToTicks(degrees) = rawPos + offset
+        // offset = degreesToTicks(degrees) - rawPos
+        double currentRawTicks = robot.turret.getCurrentPosition();
+        encoderOffset = degreesToTicks(degrees) - currentRawTicks;
+        
+        // Update target and deg to match so we don't jump
+        deg = degrees;
+        target = degreesToTicks(degrees);
+    }
+
     public boolean withinTolerance() {
         double errorTicks = target - pos;
         return Math.abs(errorTicks) < Common.TURRET_TOLERANCE_TICKS;
     }
 
     public void updateHardware() {
-        pos = robot.turret.getCurrentPosition();
+        pos = (int) (robot.turret.getCurrentPosition() + encoderOffset);
         power = MathUtils.clamp(turretPIDF.calculate(pos, target), -1, 1);
         power += kf * Math.signum(turretPIDF.getPositionError());
         robot.turret.setPower(power);

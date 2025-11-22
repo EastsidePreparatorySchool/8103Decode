@@ -50,6 +50,16 @@ public class PinpointTurretTeleOp extends CommandOpMode {
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
 
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
+
+        if (PersistentState.hasSavedPose) {
+            Common.START_X_IN = PersistentState.savedXInches;
+            Common.START_Y_IN = PersistentState.savedYInches;
+            Common.START_HEADING_DEG = PersistentState.savedHeadingDeg;
+        }
+
+        if (PersistentState.hasSavedTurret) {
+            robot.turretSubsystem.setTurretAngle(PersistentState.savedTurretDegrees);
+        }
     }
 
     @Override
@@ -63,8 +73,6 @@ public class PinpointTurretTeleOp extends CommandOpMode {
         multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();
     }
-
-    @Override
     public void run() {
         robot.periodic();
         scheduler.run();

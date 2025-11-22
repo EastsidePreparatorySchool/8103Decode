@@ -80,6 +80,10 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
             Common.START_Y_IN = PersistentState.savedYInches;
             Common.START_HEADING_DEG = PersistentState.savedHeadingDeg;
         }
+        
+        if (PersistentState.hasSavedTurret) {
+            robot.turretSubsystem.setTurretAngle(PersistentState.savedTurretDegrees);
+        }
     }
 
     @Override
