@@ -35,7 +35,6 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-@Autonomous(name = "FarNinePieceAuto", group = "Command")
 public class FarNinePieceAuto extends CommandOpMode {
     private RobotHardware robot = RobotHardware.getInstance();
     private Follower follower;
