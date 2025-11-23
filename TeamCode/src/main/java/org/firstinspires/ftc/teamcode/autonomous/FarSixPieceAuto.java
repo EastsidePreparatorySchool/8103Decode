@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-public class FarNinePieceAuto extends CommandOpMode {
+public class FarSixPieceAuto extends CommandOpMode {
     private RobotHardware robot = RobotHardware.getInstance();
     private Follower follower;
     private CommandScheduler scheduler;
@@ -42,7 +42,7 @@ public class FarNinePieceAuto extends CommandOpMode {
     private AimTurretAtPointCommand aimCommand;
     private AutoShooterRPMCommand shooterRPMCommand;
     private AutoHoodPositionCommand hoodPositionCommand;
-    private PathChain ball1Pickup, ball2Pickup, ball3Pickup, shot1, ball4Pickup, ball5Pickup, ball6Pickup, shot2;
+    private PathChain ball1Pickup, ball2Pickup, ball3Pickup, shot1;
 
     @Override
     public void initialize() {
@@ -90,21 +90,6 @@ public class FarNinePieceAuto extends CommandOpMode {
                         new WaitCommand(500),
                         new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
                         new FollowPathCommand(follower, shot1),
-                        new WaitCommand(500),
-                        new TripleShotCommand(),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
-                        new IntakeStateCommand(IntakeSubsystem.IntakeState.FORWARD),
-                        new FollowPathCommand(follower, ball4Pickup),
-                        new WaitCommand(500),
-                        new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_TWO),
-                        new FollowPathCommand(follower, ball5Pickup),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new WaitCommand(500),
-                        new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_THREE),
-                        new FollowPathCommand(follower, ball6Pickup),
-                        new WaitCommand(500),
-                        new FollowPathCommand(follower, shot2),
-                        new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
                         new WaitCommand(500),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
@@ -164,22 +149,6 @@ public class FarNinePieceAuto extends CommandOpMode {
         shot1 = follower.pathBuilder()
                 .addPath(new BezierCurve(AutoPoses.BALL3_PICKUP, AutoPoses.SHOT1))
                 .setLinearHeadingInterpolation(AutoPoses.BALL3_PICKUP.getHeading(), AutoPoses.SHOT1.getHeading())
-                .build();
-        ball4Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.SHOT1, AutoPoses.BALL4_PICKUP_CONTROL1, AutoPoses.BALL4_PICKUP))
-                .setLinearHeadingInterpolation(AutoPoses.SHOT1.getHeading(), AutoPoses.BALL4_PICKUP.getHeading())
-                .build();
-        ball5Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL4_PICKUP, AutoPoses.BALL5_PICKUP))
-                .setTangentHeadingInterpolation()
-                .build();
-        ball6Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL5_PICKUP, AutoPoses.BALL6_PICKUP))
-                .setTangentHeadingInterpolation()
-                .build();
-        shot2 = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL5_PICKUP, AutoPoses.SHOT2))
-                .setLinearHeadingInterpolation(AutoPoses.BALL5_PICKUP.getHeading(), AutoPoses.SHOT2.getHeading())
                 .build();
     }
 }
