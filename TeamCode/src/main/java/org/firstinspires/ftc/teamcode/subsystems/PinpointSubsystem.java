@@ -53,6 +53,9 @@ public class PinpointSubsystem extends SubsystemBase {
     public void periodic() {
         robot.pinpoint.update();
         pose = robot.pinpoint.getPosition();
+        robot.robotX = pose.getX(DistanceUnit.INCH);
+        robot.robotY = pose.getY(DistanceUnit.INCH);
+        robot.robotHeadingDeg = pose.getHeading(AngleUnit.DEGREES);
     }
 
     public void resetToConfiguredStart() {

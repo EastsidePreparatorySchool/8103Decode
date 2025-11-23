@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode.commandbase.complexcommands;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
+
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 
 public class AutoHoodPositionCommand extends CommandBase {
     private final HoodSubsystem hoodSubsystem;
-    private final PinpointSubsystem pinpointSubsystem;
 
-    public AutoHoodPositionCommand(HoodSubsystem hoodSubsystem, PinpointSubsystem pinpointSubsystem) {
+    public AutoHoodPositionCommand(HoodSubsystem hoodSubsystem) {
         this.hoodSubsystem = hoodSubsystem;
-        this.pinpointSubsystem = pinpointSubsystem;
         addRequirements(hoodSubsystem);
     }
 

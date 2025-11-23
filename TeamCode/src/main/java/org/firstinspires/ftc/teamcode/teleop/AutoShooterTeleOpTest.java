@@ -64,8 +64,8 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
 
         driveCommand = new DriveWithGamepadCommand(gamepad1);
         aimCommand = new AimTurretAtPointCommand(Common.TARGET_X_IN, Common.TARGET_Y_IN);
-        shooterRPMCommand = new AutoShooterRPMCommand(robot.shooterSubsystem, robot.pinpointSubsystem);
-        hoodPositionCommand = new AutoHoodPositionCommand(robot.hoodSubsystem, robot.pinpointSubsystem);
+        shooterRPMCommand = new AutoShooterRPMCommand(robot.shooterSubsystem);
+        hoodPositionCommand = new AutoHoodPositionCommand(robot.hoodSubsystem);
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);

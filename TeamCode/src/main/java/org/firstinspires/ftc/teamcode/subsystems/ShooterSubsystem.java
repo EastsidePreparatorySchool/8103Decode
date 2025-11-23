@@ -48,11 +48,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setShooterState(ShooterState shooterState) {
         state = shooterState;
-        if (state == ShooterState.OFF) {
-            power = 0.0;
-            robot.flywheel.setPower(0.0);
-            robot.flywheel2.setPower(0.0);
-        }
     }
 
     public void setTargetRpm(double rpm) {

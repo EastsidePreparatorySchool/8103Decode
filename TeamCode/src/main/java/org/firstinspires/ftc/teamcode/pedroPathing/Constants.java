@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.pedropathing.control.FilteredPIDFCoefficients;
+import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
@@ -15,9 +17,11 @@ import org.firstinspires.ftc.teamcode.lib.Common;
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(12)
-            .useSecondaryTranslationalPIDF(true)
-            .useSecondaryHeadingPIDF(true)
-            .useSecondaryDrivePIDF(true);
+            .forwardZeroPowerAcceleration(-30.08)
+            .lateralZeroPowerAcceleration(-71.16)
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.003, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0.05, 0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.015, 0, 0.00003, 0.6, 0));
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
             .rightFrontMotorName("FR")
@@ -27,7 +31,9 @@ public class Constants {
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .xVelocity(81.14)
+            .yVelocity(64.14);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(Common.PINPOINT_X_OFFSET_MM/25.4)
@@ -38,7 +44,7 @@ public class Constants {
             .forwardEncoderDirection(Common.PINPOINT_X_DIRECTION)
             .strafeEncoderDirection(Common.PINPOINT_Y_DIRECTION);
 
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 0.5, 1);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
@@ -47,4 +53,5 @@ public class Constants {
                 .pinpointLocalizer(localizerConstants)
                 .build();
     }
+
 }

@@ -71,10 +71,9 @@ public class Common {
     public static double DRIVE_SLOW_MULT = 0.5;
     // Field targeting and start pose (inches/degrees)
     public static double RIGHT_FIELD_START_X_IN = 87.0;
-    public static double RIGHT_FIELD_START_Y_IN = 8.5;
+    public static double RIGHT_FIELD_START_Y_IN = 8.25;
     public static double LEFT_FIELD_START_X_IN = 57.0;
-    public static double LEFT_FIELD_START_Y_IN = 8.5;
-    public static double START_HEADING_DEG = 270.0;
+    public static double LEFT_FIELD_START_Y_IN = 8.25;
     public static double RIGHT_FIELD_TARGET_X_IN = 144.0;
     public static double RIGHT_FIELD_TARGET_Y_IN = 144.0;
     public static double RIGHT_FIELD_ACTUAL_TARGET_X_IN = 144.0;
@@ -86,6 +85,8 @@ public class Common {
     // Selected field target used by opmodes; default to RIGHT
     public static double START_X_IN = RIGHT_FIELD_START_X_IN;
     public static double START_Y_IN = RIGHT_FIELD_START_Y_IN;
+    public static double START_HEADING_DEG = 270.0;
+
     public static double TARGET_X_IN = RIGHT_FIELD_TARGET_X_IN;
     public static double TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
     public static double ACTUAL_TARGET_X_IN = RIGHT_FIELD_ACTUAL_TARGET_X_IN;

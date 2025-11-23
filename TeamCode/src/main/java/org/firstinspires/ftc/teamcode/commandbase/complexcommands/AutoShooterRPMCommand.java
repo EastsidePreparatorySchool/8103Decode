@@ -4,16 +4,12 @@ import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
-import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 public class AutoShooterRPMCommand extends CommandBase {
     private final ShooterSubsystem shooterSubsystem;
-    private final PinpointSubsystem pinpointSubsystem;
-
-    public AutoShooterRPMCommand(ShooterSubsystem shooterSubsystem, PinpointSubsystem pinpointSubsystem) {
+    public AutoShooterRPMCommand(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
-        this.pinpointSubsystem = pinpointSubsystem;
         addRequirements(shooterSubsystem);
     }
 

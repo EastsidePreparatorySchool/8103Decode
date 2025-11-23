@@ -4,25 +4,20 @@ import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretSetTargetCommand;
-import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
+import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 public class AimTurretAtPointCommand extends CommandBase {
-    private final PinpointSubsystem odometry;
+    private RobotHardware robot = RobotHardware.getInstance();
     private final TurretSubsystem turret;
     private volatile double targetX;
     private volatile double targetY;
     private volatile double angleOffsetDeg = 0.0;
 
-    public AimTurretAtPointCommand(PinpointSubsystem odometry,
-                                   TurretSubsystem turret,
+    public AimTurretAtPointCommand(TurretSubsystem turret,
                                    double initialTargetX,
                                    double initialTargetY) {
-        this.odometry = odometry;
         this.turret = turret;
         this.targetX = initialTargetX;
         this.targetY = initialTargetY;
@@ -31,7 +26,6 @@ public class AimTurretAtPointCommand extends CommandBase {
 
     public AimTurretAtPointCommand(double initialTargetX, double initialTargetY) {
         this(
-                RobotHardware.getInstance().pinpointSubsystem,
                 RobotHardware.getInstance().turretSubsystem,
                 initialTargetX,
                 initialTargetY
@@ -49,9 +43,9 @@ public class AimTurretAtPointCommand extends CommandBase {
 
     @Override
     public void execute() {
-        double robotX = odometry.getPose().getX(DistanceUnit.INCH);
-        double robotY = odometry.getPose().getY(DistanceUnit.INCH);
-        double robotHeadingDeg = odometry.getPose().getHeading(AngleUnit.DEGREES);
+        double robotX = robot.robotX;
+        double robotY = robot.robotY;
+        double robotHeadingDeg = robot.robotHeadingDeg;
         double robotHeadingRad = Math.toRadians(robotHeadingDeg);
 
         double targetX = this.targetX;
