@@ -22,7 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public int lastTicks = 0;
     public double power = 0.0; // last commanded power
 
-    private static final int RPM_AVERAGE_WINDOW = 15;
+    private static final int RPM_AVERAGE_WINDOW = 25;
     private static final double RPM_TARGET_TOLERANCE = 100.0;
     private final double[] rpmHistory = new double[RPM_AVERAGE_WINDOW];
     private int rpmHistoryIndex = 0;

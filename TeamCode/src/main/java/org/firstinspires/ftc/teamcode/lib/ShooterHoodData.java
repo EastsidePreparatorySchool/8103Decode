@@ -14,7 +14,7 @@ public class ShooterHoodData {
         lut.add(100, 4700);
         lut.add(120, 5100);
         lut.add(140, 5500);
-        lut.add(160, 5500);
+        lut.add(160, 5600);
         lut.createLUT();
         return lut;
     }
@@ -30,7 +30,7 @@ public class ShooterHoodData {
         lut.add(100, 0.05);
         lut.add(120, 0.06);
         lut.add(140, 0.075);
-        lut.add(160, 0.075);
+        lut.add(160, 0.08);
         lut.createLUT();
         return lut;
     }

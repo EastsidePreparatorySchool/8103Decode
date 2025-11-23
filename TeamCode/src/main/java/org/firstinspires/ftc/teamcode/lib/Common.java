@@ -45,7 +45,7 @@ public class Common {
     public static double SPINDEXER_OUTTAKE_TWO = 0.98;
     public static double SPINDEXER_OUTTAKE_THREE = 0.24;
     // Transfer / shooter
-    public static double TRANSFER_DOWN = 0.49;
+    public static double TRANSFER_DOWN = 0.485;
     public static double TRANSFER_UP = 0.3;
 
     // Shooter velocity controller (RPM-based)
@@ -54,8 +54,8 @@ public class Common {
     public static double SHOOTER_GEAR_RATIO = 1.0; // Motor:flywheel
     public static double SHOOTER_MAX_RPM = 6000.0; // Bare motor free speed
     // Feedforward + feedback coefficients (power units)
-    public static double SHOOTER_KS = 0.11; // static friction offset (power)
-    public static double SHOOTER_KV = 0.00017; // power per RPM
+    public static double SHOOTER_KS = 0.09; // static friction offset (power)
+    public static double SHOOTER_KV = 0.00014; // power per RPM
     public static double SHOOTER_KA = 0.0; // power per (RPM/s)
     public static double SHOOTER_KP = 0.002; // P on velocity error (RPM)
     // Hood initial position
@@ -74,11 +74,11 @@ public class Common {
     public static double RIGHT_FIELD_START_Y_IN = 8.25;
     public static double LEFT_FIELD_START_X_IN = 57.0;
     public static double LEFT_FIELD_START_Y_IN = 8.25;
-    public static double RIGHT_FIELD_TARGET_X_IN = 144.0;
+    public static double RIGHT_FIELD_TARGET_X_IN = 152.0;
     public static double RIGHT_FIELD_TARGET_Y_IN = 144.0;
     public static double RIGHT_FIELD_ACTUAL_TARGET_X_IN = 144.0;
     public static double RIGHT_FIELD_ACTUAL_TARGET_Y_IN = 144.0;
-    public static double LEFT_FIELD_TARGET_X_IN = 0.0;
+    public static double LEFT_FIELD_TARGET_X_IN = -8.0;
     public static double LEFT_FIELD_TARGET_Y_IN = 144.0;
     public static double LEFT_FIELD_ACTUAL_TARGET_X_IN = 0;
     public static double LEFT_FIELD_ACTUAL_TARGET_Y_IN = 144.0;
