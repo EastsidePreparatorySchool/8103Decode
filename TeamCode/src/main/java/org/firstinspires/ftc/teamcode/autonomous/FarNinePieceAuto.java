@@ -9,6 +9,7 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.PerpetualCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
@@ -68,8 +69,8 @@ public class FarNinePieceAuto extends CommandOpMode {
         schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
 
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
-        scheduler.setDefaultCommand(robot.shooterSubsystem, shooterRPMCommand);
-        scheduler.setDefaultCommand(robot.hoodSubsystem, hoodPositionCommand);
+        schedule(new PerpetualCommand(shooterRPMCommand));
+        schedule(new PerpetualCommand(hoodPositionCommand));
 
         scheduler.run();
 
@@ -80,35 +81,33 @@ public class FarNinePieceAuto extends CommandOpMode {
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         new IntakeStateCommand(IntakeSubsystem.IntakeState.FORWARD),
-                        new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_ONE),
                         new FollowPathCommand(follower, ball1Pickup),
-                        new WaitCommand(500),
+                        new WaitCommand(250),
                         new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_TWO),
                         new FollowPathCommand(follower, ball2Pickup),
-                        new WaitCommand(500),
+                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
+                        new WaitCommand(250),
                         new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_THREE),
                         new FollowPathCommand(follower, ball3Pickup),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new WaitCommand(500),
+                        new WaitCommand(250),
                         new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
                         new FollowPathCommand(follower, shot1),
-                        new WaitCommand(500),
+                        new WaitCommand(250),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         new IntakeStateCommand(IntakeSubsystem.IntakeState.FORWARD),
-                        new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_ONE),
                         new FollowPathCommand(follower, ball4Pickup),
-                        new WaitCommand(500),
+                        new WaitCommand(250),
                         new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_TWO),
                         new FollowPathCommand(follower, ball5Pickup),
-                        new WaitCommand(500),
+                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
+                        new WaitCommand(250),
                         new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_THREE),
                         new FollowPathCommand(follower, ball6Pickup),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new WaitCommand(500),
+                        new WaitCommand(250),
                         new FollowPathCommand(follower, shot2),
-                        new WaitCommand(500),
                         new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
+                        new WaitCommand(250),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                 )

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.commandbase.complexcommands;
 
-import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
@@ -9,7 +8,6 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.TransferSetPositi
 import org.firstinspires.ftc.teamcode.commandbase.unsafebasecommands.TransferStateCommand;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 
 /**
@@ -25,9 +23,9 @@ public class TransferAndShootCommand extends SequentialCommandGroup {
         addCommands(
                 new WaitUntilCommand(shooterSubsystem::withinTolerance),
                 new TransferSetPositionCommand(TransferSubsystem.TransferState.UP),
-                new WaitCommand(250),
+                new WaitCommand(150),
                 new TransferStateCommand(transferSubsystem, TransferSubsystem.TransferState.DOWN),
-                new WaitCommand(250)
+                new WaitCommand(150)
         );
     }
 

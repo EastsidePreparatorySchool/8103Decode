@@ -10,7 +10,6 @@ public class AutoShooterRPMCommand extends CommandBase {
     private final ShooterSubsystem shooterSubsystem;
     public AutoShooterRPMCommand(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
-        addRequirements(shooterSubsystem);
     }
 
     @Override

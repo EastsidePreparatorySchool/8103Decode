@@ -44,7 +44,7 @@ public class Constants {
             .forwardEncoderDirection(Common.PINPOINT_X_DIRECTION)
             .strafeEncoderDirection(Common.PINPOINT_Y_DIRECTION);
 
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 0.5, 1);
+    public static PathConstraints pathConstraints = new PathConstraints(0.8, 0, 0.5, 1);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)

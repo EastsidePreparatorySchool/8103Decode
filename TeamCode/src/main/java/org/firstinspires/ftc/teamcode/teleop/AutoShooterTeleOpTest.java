@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.PerpetualCommand;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -69,8 +70,8 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
 
         scheduler.setDefaultCommand(robot.mecanumSubsystem, driveCommand);
         scheduler.setDefaultCommand(robot.turretSubsystem, aimCommand);
-        scheduler.setDefaultCommand(robot.shooterSubsystem, shooterRPMCommand);
-        scheduler.setDefaultCommand(robot.hoodSubsystem, hoodPositionCommand);
+        schedule(new PerpetualCommand(shooterRPMCommand));
+        schedule(new PerpetualCommand(hoodPositionCommand));
 
         schedule(new TurretStateCommand(TurretSubsystem.TurretState.RUNNING));
         schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
