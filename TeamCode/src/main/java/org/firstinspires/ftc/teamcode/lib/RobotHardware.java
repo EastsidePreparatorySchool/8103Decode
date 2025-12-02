@@ -30,6 +30,7 @@ import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 public class RobotHardware {
     private static RobotHardware instance;
+
     public ElapsedTime chassisElapsedTime = new ElapsedTime();
 
     public static RobotHardware getInstance() {
@@ -38,6 +39,16 @@ public class RobotHardware {
         }
         return instance;
     }
+
+     // subsystems
+    public IntakeSubsystem intakeSubsystem;
+    public ShooterSubsystem shooterSubsystem;
+    public HoodSubsystem hoodSubsystem;
+    public SpindexerSubsystem spindexerSubsystem;
+    public TransferSubsystem transferSubsystem;
+    public TurretSubsystem turretSubsystem;
+    public MecanumSubsystem mecanumSubsystem;
+    public PinpointSubsystem pinpointSubsystem;
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
@@ -65,8 +76,6 @@ public class RobotHardware {
     private double cachedBatteryVoltage = 12.0;
 
     public List<LynxModule> modules;
-    public LynxModule CONTROL_HUB;
-    public LynxModule EXPANSION_HUB;
 
     public double robotX;
     public double robotY;
@@ -180,33 +189,17 @@ public class RobotHardware {
         pinpoint.setEncoderDirections(Common.PINPOINT_X_DIRECTION, Common.PINPOINT_Y_DIRECTION);
     }
 
-    // subsystems
-    public IntakeSubsystem intakeSubsystem;
-    public ShooterSubsystem shooterSubsystem;
-    public HoodSubsystem hoodSubsystem;
-    public SpindexerSubsystem spindexerSubsystem;
-    public TransferSubsystem transferSubsystem;
-    public TurretSubsystem turretSubsystem;
-    public MecanumSubsystem mecanumSubsystem;
-    public PinpointSubsystem pinpointSubsystem;
-
     public void initLynx() {
         modules = hardwareMap.getAll(LynxModule.class);
-        if (modules.get(0).isParent() && LynxConstants.isEmbeddedSerialNumber(modules.get(0).getSerialNumber())) {
-            CONTROL_HUB = modules.get(0);
-            EXPANSION_HUB = modules.get(1);
-        } else {
-            CONTROL_HUB = modules.get(1);
-            EXPANSION_HUB = modules.get(0);
+        for (LynxModule hub : modules) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
-
-        CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
     }
 
     public void periodic() {
-        CONTROL_HUB.clearBulkCache();
-        EXPANSION_HUB.clearBulkCache();
+        for (LynxModule hub : modules) {
+            hub.clearBulkCache();
+        }
     }
 
     // Battery voltage helpers (cached)
