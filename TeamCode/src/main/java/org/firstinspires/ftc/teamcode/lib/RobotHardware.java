@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -22,6 +24,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSensorSubsystem;
 
 import java.util.List;
 
@@ -49,6 +52,7 @@ public class RobotHardware {
     public TurretSubsystem turretSubsystem;
     public MecanumSubsystem mecanumSubsystem;
     public PinpointSubsystem pinpointSubsystem;
+    public IntakeSensorSubsystem intakeSensorSubsystem;
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
@@ -70,6 +74,9 @@ public class RobotHardware {
     public CachingServo spindexer;
     // odometry
     public GoBildaPinpointDriver pinpoint;
+    // intake sensors
+    public DigitalChannel intakeProximitySensor;
+    public NormalizedColorSensor intakeColorSensor;
     // Battery voltage
     public java.util.List<VoltageSensor> voltageSensors;
     private ElapsedTime voltageTimer;
@@ -187,6 +194,14 @@ public class RobotHardware {
         pinpoint.setOffsets(Common.PINPOINT_X_OFFSET_MM, Common.PINPOINT_Y_OFFSET_MM, DistanceUnit.MM);
         pinpoint.setEncoderResolution(Common.PINPOINT_POD_TYPE);
         pinpoint.setEncoderDirections(Common.PINPOINT_X_DIRECTION, Common.PINPOINT_Y_DIRECTION);
+    }
+
+    public void initIntakeSensor() {
+        intakeProximitySensor = hardwareMap.get(DigitalChannel.class, "digital0");
+        intakeProximitySensor.setMode(DigitalChannel.Mode.INPUT);
+        intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+        intakeSensorSubsystem = new IntakeSensorSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(intakeSensorSubsystem);
     }
 
     public void initLynx() {
