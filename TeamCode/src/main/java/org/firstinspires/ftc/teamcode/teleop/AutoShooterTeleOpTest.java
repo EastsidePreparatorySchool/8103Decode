@@ -33,7 +33,7 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
 
     // Default commands
     private AimTurretAtPointCommand aimCommand;
-    private DriveWithGamepadCommand driveCommand;
+    protected DriveWithGamepadCommand driveCommand;
     private AutoShooterRPMCommand shooterRPMCommand;
     private AutoHoodPositionCommand hoodPositionCommand;
 
@@ -63,7 +63,9 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         Common.PINPOINT_RESET_IMU_ON_INIT = false;
         robot.initPinpoint();
 
-        driveCommand = new DriveWithGamepadCommand(gamepad1);
+        robot.initPinpoint();
+
+        initDriveCommand();
         aimCommand = new AimTurretAtPointCommand(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         shooterRPMCommand = new AutoShooterRPMCommand(robot.shooterSubsystem);
         hoodPositionCommand = new AutoHoodPositionCommand(robot.hoodSubsystem);
@@ -217,5 +219,9 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
             default:
                 return -1;
         }
+    }
+
+    protected void initDriveCommand() {
+        driveCommand = new DriveWithGamepadCommand(gamepad1);
     }
 }

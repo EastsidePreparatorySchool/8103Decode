@@ -12,17 +12,32 @@ import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 public class DriveWithGamepadCommand extends CommandBase {
     private final MecanumSubsystem mecanumSubsystem;
     private final Gamepad gamepad;
+    private final Boolean side;
 
-    public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad) {
+    public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad, Boolean side) {
         this.mecanumSubsystem = mecanumSubsystem;
         this.gamepad = gamepad;
+        this.side = side;
         addRequirements(mecanumSubsystem);
+    }
+
+    public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad) {
+        this(mecanumSubsystem, gamepad, null);
     }
 
     public DriveWithGamepadCommand(Gamepad gamepad) {
         this(
                 RobotHardware.getInstance().mecanumSubsystem,
-                gamepad
+                gamepad,
+                null
+        );
+    }
+
+    public DriveWithGamepadCommand(Gamepad gamepad, Boolean side) {
+        this(
+                RobotHardware.getInstance().mecanumSubsystem,
+                gamepad,
+                side
         );
     }
 
@@ -36,6 +51,16 @@ public class DriveWithGamepadCommand extends CommandBase {
         forward = Math.pow(forward, 3);
         strafe = Math.pow(strafe, 3);
         turn = Math.pow(turn, 3) / 1.5; // reduce turning sensitivity a bit
+
+        if (side != null) {
+            double heading = Math.toRadians(RobotHardware.getInstance().robotHeadingDeg);
+            double offset = side ? 0 : Math.PI;
+            double angle = -(heading - offset);
+            double oldForward = forward;
+            double oldStrafe = strafe;
+            strafe = oldStrafe * Math.cos(angle) - oldForward * Math.sin(angle);
+            forward = oldStrafe * Math.sin(angle) + oldForward * Math.cos(angle);
+        }
         double multiplier = Common.DRIVE_DEFAULT_MULT;
         double denominator = Math.max(multiplier * (Math.abs(forward) + Math.abs(strafe) + Math.abs(turn)), 1.0);
         double powerFL = multiplier * (forward + strafe + turn) / denominator;

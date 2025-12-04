@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 
 @TeleOp(name = "RightDualTeleOp", group = "Testing")
@@ -14,5 +16,10 @@ public class RightAutoShooterTeleOpTest extends AutoShooterTeleOpTest {
         Common.ACTUAL_TARGET_X_IN = Common.RIGHT_FIELD_ACTUAL_TARGET_X_IN;
         Common.ACTUAL_TARGET_Y_IN = Common.RIGHT_FIELD_ACTUAL_TARGET_Y_IN;
         super.initialize();
+    }
+
+    @Override
+    protected void initDriveCommand() {
+        driveCommand = new DriveWithGamepadCommand(gamepad1, true);
     }
 }
