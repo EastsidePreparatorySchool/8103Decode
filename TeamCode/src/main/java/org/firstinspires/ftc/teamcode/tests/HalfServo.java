@@ -11,7 +11,7 @@ public class HalfServo extends OpMode {
     private final LoopRateAverager loopRate = new LoopRateAverager(50);
     @Override
     public void init() {
-        s = hardwareMap.get(Servo.class, "transfer");
+        s = hardwareMap.get(Servo.class, "servo");
     }
 
     @Override
