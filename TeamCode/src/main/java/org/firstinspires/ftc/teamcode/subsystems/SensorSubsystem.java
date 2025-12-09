@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.lib.RobotHardware;
  * - Brushland Labs proximity sensor (digital mode on digital0)
  * - REV V3 Color Sensor (read only on rising edge of proximity sensor)
  */
-public class IntakeSensorSubsystem extends SubsystemBase {
+public class SensorSubsystem extends SubsystemBase {
 
     private RobotHardware robot;
     
@@ -33,7 +33,7 @@ public class IntakeSensorSubsystem extends SubsystemBase {
     /** HSV values of the most recently read color [hue, saturation, value] */
     public float[] detectedColorHSV = new float[3];
 
-    public IntakeSensorSubsystem() {
+    public SensorSubsystem() {
         robot = RobotHardware.getInstance();
         
         // Turn on the color sensor light if possible
