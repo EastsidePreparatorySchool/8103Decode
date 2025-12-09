@@ -60,13 +60,15 @@ public class TurretSubsystem extends SubsystemBase {
 
     public boolean withinTolerance() {
         double errorTicks = target - pos;
-        return Math.abs(errorTicks) < Common.TURRET_TOLERANCE_TICKS;
+        return ticksToDegrees(Math.abs(errorTicks)) < Common.TURRET_TOLERANCE_DEG;
     }
 
     public void updateHardware() {
         pos = (int) (robot.turret.getCurrentPosition() + encoderOffset);
         power = MathUtils.clamp(turretPIDF.calculate(pos, target), -1, 1);
-        power += kf * Math.signum(turretPIDF.getPositionError());
+        if(!withinTolerance()) {
+            power += kf * Math.signum(turretPIDF.getPositionError());
+        }
         double vbat = robot.getBatteryVoltage();
         if (vbat > 1e-3) {
             double scale = Common.NOMINAL_BATTERY_VOLTAGE / vbat;

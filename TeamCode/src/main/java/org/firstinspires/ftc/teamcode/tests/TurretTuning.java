@@ -11,6 +11,7 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
+import org.firstinspires.ftc.teamcode.lib.LoopRateLimiter;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 @Config
@@ -26,6 +27,7 @@ public class TurretTuning extends CommandOpMode {
     private MultipleTelemetry multiTelemetry;
     private TurretSubsystem turretSubsystem;
     private final LoopRateAverager loopRate = new LoopRateAverager(50);
+    private final LoopRateLimiter loopRateLimiter = new LoopRateLimiter(70);
 
     @Override
     public void initialize() {
@@ -53,6 +55,7 @@ public class TurretTuning extends CommandOpMode {
         applyTargets();
         updateMechanisms();
         publishPreStartTelemetry();
+        loopRateLimiter.waitForNextLoop();
     }
 
     @Override
@@ -65,6 +68,7 @@ public class TurretTuning extends CommandOpMode {
         applyTargets();
         updateMechanisms();
         publishActiveTelemetry();
+        loopRateLimiter.waitForNextLoop();
     }
 
     @Override
@@ -98,11 +102,9 @@ public class TurretTuning extends CommandOpMode {
         loopRate.update();
         double turretError = turretSubsystem.turretPIDF.getPositionError();
 
-        multiTelemetry.addData("turret/pos (ticks)", turretSubsystem.pos);
         multiTelemetry.addData("turret/pos (deg)", turretSubsystem.ticksToDegrees(turretSubsystem.pos));
-        multiTelemetry.addData("turret/target (ticks)", turretSubsystem.target);
         multiTelemetry.addData("turret/target (deg)", turretTargetDeg);
-        multiTelemetry.addData("turret/error (ticks)", turretError);
+        multiTelemetry.addData("turret/error (deg)", turretSubsystem.ticksToDegrees(turretError));
         multiTelemetry.addData("turret/power", turretSubsystem.power);
         multiTelemetry.addData("hz", loopRate.getHz());
         multiTelemetry.update();

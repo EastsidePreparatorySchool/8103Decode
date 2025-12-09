@@ -7,17 +7,17 @@ import com.seattlesolvers.solverslib.util.InterpLUT;
 @Config
 public class Common {
     // Turret PIDF
-    public static double TURRET_KP = 0.02;
+    public static double TURRET_KP = 0.025;
     public static double TURRET_KI = 0.0;
-    public static double TURRET_KD = 0.0008;
-    public static double TURRET_KF = 0.07;
+    public static double TURRET_KD = 0.0007;
+    public static double TURRET_KF = 0.09;
     // Turret geometry
     public static double TURRET_FULL_ROTATION_DEGREES = 360.0;
     public static double TURRET_TICKS_PER_MOTOR_REV = 28.0;
     public static double TURRET_GEARBOX_RATIO = 13.7; // goBILDA 435 rpm (13.7:1)
     public static double TURRET_DRIVING_PULLEY_TEETH = 40.0;
     public static double TURRET_DRIVEN_PULLEY_TEETH = 108.0;
-    public static double TURRET_TOLERANCE_TICKS = 5.0;
+    public static double TURRET_TOLERANCE_DEG = 1.0;
     public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 90.0;
     // Turret center offset from robot center
     public static double TURRET_OFFSET_X_IN = -3.0;
