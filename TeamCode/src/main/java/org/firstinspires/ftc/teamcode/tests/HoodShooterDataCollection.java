@@ -41,9 +41,9 @@ public class HoodShooterDataCollection extends CommandOpMode {
     private final boolean[] slotFull = new boolean[] { false, false, false };
 
     // Hood and turret offsets
-    private double hoodPos = Common.HOOD_FAR_POS;
+    private double hoodPos = Common.HOOD_INITIAL_POS;
     private double turretAngleOffsetDeg = 0.0;
-    private double targetRpm = Common.SHOOTER_FAR_RPM;
+    private double targetRpm = 0;
 
     // Edge detection
     private boolean prevA, prevY, prevLB, prevRB, prevX;

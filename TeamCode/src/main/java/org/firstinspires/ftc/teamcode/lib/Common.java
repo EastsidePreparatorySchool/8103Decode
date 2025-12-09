@@ -7,15 +7,15 @@ import com.seattlesolvers.solverslib.util.InterpLUT;
 @Config
 public class Common {
     // Turret PIDF
-    public static double TURRET_KP = 0.023;
-    public static double TURRET_KI = 0.02;
-    public static double TURRET_KD = 0.0002;
+    public static double TURRET_KP = 0.02;
+    public static double TURRET_KI = 0.0;
+    public static double TURRET_KD = 0.0008;
     public static double TURRET_KF = 0.07;
     // Turret geometry
     public static double TURRET_FULL_ROTATION_DEGREES = 360.0;
     public static double TURRET_TICKS_PER_MOTOR_REV = 28.0;
     public static double TURRET_GEARBOX_RATIO = 13.7; // goBILDA 435 rpm (13.7:1)
-    public static double TURRET_DRIVING_PULLEY_TEETH = 38.0;
+    public static double TURRET_DRIVING_PULLEY_TEETH = 40.0;
     public static double TURRET_DRIVEN_PULLEY_TEETH = 108.0;
     public static double TURRET_TOLERANCE_TICKS = 5.0;
     public static double TURRET_WIRE_WRAP_LIMIT_DEGREES = 90.0;
@@ -55,17 +55,15 @@ public class Common {
     public static double SHOOTER_MAX_RPM = 6000.0; // Bare motor free speed
     // Feedforward + feedback coefficients (power units)
     public static double SHOOTER_KS = 0.09; // static friction offset (power)
-    public static double SHOOTER_KV = 0.00014; // power per RPM
+    public static double SHOOTER_KV = 0.00015; // power per RPM
     public static double SHOOTER_KA = 0.0; // power per (RPM/s)
-    public static double SHOOTER_KP = 0.002; // P on velocity error (RPM)
+    public static double SHOOTER_KP = 0.0005; // P on velocity error (RPM)
     // Hood initial position
-    public static double HOOD_INITIAL_POS = 0.47;
+    public static double HOOD_INITIAL_POS = 0.70;
+    public static double HOOD_MAX_POS = 0.14;
     // Voltage normalization
     public static double NOMINAL_BATTERY_VOLTAGE = 12.0;
     public static double BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC = 0.5;
-
-    public static double HOOD_FAR_POS = 0.54;
-    public static double SHOOTER_FAR_RPM = 5700.0;
 
     public static double DRIVE_DEFAULT_MULT = 0.8;
     public static double DRIVE_SLOW_MULT = 0.5;

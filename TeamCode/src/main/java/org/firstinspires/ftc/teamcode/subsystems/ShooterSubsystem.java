@@ -83,8 +83,8 @@ public class ShooterSubsystem extends SubsystemBase {
         double dt = now - lastTime;
         if (dt <= 0)
             dt = 1e-3;
-
-        int ticks = robot.flywheel.getCurrentPosition();
+        // idk why negative alex prolly flipped the wires
+        int ticks = -robot.flywheel.getCurrentPosition();
         int deltaTicks = ticks - lastTicks;
         double ticksPerSecond = deltaTicks / dt;
         currentRpm = ticksPerSecondToRpm(ticksPerSecond);

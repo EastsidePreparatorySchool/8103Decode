@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.seattlesolvers.solverslib.util.MathUtils;
@@ -68,6 +67,11 @@ public class TurretSubsystem extends SubsystemBase {
         pos = (int) (robot.turret.getCurrentPosition() + encoderOffset);
         power = MathUtils.clamp(turretPIDF.calculate(pos, target), -1, 1);
         power += kf * Math.signum(turretPIDF.getPositionError());
+        double vbat = robot.getBatteryVoltage();
+        if (vbat > 1e-3) {
+            double scale = Common.NOMINAL_BATTERY_VOLTAGE / vbat;
+            power *= scale;
+        }
         robot.turret.setPower(power);
     }
 
@@ -153,16 +157,10 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     private double getTicksPerTurretRev() {
-        if (Common.TURRET_DRIVING_PULLEY_TEETH == 0) {
-            return 0;
-        }
         return Common.TURRET_TICKS_PER_MOTOR_REV * Common.TURRET_GEARBOX_RATIO * (Common.TURRET_DRIVEN_PULLEY_TEETH / Common.TURRET_DRIVING_PULLEY_TEETH);
     }
 
     private double getTicksPerDegree() {
-        if (Common.TURRET_FULL_ROTATION_DEGREES == 0) {
-            return 0;
-        }
         return getTicksPerTurretRev() / Common.TURRET_FULL_ROTATION_DEGREES;
     }
 }

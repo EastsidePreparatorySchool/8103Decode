@@ -5,18 +5,18 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSensorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
@@ -24,7 +24,6 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSensorSubsystem;
 
 import java.util.List;
 
@@ -64,6 +63,7 @@ public class RobotHardware {
     public CachingDcMotorEx flywheel;
     public CachingDcMotorEx flywheel2;
     public CachingServo hood;
+    public CachingServo hood2;
     // turret
     public CachingDcMotorEx turret;
     // intake
@@ -135,9 +135,9 @@ public class RobotHardware {
         flywheel2 = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "flywheel2"));
 
         // Shooter must run forward
-        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel.setDirection(DcMotorSimple.Direction.FORWARD);
         // Second flywheel runs opposite direction of the first
-        flywheel2.setDirection(DcMotorSimple.Direction.FORWARD);
+        flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
         // Use manual control; we compute velocity ourselves
         flywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -153,6 +153,7 @@ public class RobotHardware {
 
     public void initHood() {
         hood = new CachingServo(hardwareMap.get(Servo.class, "hood"));
+        hood2 = new CachingServo(hardwareMap.get(Servo.class, "hood2"));
         hoodSubsystem = new HoodSubsystem();
         CommandScheduler.getInstance().registerSubsystem(hoodSubsystem);
         hoodSubsystem.setHoodPosition(Common.HOOD_INITIAL_POS);

@@ -24,6 +24,7 @@ public class HoodSubsystem extends SubsystemBase {
 
     public void updateHardware() {
         robot.hood.setPosition(hoodPos);
+        robot.hood2.setPosition(hoodPos);
     }
 
     @Override

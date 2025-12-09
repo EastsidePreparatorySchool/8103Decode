@@ -23,9 +23,8 @@ public class ConfigureLaserRangefinder extends LinearOpMode {
         /* <configuration code> */
         lrf.setDistanceMode(LaserRangefinder.DistanceMode.SHORT);
         lrf.setTiming(10, 0);
-        lrf.setROI(0, 4, 4, 0);
-        lrf.setPin0Analog(0, 50);
-        lrf.setPin0Analog(0, 50);
+        lrf.setPin0Digital(0, 25);
+        lrf.setPin1Digital(0, 50);
     }
 }
 
