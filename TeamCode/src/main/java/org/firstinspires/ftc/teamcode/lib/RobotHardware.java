@@ -16,7 +16,6 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.SensorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
@@ -51,7 +50,6 @@ public class RobotHardware {
     public TurretSubsystem turretSubsystem;
     public MecanumSubsystem mecanumSubsystem;
     public PinpointSubsystem pinpointSubsystem;
-    public SensorSubsystem sensorSubsystem;
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
@@ -197,12 +195,10 @@ public class RobotHardware {
         pinpoint.setEncoderDirections(Common.PINPOINT_X_DIRECTION, Common.PINPOINT_Y_DIRECTION);
     }
 
-    public void initIntakeSensor() {
+    public void initSensors() {
         intakeProximitySensor = hardwareMap.get(DigitalChannel.class, "digital0");
         intakeProximitySensor.setMode(DigitalChannel.Mode.INPUT);
-        intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
-        sensorSubsystem = new SensorSubsystem();
-        CommandScheduler.getInstance().registerSubsystem(sensorSubsystem);
+        intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "color");
     }
 
     public void initLynx() {
