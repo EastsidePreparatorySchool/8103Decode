@@ -5,10 +5,9 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -72,9 +71,8 @@ public class RobotHardware {
     public CachingServo spindexer;
     // odometry
     public GoBildaPinpointDriver pinpoint;
-    // intake sensors
-    public DigitalChannel intakeProximitySensor;
-    public NormalizedColorSensor intakeColorSensor;
+    // color sensor (REV Color Sensor V3) - used for color detection and distance
+    public ColorRangeSensor colorSensor;
     // Battery voltage
     public java.util.List<VoltageSensor> voltageSensors;
     private ElapsedTime voltageTimer;
@@ -195,10 +193,10 @@ public class RobotHardware {
         pinpoint.setEncoderDirections(Common.PINPOINT_X_DIRECTION, Common.PINPOINT_Y_DIRECTION);
     }
 
-    public void initSensors() {
-        intakeProximitySensor = hardwareMap.get(DigitalChannel.class, "digital0");
-        intakeProximitySensor.setMode(DigitalChannel.Mode.INPUT);
-        intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "color");
+    public void initColorSensor() {
+        // REV Color Sensor V3 configured with name "color"
+        // ColorRangeSensor provides both color sensing and distance measurement
+        colorSensor = hardwareMap.get(ColorRangeSensor.class, "color");
     }
 
     public void initLynx() {
