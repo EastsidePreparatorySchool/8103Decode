@@ -55,7 +55,7 @@ public class Common {
     public static double SHOOTER_MAX_RPM = 6000.0; // Bare motor free speed
     // Feedforward + feedback coefficients (power units)
     public static double SHOOTER_KS = 0.09; // static friction offset (power)
-    public static double SHOOTER_KV = 0.00015; // power per RPM
+    public static double SHOOTER_KV = 0.000155; // power per RPM
     public static double SHOOTER_KA = 0.0; // power per (RPM/s)
     public static double SHOOTER_KP = 0.0005; // P on velocity error (RPM)
     // Hood initial position

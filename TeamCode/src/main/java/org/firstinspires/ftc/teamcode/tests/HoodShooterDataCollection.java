@@ -105,7 +105,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
         boolean start = gamepad2.start;
-        if (start && !prevStart && false) {
+        if (start && !prevStart) {
             targetRpm = Common.shooterInterpLUT.get(
                     Math.hypot(
                             144 - robot.turretSubsystem.turretX,

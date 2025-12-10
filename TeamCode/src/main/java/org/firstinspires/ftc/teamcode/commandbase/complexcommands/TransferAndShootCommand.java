@@ -25,7 +25,7 @@ public class TransferAndShootCommand extends SequentialCommandGroup {
                 new TransferSetPositionCommand(TransferSubsystem.TransferState.UP),
                 new WaitCommand(150),
                 new TransferStateCommand(transferSubsystem, TransferSubsystem.TransferState.DOWN),
-                new WaitCommand(150)
+                new WaitCommand(100)
         );
     }
 

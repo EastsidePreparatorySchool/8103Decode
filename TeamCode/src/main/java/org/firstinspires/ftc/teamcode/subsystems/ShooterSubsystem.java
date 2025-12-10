@@ -22,7 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public int lastTicks = 0;
     public double power = 0.0; // last commanded power
 
-    private static final int RPM_AVERAGE_WINDOW = 25;
+    private static final int RPM_AVERAGE_WINDOW = 5;
     private static final double RPM_TARGET_TOLERANCE = 100.0;
     private final double[] rpmHistory = new double[RPM_AVERAGE_WINDOW];
     private int rpmHistoryIndex = 0;
@@ -84,10 +84,10 @@ public class ShooterSubsystem extends SubsystemBase {
         if (dt <= 0)
             dt = 1e-3;
         // idk why negative alex prolly flipped the wires
-        int ticks = -robot.flywheel.getCurrentPosition();
-        int deltaTicks = ticks - lastTicks;
-        double ticksPerSecond = deltaTicks / dt;
-        currentRpm = ticksPerSecondToRpm(ticksPerSecond);
+//        int ticks = -robot.flywheel.getCurrentPosition();
+//        int deltaTicks = ticks - lastTicks;
+//        double ticksPerSecond = deltaTicks / dt;
+        currentRpm = ticksPerSecondToRpm(-robot.flywheel.getVelocity());
         // Update rolling RPM history
         rpmHistory[rpmHistoryIndex] = currentRpm;
         rpmHistoryIndex = (rpmHistoryIndex + 1) % RPM_AVERAGE_WINDOW;
@@ -133,9 +133,9 @@ public class ShooterSubsystem extends SubsystemBase {
         // Telemetry moved to OpModes
 
         // Save time history
-        lastTime = now;
-        lastTicks = ticks;
-        lastRpm = currentRpm;
+//        lastTime = now;
+//        lastTicks = ticks;
+//        lastRpm = currentRpm;
     }
 
     /**
