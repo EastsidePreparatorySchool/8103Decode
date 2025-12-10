@@ -17,9 +17,4 @@ public class RightAutoShooterTeleOpTest extends AutoShooterTeleOpTest {
         Common.ACTUAL_TARGET_Y_IN = Common.RIGHT_FIELD_ACTUAL_TARGET_Y_IN;
         super.initialize();
     }
-
-    @Override
-    protected void initDriveCommand() {
-        driveCommand = new DriveWithGamepadCommand(gamepad1, true);
-    }
 }

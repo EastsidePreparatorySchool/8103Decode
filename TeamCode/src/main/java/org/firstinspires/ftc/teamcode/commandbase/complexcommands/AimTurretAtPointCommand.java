@@ -66,7 +66,7 @@ public class AimTurretAtPointCommand extends CommandBase {
         }
 
         double fieldAngleDeg = Math.toDegrees(Math.atan2(deltaY, deltaX));
-        double turretTargetDeg = fieldAngleDeg - robotHeadingDeg + angleOffsetDeg + 180;
+        double turretTargetDeg = fieldAngleDeg - robotHeadingDeg + angleOffsetDeg;
         CommandScheduler.getInstance().schedule(new TurretSetTargetCommand(turret, turretTargetDeg));
     }
 

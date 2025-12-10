@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.util.MathUtils;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -104,7 +105,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
 
         boolean start = gamepad2.start;
-        if (start && !prevStart) {
+        if (start && !prevStart && false) {
             targetRpm = Common.shooterInterpLUT.get(
                     Math.hypot(
                             144 - robot.turretSubsystem.turretX,
@@ -121,7 +122,7 @@ public class HoodShooterDataCollection extends CommandOpMode {
         
         if(gamepad2.back) {
             targetRpm = 5000;
-            hoodPos = 0.5;
+            hoodPos = Common.HOOD_INITIAL_POS;
             schedule(new ShooterSetTargetRPMCommand(targetRpm));
             schedule(new HoodSetPositionCommand(hoodPos));
         }
@@ -174,11 +175,11 @@ public class HoodShooterDataCollection extends CommandOpMode {
         boolean dUp = gamepad2.dpad_up;
         boolean dDn = gamepad2.dpad_down;
         if (dUp && !prevDpadUp) {
-            hoodPos = clamp01(hoodPos + 0.01);
+            hoodPos = MathUtils.clamp(hoodPos - 0.01, Common.HOOD_MAX_POS, Common.HOOD_INITIAL_POS);
             schedule(new HoodSetPositionCommand(hoodPos));
         }
         if (dDn && !prevDpadDown) {
-            hoodPos = clamp01(hoodPos - 0.01);
+            hoodPos = MathUtils.clamp(hoodPos + 0.01, Common.HOOD_MAX_POS, Common.HOOD_INITIAL_POS);
             schedule(new HoodSetPositionCommand(hoodPos));
         }
         prevDpadUp = dUp;

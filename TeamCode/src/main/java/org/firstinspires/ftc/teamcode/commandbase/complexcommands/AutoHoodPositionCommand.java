@@ -21,7 +21,7 @@ public class AutoHoodPositionCommand extends CommandBase {
 
         double targetHoodPos = Common.HOOD_INITIAL_POS;
         try {
-            targetHoodPos += Common.hoodInterpLUT.get(distance);
+            targetHoodPos = Common.hoodInterpLUT.get(distance);
         } catch (Exception e) {
             targetHoodPos = Common.HOOD_INITIAL_POS;
         }
