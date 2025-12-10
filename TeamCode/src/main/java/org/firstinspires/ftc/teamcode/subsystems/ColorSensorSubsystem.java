@@ -110,7 +110,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
      * Reads distance data from the sensor.
      */
     private void readDistance() {
-        distance = robot.colorSensor.getDistance(DistanceUnit.INCHES);
+        distance = robot.colorSensor.getDistance(DistanceUnit.INCH);
     }
 
     public void updateHardware() {
