@@ -15,6 +15,7 @@ public class DistanceSensorSubsystem extends SubsystemBase {
     public boolean within50MM;
     public DistanceSensorSubsystem() {
         robot = RobotHardware.getInstance();
+        state = DistanceSensorState.OFF;
     }
 
     public void setState(DistanceSensorState newState) {
