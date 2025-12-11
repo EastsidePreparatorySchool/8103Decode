@@ -89,6 +89,8 @@ public class Common {
     public static double TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
     public static double ACTUAL_TARGET_X_IN = RIGHT_FIELD_ACTUAL_TARGET_X_IN;
     public static double ACTUAL_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
+    // Auto-intake ball detection
+    public static double BALL_DETECTION_DISTANCE_IN = 1.0;
     // Interpolation Tables
     public static InterpLUT shooterInterpLUT = ShooterHoodData.getShooterInterpLUT();
     public static InterpLUT hoodInterpLUT = ShooterHoodData.getHoodInterpLUT();

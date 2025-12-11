@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ColorSensorSubsystem;
 
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class RobotHardware {
     public TurretSubsystem turretSubsystem;
     public MecanumSubsystem mecanumSubsystem;
     public PinpointSubsystem pinpointSubsystem;
+    public ColorSensorSubsystem colorSensorSubsystem;
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
@@ -197,6 +199,8 @@ public class RobotHardware {
         // REV Color Sensor V3 configured with name "color"
         // ColorRangeSensor provides both color sensing and distance measurement
         colorSensor = hardwareMap.get(ColorRangeSensor.class, "color");
+        colorSensorSubsystem = new ColorSensorSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(colorSensorSubsystem);
     }
 
     public void initLynx() {

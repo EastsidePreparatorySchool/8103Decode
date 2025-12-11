@@ -27,22 +27,22 @@ import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 public class AutoShooterTeleOpTest extends CommandOpMode {
-    private final RobotHardware robot = RobotHardware.getInstance();
-    private CommandScheduler scheduler;
-    private MultipleTelemetry multiTelemetry;
+    public final RobotHardware robot = RobotHardware.getInstance();
+    public CommandScheduler scheduler;
+    public MultipleTelemetry multiTelemetry;
 
     // Default commands
-    private AimTurretAtPointCommand aimCommand;
+    public AimTurretAtPointCommand aimCommand;
     protected DriveWithGamepadCommand driveCommand;
-    private AutoShooterRPMCommand shooterRPMCommand;
-    private AutoHoodPositionCommand hoodPositionCommand;
+    public AutoShooterRPMCommand shooterRPMCommand;
+    public AutoHoodPositionCommand hoodPositionCommand;
 
     // Turret offset
-    private double turretAngleOffsetDeg = 0.0;
-    private double hoodOffset = 0.0;
+    public double turretAngleOffsetDeg = 0.0;
+    public double hoodOffset = 0.0;
     // Edge detection
-    private boolean prevA, prevY, prevLB, prevRB;
-    private boolean prevDpadLeft, prevDpadRight, prevDpadUp, prevDpadDown;
+    public boolean prevA, prevY, prevLB, prevRB;
+    public boolean prevDpadLeft, prevDpadRight, prevDpadUp, prevDpadDown;
 
     @Override
     public void initialize() {
