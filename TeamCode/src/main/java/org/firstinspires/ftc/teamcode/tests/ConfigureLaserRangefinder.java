@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.tests;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class ConfigureLaserRangefinder extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        MultipleTelemetry telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), this.telemetry);
         LaserRangefinder lrf = new LaserRangefinder(hardwareMap.get(RevColorSensorV3.class, "color"));
         telemetry.addData("Pin0", lrf.getPin0Mode());
         telemetry.addData("Pin1", lrf.getPin1Mode());
@@ -22,10 +25,10 @@ public class ConfigureLaserRangefinder extends LinearOpMode {
         waitForStart();
         /* <configuration code> */
         lrf.setDistanceMode(LaserRangefinder.DistanceMode.SHORT);
-        lrf.setTiming(10, 0);
-        lrf.setROI(0, 10, 10, 0);
-        lrf.setPin0Analog(0, 20);
-        lrf.setPin1Analog(0, 40);
+        lrf.setTiming(15, 0);
+        lrf.setROI(0, 4, 4, 0);
+        lrf.setPin0Digital(0, 50);
+        lrf.setPin1Digital(0, 100);
     }
 }
 

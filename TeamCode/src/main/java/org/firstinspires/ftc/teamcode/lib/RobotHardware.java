@@ -5,6 +5,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -14,6 +15,7 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.subsystems.DistanceSensorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
@@ -51,6 +53,7 @@ public class RobotHardware {
     public MecanumSubsystem mecanumSubsystem;
     public PinpointSubsystem pinpointSubsystem;
     public ColorSensorSubsystem colorSensorSubsystem;
+    public DistanceSensorSubsystem distanceSensorSubsystem;
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
@@ -75,6 +78,8 @@ public class RobotHardware {
     public GoBildaPinpointDriver pinpoint;
     // color sensor (REV Color Sensor V3) - used for color detection and distance
     public ColorRangeSensor colorSensor;
+    // distance sensor (returns true when object within 50mm)
+    public DigitalChannel distanceSensor;
     // Battery voltage
     public java.util.List<VoltageSensor> voltageSensors;
     private ElapsedTime voltageTimer;
@@ -201,6 +206,13 @@ public class RobotHardware {
         colorSensor = hardwareMap.get(ColorRangeSensor.class, "color");
         colorSensorSubsystem = new ColorSensorSubsystem();
         CommandScheduler.getInstance().registerSubsystem(colorSensorSubsystem);
+    }
+
+    public void initDistanceSensor() {
+        // Brushland labs sensor in digital0
+        distanceSensor = hardwareMap.digitalChannel.get("digital0");
+        distanceSensorSubsystem = new DistanceSensorSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(distanceSensorSubsystem);
     }
 
     public void initLynx() {
