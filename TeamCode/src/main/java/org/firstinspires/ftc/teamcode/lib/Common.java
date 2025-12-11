@@ -27,9 +27,9 @@ public class Common {
     public static double INTAKE_BACKWARD_POWER = -1.0;
     public static double SLOWMODE_MULTIPLIER = 0.4;
     // Pinpoint odometry configuration
-    // Robot 16.5" wide (center to left edge = 8.25"). X pod is 3.1" in from left =>
+    // Robot 16.5" wide (center to left edge = 8.25"). X pod is 6" in from left =>
     // +
-    public static double PINPOINT_X_OFFSET_MM = 131;
+    public static double PINPOINT_X_OFFSET_MM = 58;
     // Robot 16.5" long (center to back edge = 8.25"). Y pod is 1.4" in from back =>
     // -6.85 => -174mm
     public static double PINPOINT_Y_OFFSET_MM = -174;
@@ -38,12 +38,12 @@ public class Common {
     public static GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_POD_TYPE = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
     public static boolean PINPOINT_RESET_IMU_ON_INIT = true;
     // Spindexer targets defined as servo positions [0..1]
-    public static double SPINDEXER_INTAKE_ONE = 0.04;
-    public static double SPINDEXER_INTAKE_TWO = 0.41;
-    public static double SPINDEXER_INTAKE_THREE = 0.8;
-    public static double SPINDEXER_OUTTAKE_ONE = 0.61;
-    public static double SPINDEXER_OUTTAKE_TWO = 0.98;
-    public static double SPINDEXER_OUTTAKE_THREE = 0.24;
+    public static double SPINDEXER_INTAKE_ONE = 0.03;
+    public static double SPINDEXER_INTAKE_TWO = 0.25;
+    public static double SPINDEXER_INTAKE_THREE = 0.45;
+    public static double SPINDEXER_OUTTAKE_ONE = 0.35;
+    public static double SPINDEXER_OUTTAKE_TWO = 0.56;
+    public static double SPINDEXER_OUTTAKE_THREE = 0.77;
     // Transfer / shooter
     public static double TRANSFER_DOWN = 0.485;
     public static double TRANSFER_UP = 0.3;

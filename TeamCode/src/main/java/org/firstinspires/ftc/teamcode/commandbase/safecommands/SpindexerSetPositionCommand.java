@@ -17,12 +17,12 @@ public class SpindexerSetPositionCommand extends CommandBase {
     // Wait times matrix [from][to]
     // Indices: 0=INTAKE_ONE, 1=INTAKE_TWO, 2=INTAKE_THREE, 3=OUTTAKE_ONE, 4=OUTTAKE_TWO, 5=OUTTAKE_THREE
     private static final long[][] WAIT_TIMES = {
-            {0, 250, 550, 500, 700, 125},   // From INTAKE_ONE (1)
-            {250, 0, 250, 125, 500, 125},   // From INTAKE_TWO (2)
-            {550, 250, 0, 125, 125, 500},   // From INTAKE_THREE (3) - Assumed 3->2 is 250 based on symmetry/pattern
-            {500, 125, 125, 0, 250, 250},   // From OUTTAKE_ONE (4)
-            {700, 500, 125, 250, 0, 550},   // From OUTTAKE_TWO (5)
-            {125, 125, 500, 250, 550, 0}    // From OUTTAKE_THREE (6)
+            {0, 175, 350, 275, 525, 775},   // From INTAKE_ONE (1)
+            {175, 0, 175, 100, 275, 525},   // From INTAKE_TWO (2)
+            {350, 175, 0, 100, 100, 350},   // From INTAKE_THREE (3) - Assumed 3->2 is 250 based on symmetry/pattern
+            {500, 125, 125, 0, 175, 350},   // From OUTTAKE_ONE (4)
+            {700, 500, 125, 175, 0, 175},   // From OUTTAKE_TWO (5)
+            {125, 125, 500, 350, 175, 0}    // From OUTTAKE_THREE (6)
     };
 
     public SpindexerSetPositionCommand(SpindexerSubsystem spindexerSubsystem, TransferSubsystem transferSubsystem, SpindexerSubsystem.SpindexerState state) {

@@ -266,9 +266,17 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         prevDpadUp = dUp;
         prevDpadDown = dDn;
 
-        // Auto-disable intake when all slots are full (not manual override)
+        // Auto-disable intake, turn on shooter, and switch to OUTTAKE_ONE when all slots are full
         if (isAllSlotsFull() && robot.intakeSubsystem.state == IntakeSubsystem.IntakeState.FORWARD) {
             schedule(new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED));
+            // Turn on shooter so it's ready to fire
+            if (robot.shooterSubsystem.state != ShooterSubsystem.ShooterState.ON) {
+                schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.ON));
+            }
+            // Switch to OUTTAKE_ONE for immediate shooting
+            if (robot.spindexerSubsystem.state != SpindexerSubsystem.SpindexerState.OUTTAKE_ONE) {
+                startSlotSwitch(SpindexerSubsystem.SpindexerState.OUTTAKE_ONE);
+            }
         }
 
         // Telemetry
@@ -314,6 +322,8 @@ public class AutoIntakeTeleOp extends CommandOpMode {
                 slotSwitchWaitTime = WAIT_TIMES[5][0] + COOLDOWN_MS;
                 slotSwitchStartTime = System.currentTimeMillis();
                 slotSwitchInProgress = true;
+                // Turn intake back on after tripleshot finishes
+                schedule(new IntakeStateCommand(IntakeSubsystem.IntakeState.FORWARD));
             }
             lastKnownSpindexerState = currentSpindexerState;
             detectionState = DetectionState.SPINDEXER_MOVING;

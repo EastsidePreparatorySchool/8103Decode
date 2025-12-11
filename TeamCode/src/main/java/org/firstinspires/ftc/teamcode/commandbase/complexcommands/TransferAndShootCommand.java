@@ -23,9 +23,9 @@ public class TransferAndShootCommand extends SequentialCommandGroup {
         addCommands(
                 new WaitUntilCommand(shooterSubsystem::withinTolerance),
                 new TransferSetPositionCommand(TransferSubsystem.TransferState.UP),
-                new WaitCommand(150),
+                new WaitCommand(100),
                 new TransferStateCommand(transferSubsystem, TransferSubsystem.TransferState.DOWN),
-                new WaitCommand(100)
+                new WaitCommand(50)
         );
     }
 
