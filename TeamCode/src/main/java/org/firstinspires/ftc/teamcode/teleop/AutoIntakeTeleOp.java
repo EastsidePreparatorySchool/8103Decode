@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -22,13 +23,12 @@ import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateComma
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.DistanceSensorStateCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.ColorSensorStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
+import org.firstinspires.ftc.teamcode.lib.Common.BallColor;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.DistanceSensorSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ColorSensorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
@@ -36,7 +36,7 @@ import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 /**
  * TeleOp with automatic spindexer slot switching based on distance sensor ball detection.
- * Tracks ball occupancy and HSV colors, disables intake when full, clears on tripleshot.
+ * Tracks ball occupancy and colors, disables intake when full, clears on tripleshot.
  */
 public class AutoIntakeTeleOp extends CommandOpMode {
     public final RobotHardware robot = RobotHardware.getInstance();
@@ -60,22 +60,27 @@ public class AutoIntakeTeleOp extends CommandOpMode {
     // Loop rate tracking
     private final LoopRateAverager loopRateAverager = new LoopRateAverager();
 
-    // Ball tracking: HSV values for each slot (null if empty)
-    // slotHSV[0] = slot 1, slotHSV[1] = slot 2, slotHSV[2] = slot 3
-    private final float[][] slotHSV = {null, null, null};
+    // Ball tracking: BallColor for each slot (NONE if empty)
+    // slotColors[0] = slot 1, slotColors[1] = slot 2, slotColors[2] = slot 3
+    private final BallColor[] slotColors = {BallColor.NONE, BallColor.NONE, BallColor.NONE};
 
     // Detection state machine
     private enum DetectionState {
-        IDLE,             // Waiting for ball detection
-        SPINDEXER_MOVING, // Spindexer moving, ignore sensor
-        COOLDOWN          // After spindexer settles, wait 100ms before reading
+        IDLE,                 // Waiting for ball detection
+        AWAITING_COLOR,       // Ball detected, waiting for color confirmation
+        SPINDEXER_MOVING,     // Spindexer moving, ignore sensor
+        COOLDOWN              // After spindexer settles, wait 100ms before reading
     }
     private DetectionState detectionState = DetectionState.IDLE;
     private ElapsedTime cooldownTimer = new ElapsedTime();
+    private ElapsedTime colorConfirmationTimer = new ElapsedTime();
     private static final long COOLDOWN_MS = 100; // Extra safety margin after spindexer wait
 
     // Track previous distance sensor state for edge detection
     private boolean prevDistanceWithin50MM = false;
+
+    // Track the slot that is awaiting color confirmation
+    private int awaitingColorSlotIndex = -1;
 
     // Track if we're currently switching slots
     private boolean slotSwitchInProgress = false;
@@ -177,9 +182,18 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         // Handle spindexer movement state tracking
         updateDetectionState();
 
-        // Process ball detection (only in IDLE state)
-        if (detectionState == DetectionState.IDLE) {
-            processBallDetection();
+        // Process ball detection based on current state
+        switch (detectionState) {
+            case IDLE:
+                processBallDetection();
+                break;
+            case AWAITING_COLOR:
+                processColorConfirmation();
+                break;
+            default:
+                // SPINDEXER_MOVING or COOLDOWN - just update prevDistanceWithin50MM
+                prevDistanceWithin50MM = robot.distanceSensorSubsystem.getWithin50MM();
+                break;
         }
 
         // Gamepad1 A: toggle intake on/off (manual override - always allowed)
@@ -193,9 +207,9 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         prevA = a;
 
         // Gamepad1 Y: cycle through intake positions 1 -> 2 -> 3 -> 1 (manual override)
-        // Only allow if not currently switching or in tripleshot
+        // Only allow if not currently switching or in tripleshot or awaiting color
         boolean y = gamepad1.y;
-        if (y && !prevY && !slotSwitchInProgress && !tripleShotInProgress) {
+        if (y && !prevY && !slotSwitchInProgress && !tripleShotInProgress && detectionState != DetectionState.AWAITING_COLOR) {
             int currIdx = intakeIndexFromState(robot.spindexerSubsystem.state);
             int nextIdx = (currIdx == -1) ? 0 : (currIdx + 1) % 3;
             startSlotSwitch(intakeStateForSlot(nextIdx));
@@ -211,6 +225,7 @@ public class AutoIntakeTeleOp extends CommandOpMode {
                 // Mark tripleshot in progress - will track return to INTAKE_ONE
                 tripleShotInProgress = true;
                 detectionState = DetectionState.SPINDEXER_MOVING;
+                awaitingColorSlotIndex = -1;
                 schedule(new TripleShotCommand());
             }
         }
@@ -251,16 +266,16 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         prevDpadUp = dUp;
         prevDpadDown = dDn;
 
-        // Auto-disable intake when all slots are full
+        // Auto-disable intake when all slots are full (not manual override)
         if (isAllSlotsFull() && robot.intakeSubsystem.state == IntakeSubsystem.IntakeState.FORWARD) {
             schedule(new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED));
         }
 
         // Telemetry
         multiTelemetry.addData("Loop Rate (Hz)", loopRateAverager.getHz());
-        multiTelemetry.addData("Slot 1", formatSlotHSV(0));
-        multiTelemetry.addData("Slot 2", formatSlotHSV(1));
-        multiTelemetry.addData("Slot 3", formatSlotHSV(2));
+        multiTelemetry.addData("Slot 1", slotColors[0].toString());
+        multiTelemetry.addData("Slot 2", slotColors[1].toString());
+        multiTelemetry.addData("Slot 3", slotColors[2].toString());
         multiTelemetry.addData("All Slots Full", isAllSlotsFull());
         multiTelemetry.addData("Detection State", detectionState.toString());
 
@@ -307,6 +322,11 @@ public class AutoIntakeTeleOp extends CommandOpMode {
 
         lastKnownSpindexerState = currentSpindexerState;
 
+        // Don't update state machine if we're awaiting color confirmation
+        if (detectionState == DetectionState.AWAITING_COLOR) {
+            return;
+        }
+
         if (slotSwitchInProgress) {
             long elapsed = System.currentTimeMillis() - slotSwitchStartTime;
             if (elapsed >= slotSwitchWaitTime) {
@@ -340,9 +360,11 @@ public class AutoIntakeTeleOp extends CommandOpMode {
 
         // Edge detection: false -> true means ball entered
         if (currentWithin50MM && !prevDistanceWithin50MM) {
-            // Ball detected! Only mark if slot is empty
-            if (slotHSV[currentSlot] == null) {
-                onBallDetected(currentSlot);
+            // Ball detected! Only start color confirmation if slot is empty
+            if (slotColors[currentSlot] == BallColor.NONE) {
+                awaitingColorSlotIndex = currentSlot;
+                colorConfirmationTimer.reset();
+                detectionState = DetectionState.AWAITING_COLOR;
             }
         }
 
@@ -350,31 +372,67 @@ public class AutoIntakeTeleOp extends CommandOpMode {
     }
 
     /**
-     * Called when a ball is detected. Reads color and switches to next empty slot.
+     * Process color confirmation - wait for color sensor to detect purple/green
+     * or timeout after 500ms and mark as UNKNOWN.
      */
-    private void onBallDetected(int slotIndex) {
-        // Read color from color sensor (single I2C read)
-        float[] hsv = readColorSensorHSV();
-        slotHSV[slotIndex] = hsv;
+    private void processColorConfirmation() {
+        if (awaitingColorSlotIndex < 0 || awaitingColorSlotIndex > 2) {
+            detectionState = DetectionState.IDLE;
+            return;
+        }
 
-        // Switch to next empty slot
-        switchToNextEmptySlot();
+        // Read color from color sensor
+        BallColor detectedColor = readColorSensor();
+
+        if (detectedColor == BallColor.PURPLE || detectedColor == BallColor.GREEN) {
+            // Color confirmed! Mark slot and switch
+            slotColors[awaitingColorSlotIndex] = detectedColor;
+            awaitingColorSlotIndex = -1;
+            switchToNextEmptySlot();
+        } else if (colorConfirmationTimer.milliseconds() >= Common.COLOR_CONFIRMATION_TIMEOUT_MS) {
+            // Timeout - mark as UNKNOWN and switch
+            slotColors[awaitingColorSlotIndex] = BallColor.UNKNOWN;
+            awaitingColorSlotIndex = -1;
+            switchToNextEmptySlot();
+        }
+        // Otherwise keep waiting for color confirmation
     }
 
     /**
-     * Read HSV values directly from the color sensor.
-     * This is called only when a ball is detected to minimize I2C reads.
+     * Read color sensor and determine ball color.
+     * Uses NormalizedRGBA and converts to HSV for color detection.
      */
-    private float[] readColorSensorHSV() {
-        // Read RGB directly from hardware
-        int red = robot.colorSensor.red();
-        int green = robot.colorSensor.green();
-        int blue = robot.colorSensor.blue();
+    private BallColor readColorSensor() {
+        // Read normalized colors directly from hardware
+        NormalizedRGBA colors = robot.colorSensor.getNormalizedColors();
+
+        // Convert normalized (0-1) to 0-255 range for HSV conversion
+        int red = (int) (colors.red * 255);
+        int green = (int) (colors.green * 255);
+        int blue = (int) (colors.blue * 255);
 
         // Convert to HSV
         float[] hsv = new float[3];
         Color.RGBToHSV(red, green, blue, hsv);
-        return hsv;
+        float hue = hsv[0];         // 0-360 degrees
+        float saturation = hsv[1];  // 0-1
+
+        // Check minimum saturation
+        if (saturation < Common.COLOR_MIN_SATURATION) {
+            return BallColor.UNKNOWN;
+        }
+
+        // Check for purple (hue 200-300)
+        if (hue >= Common.PURPLE_HUE_MIN && hue <= Common.PURPLE_HUE_MAX) {
+            return BallColor.PURPLE;
+        }
+
+        // Check for green (hue 60-165)
+        if (hue >= Common.GREEN_HUE_MIN && hue <= Common.GREEN_HUE_MAX) {
+            return BallColor.GREEN;
+        }
+
+        return BallColor.UNKNOWN;
     }
 
     /**
@@ -387,12 +445,14 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         // Find next empty slot (circular search)
         for (int i = 1; i <= 3; i++) {
             int checkSlot = (currentSlot + i) % 3;
-            if (slotHSV[checkSlot] == null) {
+            if (slotColors[checkSlot] == BallColor.NONE) {
                 startSlotSwitch(intakeStateForSlot(checkSlot));
                 return;
             }
         }
         // All slots full - intake will be auto-disabled in run()
+        // Just go back to IDLE state
+        detectionState = DetectionState.IDLE;
     }
 
     /**
@@ -417,16 +477,16 @@ public class AutoIntakeTeleOp extends CommandOpMode {
      * Clear all slot tracking (called before tripleshot).
      */
     private void clearAllSlots() {
-        slotHSV[0] = null;
-        slotHSV[1] = null;
-        slotHSV[2] = null;
+        slotColors[0] = BallColor.NONE;
+        slotColors[1] = BallColor.NONE;
+        slotColors[2] = BallColor.NONE;
     }
 
     /**
      * Check if all 3 slots are occupied.
      */
     private boolean isAllSlotsFull() {
-        return slotHSV[0] != null && slotHSV[1] != null && slotHSV[2] != null;
+        return slotColors[0] != BallColor.NONE && slotColors[1] != BallColor.NONE && slotColors[2] != BallColor.NONE;
     }
 
     /**
@@ -434,17 +494,6 @@ public class AutoIntakeTeleOp extends CommandOpMode {
      */
     private int getCurrentIntakeSlotIndex() {
         return intakeIndexFromState(robot.spindexerSubsystem.state);
-    }
-
-    /**
-     * Format slot HSV for telemetry.
-     */
-    private String formatSlotHSV(int slotIdx) {
-        if (slotHSV[slotIdx] == null) {
-            return "EMPTY";
-        }
-        float[] hsv = slotHSV[slotIdx];
-        return String.format("H:%.0f S:%.2f V:%.2f", hsv[0], hsv[1], hsv[2]);
     }
 
     private static SpindexerSubsystem.SpindexerState intakeStateForSlot(int slotIdx) {

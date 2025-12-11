@@ -91,6 +91,23 @@ public class Common {
     public static double ACTUAL_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
     // Auto-intake ball detection
     public static double BALL_DETECTION_DISTANCE_IN = 1.0;
+
+    // Ball color detection thresholds
+    public static double PURPLE_HUE_MIN = 200.0;
+    public static double PURPLE_HUE_MAX = 300.0;
+    public static double GREEN_HUE_MIN = 60.0;
+    public static double GREEN_HUE_MAX = 165.0;
+    public static double COLOR_MIN_SATURATION = 0.3;
+    public static long COLOR_CONFIRMATION_TIMEOUT_MS = 500;
+
+    // Ball color enum for slot tracking
+    public enum BallColor {
+        PURPLE,
+        GREEN,
+        UNKNOWN,
+        NONE  // Empty slot
+    }
+
     // Interpolation Tables
     public static InterpLUT shooterInterpLUT = ShooterHoodData.getShooterInterpLUT();
     public static InterpLUT hoodInterpLUT = ShooterHoodData.getHoodInterpLUT();

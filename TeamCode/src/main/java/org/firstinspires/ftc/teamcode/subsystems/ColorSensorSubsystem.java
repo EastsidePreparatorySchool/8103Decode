@@ -91,13 +91,17 @@ public class ColorSensorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Reads color data from the sensor and converts to HSV.
+     * Reads color data from the sensor using NormalizedRGBA and converts to HSV.
      */
     private void readColor() {
-        red = robot.colorSensor.red();
-        green = robot.colorSensor.green();
-        blue = robot.colorSensor.blue();
-        alpha = robot.colorSensor.alpha();
+        // Use normalized colors for consistent readings
+        com.qualcomm.robotcore.hardware.NormalizedRGBA colors = robot.colorSensor.getNormalizedColors();
+        
+        // Convert normalized (0-1) to 0-255 range for HSV conversion
+        red = (int) (colors.red * 255);
+        green = (int) (colors.green * 255);
+        blue = (int) (colors.blue * 255);
+        alpha = (int) (colors.alpha * 255);
 
         // Convert RGB to HSV using Android's Color utility
         Color.RGBToHSV(red, green, blue, hsvValues);
