@@ -61,9 +61,9 @@ public class AutoShooterTeleOpTest extends CommandOpMode {
         // If we have a saved pose from auto, avoid resetting IMU so heading stays
         // consistent
         // Otherwise calibrate it
-        Common.PINPOINT_RESET_IMU_ON_INIT = false;
+        Common.PINPOINT_RESET_IMU_ON_INIT = true;
         if(PersistentState.hasSavedPose) {
-            Common.PINPOINT_RESET_IMU_ON_INIT = true;
+            Common.PINPOINT_RESET_IMU_ON_INIT = false;
         }
         robot.initPinpoint();
 
