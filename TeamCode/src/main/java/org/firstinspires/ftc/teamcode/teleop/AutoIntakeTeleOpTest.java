@@ -21,7 +21,8 @@ public class AutoIntakeTeleOpTest extends AutoShooterTeleOpTest {
         IDLE,           // Intake not running or at outtake slot
         WAITING_FOR_BALL, // Intake running, at intake slot, waiting for ball
         BALL_DETECTED,  // Ball detected, reading color and switching
-        SWITCHING_SLOT  // Spindexer transitioning
+        SWITCHING_SLOT, // Spindexer transitioning
+        SENSOR_COOLDOWN // Waiting for sensor to clear before detecting next ball
     }
     
     private AutoIntakeState autoIntakeState = AutoIntakeState.IDLE;
@@ -98,7 +99,8 @@ public class AutoIntakeTeleOpTest extends AutoShooterTeleOpTest {
         if (spindexerCommandRunning) {
             if (System.currentTimeMillis() - spindexerCommandStartTime >= spindexerCommandDuration) {
                 spindexerCommandRunning = false;
-                autoIntakeState = AutoIntakeState.WAITING_FOR_BALL;
+                // Go to cooldown state to wait for sensor to clear before detecting next ball
+                autoIntakeState = AutoIntakeState.SENSOR_COOLDOWN;
                 // Resume distance reading
                 robot.colorSensorSubsystem.setState(ColorSensorSubsystem.ColorSensorState.READING_DISTANCE);
             } else {
@@ -167,6 +169,16 @@ public class AutoIntakeTeleOpTest extends AutoShooterTeleOpTest {
                 
             case SWITCHING_SLOT:
                 // Wait for spindexer command to complete (handled at top of method)
+                break;
+                
+            case SENSOR_COOLDOWN:
+                // Wait for sensor to read no ball (ball has passed) before detecting next ball
+                // This prevents double-detection of the same ball
+                double cooldownDistance = robot.colorSensorSubsystem.getDistance();
+                if (cooldownDistance >= Common.BALL_DETECTION_DISTANCE_IN) {
+                    // Sensor is clear, safe to start looking for next ball
+                    autoIntakeState = AutoIntakeState.WAITING_FOR_BALL;
+                }
                 break;
         }
     }
