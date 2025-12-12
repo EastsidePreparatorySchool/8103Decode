@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.PerpetualCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.command.WaitCommand;
-import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -19,19 +16,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AimTurretAtPointCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoHoodPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoShooterRPMCommand;
-import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
-import org.firstinspires.ftc.teamcode.lib.AutoPoses;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.SpindexerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
 public class FarNinePieceAuto extends CommandOpMode {
@@ -75,39 +66,6 @@ public class FarNinePieceAuto extends CommandOpMode {
         buildPaths();
         schedule(
                 new SequentialCommandGroup(
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new TripleShotCommand(),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
-                        new IntakeStateCommand(IntakeSubsystem.IntakeState.FORWARD),
-                        new FollowPathCommand(follower, ball1Pickup),
-                        new WaitCommand(500),
-                        new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_TWO),
-                        new FollowPathCommand(follower, ball2Pickup),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new WaitCommand(500),
-                        new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_THREE),
-                        new FollowPathCommand(follower, ball3Pickup),
-                        new WaitCommand(500),
-                        new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
-                        new FollowPathCommand(follower, shot1),
-                        new WaitCommand(500),
-                        new TripleShotCommand(),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
-                        new IntakeStateCommand(IntakeSubsystem.IntakeState.FORWARD),
-                        new FollowPathCommand(follower, ball4Pickup),
-                        new WaitCommand(500),
-                        new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_TWO),
-                        new FollowPathCommand(follower, ball5Pickup),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new WaitCommand(500),
-                        new SpindexerSetPositionCommand(SpindexerSubsystem.SpindexerState.INTAKE_THREE),
-                        new FollowPathCommand(follower, ball6Pickup),
-                        new WaitCommand(500),
-                        new FollowPathCommand(follower, shot2),
-                        new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
-                        new WaitCommand(500),
-                        new TripleShotCommand(),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                 )
         );
     }
@@ -149,37 +107,5 @@ public class FarNinePieceAuto extends CommandOpMode {
     }
 
     public void buildPaths() {
-        ball1Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.START, AutoPoses.BALL1_PICKUP_CONTROL1, AutoPoses.BALL1_PICKUP))
-                .setLinearHeadingInterpolation(AutoPoses.START.getHeading(), AutoPoses.BALL1_PICKUP.getHeading())
-                .build();
-        ball2Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL1_PICKUP, AutoPoses.BALL2_PICKUP))
-                .setTangentHeadingInterpolation()
-                .build();
-        ball3Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL2_PICKUP, AutoPoses.BALL3_PICKUP))
-                .setTangentHeadingInterpolation()
-                .build();
-        shot1 = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL3_PICKUP, AutoPoses.SHOT1))
-                .setLinearHeadingInterpolation(AutoPoses.BALL3_PICKUP.getHeading(), AutoPoses.SHOT1.getHeading())
-                .build();
-        ball4Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.SHOT1, AutoPoses.BALL4_PICKUP_CONTROL1, AutoPoses.BALL4_PICKUP))
-                .setLinearHeadingInterpolation(AutoPoses.SHOT1.getHeading(), AutoPoses.BALL4_PICKUP.getHeading())
-                .build();
-        ball5Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL4_PICKUP, AutoPoses.BALL5_PICKUP))
-                .setTangentHeadingInterpolation()
-                .build();
-        ball6Pickup = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL5_PICKUP, AutoPoses.BALL6_PICKUP))
-                .setTangentHeadingInterpolation()
-                .build();
-        shot2 = follower.pathBuilder()
-                .addPath(new BezierCurve(AutoPoses.BALL5_PICKUP, AutoPoses.SHOT2))
-                .setLinearHeadingInterpolation(AutoPoses.BALL5_PICKUP.getHeading(), AutoPoses.SHOT2.getHeading())
-                .build();
     }
 }
