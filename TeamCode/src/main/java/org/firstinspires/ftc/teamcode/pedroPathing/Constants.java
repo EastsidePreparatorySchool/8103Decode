@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.lib.Common;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(12)
+            .mass(13)
             .forwardZeroPowerAcceleration(-30.08)
             .lateralZeroPowerAcceleration(-71.16)
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.003, 0))

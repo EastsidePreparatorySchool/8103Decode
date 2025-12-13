@@ -9,6 +9,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.lib.Common;
+import org.firstinspires.ftc.teamcode.lib.LoopRateLimiter;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.lib.LoopRateAverager;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -38,6 +39,7 @@ public class ShooterTuning extends CommandOpMode {
     // Track previous dashboard values to avoid rescheduling every loop
     private double prevShooterTargetRpm = Double.NaN;
     private double prevHoodPos = Double.NaN;
+    private final LoopRateLimiter loopRateLimiter = new LoopRateLimiter(50);
 
     @Override
     public void initialize() {
@@ -67,6 +69,7 @@ public class ShooterTuning extends CommandOpMode {
         scheduler.run();
         handleDashboardChanges();
         publishTelemetry();
+        loopRateLimiter.waitForNextLoop();
     }
 
     @Override
@@ -79,6 +82,7 @@ public class ShooterTuning extends CommandOpMode {
 
         handleDashboardChanges();
         publishTelemetry();
+        loopRateLimiter.waitForNextLoop();
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.PerpetualCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.FollowPathCommand;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -111,7 +111,7 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
                         new FollowPathCommand(follower, path9),
                         new TripleShotCommand(),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
+                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                         // // Intake while following path10to12 (ends when path done OR 3 balls collected)
                         // new IntakeWhileFollowingPathCommand(follower, path10to12),
                         // // Post-intake: turn on shooter, follow path13, tripleshot

@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 
-@TeleOp(name = "RightAutoIntakeTeleOp", group = "Testing")
+@TeleOp(name = "RightAutoIntakeTeleOp", group = "TeleOps")
 public class RightAutoIntakeTeleOp extends AutoIntakeTeleOp {
     @Override
     public void initialize() {

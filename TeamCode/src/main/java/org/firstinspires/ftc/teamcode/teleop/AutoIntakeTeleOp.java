@@ -74,10 +74,9 @@ public class AutoIntakeTeleOp extends CommandOpMode {
     private DetectionState detectionState = DetectionState.IDLE;
     private ElapsedTime cooldownTimer = new ElapsedTime();
     private ElapsedTime colorConfirmationTimer = new ElapsedTime();
-    private static final long COOLDOWN_MS = 100; // Extra safety margin after spindexer wait
+    private static final long COOLDOWN_MS = 20; // Extra safety margin after spindexer wait
 
-    // Track previous distance sensor state for edge detection
-    private boolean prevDistanceWithin50MM = false;
+
 
     // Track the slot that is awaiting color confirmation
     private int awaitingColorSlotIndex = -1;
@@ -191,8 +190,7 @@ public class AutoIntakeTeleOp extends CommandOpMode {
                 processColorConfirmation();
                 break;
             default:
-                // SPINDEXER_MOVING or COOLDOWN - just update prevDistanceWithin50MM
-                prevDistanceWithin50MM = robot.distanceSensorSubsystem.getWithin50MM();
+                // SPINDEXER_MOVING or COOLDOWN - do nothing
                 break;
         }
 
@@ -357,30 +355,24 @@ public class AutoIntakeTeleOp extends CommandOpMode {
     }
 
     /**
-     * Process ball detection using distance sensor edge detection.
+     * Process ball detection using distance sensor.
      * Only called when in IDLE state.
      */
     private void processBallDetection() {
         // Only process when in an intake state
         int currentSlot = getCurrentIntakeSlotIndex();
         if (currentSlot == -1) {
-            prevDistanceWithin50MM = robot.distanceSensorSubsystem.getWithin50MM();
             return;
         }
 
         boolean currentWithin50MM = robot.distanceSensorSubsystem.getWithin50MM();
 
-        // Edge detection: false -> true means ball entered
-        if (currentWithin50MM && !prevDistanceWithin50MM) {
-            // Ball detected! Only start color confirmation if slot is empty
-            if (slotColors[currentSlot] == BallColor.NONE) {
-                awaitingColorSlotIndex = currentSlot;
-                colorConfirmationTimer.reset();
-                detectionState = DetectionState.AWAITING_COLOR;
-            }
+        // Ball detected! Only start color confirmation if slot is empty
+        if (currentWithin50MM && slotColors[currentSlot] == BallColor.NONE) {
+            awaitingColorSlotIndex = currentSlot;
+            colorConfirmationTimer.reset();
+            detectionState = DetectionState.AWAITING_COLOR;
         }
-
-        prevDistanceWithin50MM = currentWithin50MM;
     }
 
     /**

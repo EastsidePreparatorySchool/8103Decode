@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.commandbase.complexcommands;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.PathChain;
 import com.seattlesolvers.solverslib.command.ParallelRaceGroup;
-import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 /**
  * Follows a path while intaking balls and auto-switching spindexer slots.

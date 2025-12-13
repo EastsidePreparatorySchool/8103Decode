@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.SpindexerSetPositionCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.DistanceSensorStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.Common.BallColor;
@@ -39,10 +38,9 @@ public class AutoIntakeCommand extends CommandBase {
     private DetectionState detectionState = DetectionState.IDLE;
     private ElapsedTime cooldownTimer = new ElapsedTime();
     private ElapsedTime colorConfirmationTimer = new ElapsedTime();
-    private static final long COOLDOWN_MS = 100;
+    private static final long COOLDOWN_MS = 20;
 
-    // Track previous distance sensor state for edge detection
-    private boolean prevDistanceWithin50MM = false;
+
 
     // Track the slot that is awaiting color confirmation
     private int awaitingColorSlotIndex = -1;
@@ -77,7 +75,6 @@ public class AutoIntakeCommand extends CommandBase {
         
         // Reset state
         detectionState = DetectionState.IDLE;
-        prevDistanceWithin50MM = robot.distanceSensorSubsystem.getWithin50MM();
         slotSwitchInProgress = false;
         awaitingColorSlotIndex = -1;
     }
@@ -96,8 +93,7 @@ public class AutoIntakeCommand extends CommandBase {
                 processColorConfirmation();
                 break;
             default:
-                // SPINDEXER_MOVING or COOLDOWN - just update prevDistanceWithin50MM
-                prevDistanceWithin50MM = robot.distanceSensorSubsystem.getWithin50MM();
+                // SPINDEXER_MOVING or COOLDOWN - do nothing
                 break;
         }
     }
@@ -109,8 +105,9 @@ public class AutoIntakeCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        // Turn off intake
-        new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED).schedule();
+        // Turn off intake - directly set state instead of scheduling to avoid
+        // infinite recursion when cancelled inside a command group
+        robot.intakeSubsystem.state = IntakeSubsystem.IntakeState.STOPPED;
     }
 
     /**
@@ -140,30 +137,24 @@ public class AutoIntakeCommand extends CommandBase {
     }
 
     /**
-     * Process ball detection using distance sensor edge detection.
+     * Process ball detection using distance sensor.
      * Only called when in IDLE state.
      */
     private void processBallDetection() {
         // Only process when in an intake state
         int currentSlot = getCurrentIntakeSlotIndex();
         if (currentSlot == -1) {
-            prevDistanceWithin50MM = robot.distanceSensorSubsystem.getWithin50MM();
             return;
         }
 
         boolean currentWithin50MM = robot.distanceSensorSubsystem.getWithin50MM();
 
-        // Edge detection: false -> true means ball entered
-        if (currentWithin50MM && !prevDistanceWithin50MM) {
-            // Ball detected! Only start color confirmation if slot is empty
-            if (slotColors[currentSlot] == BallColor.NONE) {
-                awaitingColorSlotIndex = currentSlot;
-                colorConfirmationTimer.reset();
-                detectionState = DetectionState.AWAITING_COLOR;
-            }
+        // Ball detected! Only start color confirmation if slot is empty
+        if (currentWithin50MM && slotColors[currentSlot] == BallColor.NONE) {
+            awaitingColorSlotIndex = currentSlot;
+            colorConfirmationTimer.reset();
+            detectionState = DetectionState.AWAITING_COLOR;
         }
-
-        prevDistanceWithin50MM = currentWithin50MM;
     }
 
     /**
@@ -257,7 +248,9 @@ public class AutoIntakeCommand extends CommandBase {
             detectionState = DetectionState.SPINDEXER_MOVING;
         }
 
-        new SpindexerSetPositionCommand(targetState).schedule();
+        // Directly set spindexer state instead of scheduling command
+        // (scheduling would conflict since we require the spindexer subsystem)
+        robot.spindexerSubsystem.setSpindexerState(targetState);
     }
 
     private void clearAllSlots() {

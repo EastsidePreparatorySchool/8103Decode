@@ -12,7 +12,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.PerpetualCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
+import org.firstinspires.ftc.teamcode.commandbase.complexcommands.FollowPathCommand;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -138,6 +138,13 @@ public class RightFarNineTwoPre extends CommandOpMode {
                 Common.TARGET_Y_IN - robot.turretSubsystem.turretY);
         multiTelemetry.addData("Distance to Goal", distance);
         multiTelemetry.addData("shooter rpm target", robot.shooterSubsystem.targetRpm);
+        multiTelemetry.addData("shooter rpm actual", robot.shooterSubsystem.currentRpm);
+        try {
+            multiTelemetry.addData("follower t val", follower.getCurrentTValue());
+            multiTelemetry.addData("follower @ parametric end", follower.atParametricEnd());
+            multiTelemetry.addData("follower busy", follower.isBusy());
+        } catch (Exception ignored) {
+        }
         multiTelemetry.addData("shooter within tolerance", robot.shooterSubsystem.withinTolerance());
         multiTelemetry.addData("hood pos", robot.hoodSubsystem.hoodPos);
         multiTelemetry.update();

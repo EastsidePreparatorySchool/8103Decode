@@ -38,12 +38,12 @@ public class Common {
     public static GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_POD_TYPE = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
     public static boolean PINPOINT_RESET_IMU_ON_INIT = true;
     // Spindexer targets defined as servo positions [0..1]
-    public static double SPINDEXER_INTAKE_ONE = 0.02;
-    public static double SPINDEXER_INTAKE_TWO = 0.24;
-    public static double SPINDEXER_INTAKE_THREE = 0.44;
-    public static double SPINDEXER_OUTTAKE_ONE = 0.34;
-    public static double SPINDEXER_OUTTAKE_TWO = 0.55;
-    public static double SPINDEXER_OUTTAKE_THREE = 0.76;
+    public static double SPINDEXER_INTAKE_ONE = 0.12;
+    public static double SPINDEXER_INTAKE_TWO = 0.34;
+    public static double SPINDEXER_INTAKE_THREE = 0.54;
+    public static double SPINDEXER_OUTTAKE_ONE = 0.44;
+    public static double SPINDEXER_OUTTAKE_TWO = 0.65;
+    public static double SPINDEXER_OUTTAKE_THREE = 0.86;
     // Transfer / shooter
     public static double TRANSFER_DOWN = 0.485;
     public static double TRANSFER_UP = 0.3;
