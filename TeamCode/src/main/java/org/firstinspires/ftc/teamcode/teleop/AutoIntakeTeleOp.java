@@ -227,7 +227,7 @@ public class AutoIntakeTeleOp extends CommandOpMode {
                 detectionState = DetectionState.SPINDEXER_MOVING;
                 awaitingColorSlotIndex = -1;
                 schedule(new TripleShotCommand());
-                schedule(new ShooterStateCommand(ShooterState.OFF))
+                schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
             }
         }
         prevLB = lb;

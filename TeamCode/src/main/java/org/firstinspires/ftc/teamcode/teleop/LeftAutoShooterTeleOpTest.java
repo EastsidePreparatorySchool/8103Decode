@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.DriveWithGamepadCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 
+@Disabled
 @TeleOp(name = "LeftDualTeleOp", group = "Testing")
 public class LeftAutoShooterTeleOpTest extends AutoShooterTeleOpTest {
     @Override
