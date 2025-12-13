@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
-import org.firstinspires.ftc.teamcode.commandbase.safecommands.DistanceSensorStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.Common.BallColor;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
@@ -69,9 +67,13 @@ public class AutoIntakeCommand extends CommandBase {
         // Clear slot tracking
         clearAllSlots();
         
-        // Turn on intake and distance sensor
-        new IntakeStateCommand(IntakeSubsystem.IntakeState.FORWARD).schedule();
-        new DistanceSensorStateCommand(DistanceSensorSubsystem.DistanceSensorState.ON).schedule();
+        // Directly set subsystem states instead of scheduling commands
+        // (scheduling would conflict since we require these subsystems)
+        robot.intakeSubsystem.setIntakeState(IntakeSubsystem.IntakeState.FORWARD);
+        robot.distanceSensorSubsystem.setState(DistanceSensorSubsystem.DistanceSensorState.ON);
+        
+        // Ensure spindexer starts at INTAKE_ONE
+        robot.spindexerSubsystem.setSpindexerState(SpindexerSubsystem.SpindexerState.INTAKE_ONE);
         
         // Reset state
         detectionState = DetectionState.IDLE;

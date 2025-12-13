@@ -212,6 +212,7 @@ public class RobotHardware {
         // Brushland labs sensor in digital0
         distanceSensor = hardwareMap.digitalChannel.get("digital0");
         distanceSensorSubsystem = new DistanceSensorSubsystem();
+        distanceSensorSubsystem.state = distanceSensorSubsystem.state = DistanceSensorSubsystem.DistanceSensorState.ON;
         CommandScheduler.getInstance().registerSubsystem(distanceSensorSubsystem);
     }
 
