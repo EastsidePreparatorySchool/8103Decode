@@ -31,8 +31,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-@Autonomous(name = "RightFarTwelveOnePreOneHPTwoGate", group = "Autos")
-public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
+@Autonomous(name = "RightFarNineTwoPre", group = "Autos")
+public class RightFarNineTwoPre extends CommandOpMode {
     private RobotHardware robot = RobotHardware.getInstance();
     private Follower follower;
     private CommandScheduler scheduler;
@@ -40,7 +40,9 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
     private AimTurretAtPointCommand aimCommand;
     private AutoShooterRPMCommand shooterRPMCommand;
     private AutoHoodPositionCommand hoodPositionCommand;
-    private PathChain path1and2, path3, path4, path5, path6to8, path9, path10to12, path13;
+    
+    // PathChains: First preset intake, return to shoot, second preset intake, return to shoot
+    private PathChain intakePreset1, returnFromPreset1, intakePreset2, returnFromPreset2;
 
     @Override
     public void initialize() {
@@ -88,37 +90,24 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
         buildPaths();
         schedule(
                 new SequentialCommandGroup(
+                        // Tripleshot preload
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
-                        // Intake while following path1and2 (ends when path done OR 3 balls collected)
-                        new IntakeWhileFollowingPathCommand(follower, path1and2),
-                        // Post-intake: turn on shooter, follow path3, tripleshot                        
+                        // Intake first preset (near start, like far twelve auto path1and2)
+                        new IntakeWhileFollowingPathCommand(follower, intakePreset1),
+                        // Return to shooting position and tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path3),
+                        new FollowPathCommand(follower, returnFromPreset1),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
-                        // Intake while following path4 (ends when path done OR 3 balls collected)
-                        new IntakeWhileFollowingPathCommand(follower, path4),
-                        // Post-intake: turn on shooter, follow path5, tripleshot
+                        // Intake second preset (like close auto path2 area, tangential intake)
+                        new IntakeWhileFollowingPathCommand(follower, intakePreset2),
+                        // Return to shooting position and tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path5),
+                        new FollowPathCommand(follower, returnFromPreset2),
                         new TripleShotCommand(),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
-                        // Intake while following path6to8 (ends when path done OR 3 balls collected)
-                        new IntakeWhileFollowingPathCommand(follower, path6to8),
-                        // Post-intake: turn on shooter, follow path9, tripleshot
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path9),
-                        new TripleShotCommand(),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
-                        // // Intake while following path10to12 (ends when path done OR 3 balls collected)
-                        // new IntakeWhileFollowingPathCommand(follower, path10to12),
-                        // // Post-intake: turn on shooter, follow path13, tripleshot
-                        // new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        // new FollowPathCommand(follower, path13),
-                        // new TripleShotCommand(),
-                        // new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
+                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                 )
         );
     }
@@ -160,11 +149,9 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
     }
 
     public void buildPaths() {
-        // Start point: (87, 8.25), heading starts at 90°
-        Pose startPose = new Pose(87, 8.25, Math.toRadians(90));
-        
-        // Path 1 and 2 combined: Start → (103, 36) → (130, 36)
-        path1and2 = follower.pathBuilder()
+        // First preset: Same as far twelve auto path1and2
+        // (87, 8.25) → (103, 36) → (130, 36) with tangential intake
+        intakePreset1 = follower.pathBuilder()
                 .addPath(new BezierCurve(
                         new Pose(87, 8.25),
                         new Pose(87, 36),
@@ -176,78 +163,34 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
-        // Path 3: (130, 36) → (90, 11), constant heading at 0°
-        path3 = follower.pathBuilder()
+        // Return from first preset to shooting position with linear heading to 90° for smooth transition
+        // (130, 36) → (90, 11) linear interp from 0° to 90°
+        returnFromPreset1 = follower.pathBuilder()
                 .addPath(new BezierLine(
                         new Pose(130, 36),
                         new Pose(90, 11)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(90))
                 .build();
 
-        // Path 4: (90, 11) → (134, 8.5), constant heading at 0°
-        path4 = follower.pathBuilder()
-                .addPath(new BezierLine(
+        // Second preset: Similar tangential pattern, intake at y=60 line (24 above first preset)
+        // (90, 11) → curve up → (103, 60) → (130, 60) tangential intake
+        intakePreset2 = follower.pathBuilder()
+                .addPath(new BezierCurve(
                         new Pose(90, 11),
-                        new Pose(134, 8.5)))
+                        new Pose(90, 60),
+                        new Pose(103, 60)))
+                .setTangentHeadingInterpolation()
+                .addPath(new BezierLine(
+                        new Pose(103, 60),
+                        new Pose(130, 60)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
-        // Path 5: (134, 8.5) → (90, 11), constant heading at 0°
-        path5 = follower.pathBuilder()
+        // Return from second preset to shooting position
+        // (130, 60) → (90, 11)
+        returnFromPreset2 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(134, 8.5),
-                        new Pose(90, 11)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-
-        // Paths 6, 8a, 8b combined: (90, 11) → (135, 12) → (135, 20) → (135, 28)
-        path6to8 = follower.pathBuilder()
-                .addPath(new BezierLine(
-                        new Pose(90, 11),
-                        new Pose(135, 12)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new BezierCurve(
-                        new Pose(135, 12),
-                        new Pose(120, 16),
-                        new Pose(135, 20)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new BezierCurve(
-                        new Pose(135, 20),
-                        new Pose(120, 24),
-                        new Pose(135, 28)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-
-        // Path 9: (135, 28) → (90, 11), constant heading at 0°
-        path9 = follower.pathBuilder()
-                .addPath(new BezierLine(
-                        new Pose(135, 28),
-                        new Pose(90, 11)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-
-        // Paths 10, 11, 12 combined: (90, 11) → (135, 12) → (135, 20) → (135, 28)
-        path10to12 = follower.pathBuilder()
-                .addPath(new BezierLine(
-                        new Pose(90, 11),
-                        new Pose(135, 12)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new BezierCurve(
-                        new Pose(135, 12),
-                        new Pose(120, 16),
-                        new Pose(135, 20)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new BezierCurve(
-                        new Pose(135, 20),
-                        new Pose(120, 24),
-                        new Pose(135, 28)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-
-        // Path 13: (135, 28) → (90, 11), constant heading at 0°
-        path13 = follower.pathBuilder()
-                .addPath(new BezierLine(
-                        new Pose(135, 28),
+                        new Pose(130, 60),
                         new Pose(90, 11)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();

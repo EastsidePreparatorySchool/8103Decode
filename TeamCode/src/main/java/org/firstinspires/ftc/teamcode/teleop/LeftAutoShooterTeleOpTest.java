@@ -12,8 +12,8 @@ public class LeftAutoShooterTeleOpTest extends AutoShooterTeleOpTest {
     public void initialize() {
         Common.TARGET_X_IN = Common.LEFT_FIELD_TARGET_X_IN;
         Common.TARGET_Y_IN = Common.LEFT_FIELD_TARGET_Y_IN;
-        Common.START_X_IN = Common.LEFT_FIELD_START_X_IN;
-        Common.START_Y_IN = Common.LEFT_FIELD_START_Y_IN;
+        Common.START_X_IN = Common.LEFT_FAR_START_X_IN;
+        Common.START_Y_IN = Common.LEFT_FAR_START_Y_IN;
         Common.ACTUAL_TARGET_X_IN = Common.LEFT_FIELD_ACTUAL_TARGET_X_IN;
         Common.ACTUAL_TARGET_Y_IN = Common.LEFT_FIELD_ACTUAL_TARGET_Y_IN;
         super.initialize();

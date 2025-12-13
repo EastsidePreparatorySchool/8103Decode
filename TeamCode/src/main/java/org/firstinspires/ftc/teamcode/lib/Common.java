@@ -67,11 +67,19 @@ public class Common {
 
     public static double DRIVE_DEFAULT_MULT = 0.8;
     public static double DRIVE_SLOW_MULT = 0.5;
-    // Field targeting and start pose (inches/degrees)
-    public static double RIGHT_FIELD_START_X_IN = 87.0;
-    public static double RIGHT_FIELD_START_Y_IN = 8.25;
-    public static double LEFT_FIELD_START_X_IN = 57.0;
-    public static double LEFT_FIELD_START_Y_IN = 8.25;
+    // Field starting positions (inches) and headings (degrees)
+    public static double RIGHT_FAR_START_X_IN = 87.0;
+    public static double RIGHT_FAR_START_Y_IN = 8.25;
+    public static double RIGHT_FAR_START_HEADING_DEG = 90.0;
+    public static double RIGHT_CLOSE_START_X_IN = 121.0;
+    public static double RIGHT_CLOSE_START_Y_IN = 120.0;
+    public static double RIGHT_CLOSE_START_HEADING_DEG = 0.0;
+    public static double LEFT_FAR_START_X_IN = 57.0;
+    public static double LEFT_FAR_START_Y_IN = 8.25;
+    public static double LEFT_FAR_START_HEADING_DEG = 90.0;
+    public static double LEFT_CLOSE_START_X_IN = 23.0;
+    public static double LEFT_CLOSE_START_Y_IN = 120.0;
+    public static double LEFT_CLOSE_START_HEADING_DEG = 180.0;
     public static double RIGHT_FIELD_TARGET_X_IN = 144.0;
     public static double RIGHT_FIELD_TARGET_Y_IN = 144.0;
     public static double RIGHT_FIELD_ACTUAL_TARGET_X_IN = 144.0;
@@ -80,10 +88,10 @@ public class Common {
     public static double LEFT_FIELD_TARGET_Y_IN = 144.0;
     public static double LEFT_FIELD_ACTUAL_TARGET_X_IN = 0;
     public static double LEFT_FIELD_ACTUAL_TARGET_Y_IN = 144.0;
-    // Selected field target used by opmodes; default to RIGHT
-    public static double START_X_IN = RIGHT_FIELD_START_X_IN;
-    public static double START_Y_IN = RIGHT_FIELD_START_Y_IN;
-    public static double START_HEADING_DEG = 90.0;
+    // Selected field target used by opmodes; default to RIGHT FAR
+    public static double START_X_IN = RIGHT_FAR_START_X_IN;
+    public static double START_Y_IN = RIGHT_FAR_START_Y_IN;
+    public static double START_HEADING_DEG = RIGHT_FAR_START_HEADING_DEG;
 
     public static double TARGET_X_IN = RIGHT_FIELD_TARGET_X_IN;
     public static double TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
@@ -97,7 +105,7 @@ public class Common {
     public static double GREEN_HUE_MIN = 60.0;
     public static double GREEN_HUE_MAX = 165.0;
     public static double COLOR_MIN_SATURATION = 0.3;
-    public static long COLOR_CONFIRMATION_TIMEOUT_MS = 500;
+    public static long COLOR_CONFIRMATION_TIMEOUT_MS = 100;
 
     // Ball color enum for slot tracking
     public enum BallColor {

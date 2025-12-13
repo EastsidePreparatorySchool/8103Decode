@@ -31,8 +31,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
-@Autonomous(name = "RightFarTwelveOnePreOneHPTwoGate", group = "Autos")
-public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
+@Autonomous(name = "LeftFarTwelveOnePreOneHPTwoGate", group = "Autos")
+public class LeftFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
     private RobotHardware robot = RobotHardware.getInstance();
     private Follower follower;
     private CommandScheduler scheduler;
@@ -63,14 +63,14 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
         Common.PINPOINT_RESET_IMU_ON_INIT = true;
         robot.initPinpoint();
         
-        // Set start position and target for right far auto
-        Common.START_X_IN = Common.RIGHT_FAR_START_X_IN;
-        Common.START_Y_IN = Common.RIGHT_FAR_START_Y_IN;
-        Common.START_HEADING_DEG = Common.RIGHT_FAR_START_HEADING_DEG;
-        Common.TARGET_X_IN = Common.RIGHT_FIELD_TARGET_X_IN;
-        Common.TARGET_Y_IN = Common.RIGHT_FIELD_TARGET_Y_IN;
-        Common.ACTUAL_TARGET_X_IN = Common.RIGHT_FIELD_ACTUAL_TARGET_X_IN;
-        Common.ACTUAL_TARGET_Y_IN = Common.RIGHT_FIELD_ACTUAL_TARGET_Y_IN;
+        // Set start position and target for left far auto
+        Common.START_X_IN = Common.LEFT_FAR_START_X_IN;
+        Common.START_Y_IN = Common.LEFT_FAR_START_Y_IN;
+        Common.START_HEADING_DEG = Common.LEFT_FAR_START_HEADING_DEG;
+        Common.TARGET_X_IN = Common.LEFT_FIELD_TARGET_X_IN;
+        Common.TARGET_Y_IN = Common.LEFT_FIELD_TARGET_Y_IN;
+        Common.ACTUAL_TARGET_X_IN = Common.LEFT_FIELD_ACTUAL_TARGET_X_IN;
+        Common.ACTUAL_TARGET_Y_IN = Common.LEFT_FIELD_ACTUAL_TARGET_Y_IN;
         
         aimCommand = new AimTurretAtPointCommand(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         shooterRPMCommand = new AutoShooterRPMCommand(robot.shooterSubsystem);
@@ -111,14 +111,7 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
                         new FollowPathCommand(follower, path9),
                         new TripleShotCommand(),
-                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
-                        // // Intake while following path10to12 (ends when path done OR 3 balls collected)
-                        // new IntakeWhileFollowingPathCommand(follower, path10to12),
-                        // // Post-intake: turn on shooter, follow path13, tripleshot
-                        // new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        // new FollowPathCommand(follower, path13),
-                        // new TripleShotCommand(),
-                        // new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
+                        new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                 )
         );
     }
@@ -160,96 +153,96 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
     }
 
     public void buildPaths() {
-        // Start point: (87, 8.25), heading starts at 90°
-        Pose startPose = new Pose(87, 8.25, Math.toRadians(90));
+        // Mirrored from right auto: X = 144 - rightX, heading = 180 - rightHeading
+        // Start point: (57, 8.25), heading 90°
         
-        // Path 1 and 2 combined: Start → (103, 36) → (130, 36)
+        // Path 1 and 2 combined: (57, 8.25) → (41, 36) → (14, 36)
         path1and2 = follower.pathBuilder()
                 .addPath(new BezierCurve(
-                        new Pose(87, 8.25),
-                        new Pose(87, 36),
-                        new Pose(103, 36)))
+                        new Pose(57, 8.25),
+                        new Pose(57, 36),
+                        new Pose(41, 36)))
                 .setTangentHeadingInterpolation()
                 .addPath(new BezierLine(
-                        new Pose(103, 36),
-                        new Pose(130, 36)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(41, 36),
+                        new Pose(14, 36)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        // Path 3: (130, 36) → (90, 11), constant heading at 0°
+        // Path 3: (14, 36) → (54, 11), constant heading at 180°
         path3 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(130, 36),
-                        new Pose(90, 11)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(14, 36),
+                        new Pose(54, 11)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        // Path 4: (90, 11) → (134, 8.5), constant heading at 0°
+        // Path 4: (54, 11) → (10, 8.5), constant heading at 180°
         path4 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(90, 11),
-                        new Pose(134, 8.5)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(54, 11),
+                        new Pose(10, 8.5)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        // Path 5: (134, 8.5) → (90, 11), constant heading at 0°
+        // Path 5: (10, 8.5) → (54, 11), constant heading at 180°
         path5 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(134, 8.5),
-                        new Pose(90, 11)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(10, 8.5),
+                        new Pose(54, 11)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        // Paths 6, 8a, 8b combined: (90, 11) → (135, 12) → (135, 20) → (135, 28)
+        // Paths 6, 8a, 8b combined: (54, 11) → (9, 12) → (9, 20) → (9, 28)
         path6to8 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(90, 11),
-                        new Pose(135, 12)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(54, 11),
+                        new Pose(9, 12)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(new BezierCurve(
-                        new Pose(135, 12),
-                        new Pose(120, 16),
-                        new Pose(135, 20)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(9, 12),
+                        new Pose(24, 16),
+                        new Pose(9, 20)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(new BezierCurve(
-                        new Pose(135, 20),
-                        new Pose(120, 24),
-                        new Pose(135, 28)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(9, 20),
+                        new Pose(24, 24),
+                        new Pose(9, 28)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        // Path 9: (135, 28) → (90, 11), constant heading at 0°
+        // Path 9: (9, 28) → (54, 11), constant heading at 180°
         path9 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(135, 28),
-                        new Pose(90, 11)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(9, 28),
+                        new Pose(54, 11)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        // Paths 10, 11, 12 combined: (90, 11) → (135, 12) → (135, 20) → (135, 28)
+        // Paths 10, 11, 12 combined: (54, 11) → (9, 12) → (9, 20) → (9, 28)
         path10to12 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(90, 11),
-                        new Pose(135, 12)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(54, 11),
+                        new Pose(9, 12)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(new BezierCurve(
-                        new Pose(135, 12),
-                        new Pose(120, 16),
-                        new Pose(135, 20)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(9, 12),
+                        new Pose(24, 16),
+                        new Pose(9, 20)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(new BezierCurve(
-                        new Pose(135, 20),
-                        new Pose(120, 24),
-                        new Pose(135, 28)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(9, 20),
+                        new Pose(24, 24),
+                        new Pose(9, 28)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        // Path 13: (135, 28) → (90, 11), constant heading at 0°
+        // Path 13: (9, 28) → (54, 11), constant heading at 180°
         path13 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(135, 28),
-                        new Pose(90, 11)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                        new Pose(9, 28),
+                        new Pose(54, 11)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
     }
 }
