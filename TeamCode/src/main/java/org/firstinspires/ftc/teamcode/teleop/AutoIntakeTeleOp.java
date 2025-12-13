@@ -227,6 +227,7 @@ public class AutoIntakeTeleOp extends CommandOpMode {
                 detectionState = DetectionState.SPINDEXER_MOVING;
                 awaitingColorSlotIndex = -1;
                 schedule(new TripleShotCommand());
+                schedule(new ShooterStateCommand(ShooterState.OFF))
             }
         }
         prevLB = lb;
@@ -291,6 +292,7 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
         multiTelemetry.addData("heading (deg)", robot.pinpointSubsystem.getHeadingDegrees());
         multiTelemetry.addData("shooter rpm target", robot.shooterSubsystem.targetRpm);
+        multiTelemetry.addData("shooter rpm actual", robot.shooterSubsystem.currentRpm);
         multiTelemetry.addData("shooter within tolerance", shooterWithinTolerance);
         multiTelemetry.addData("hood pos", robot.hoodSubsystem.hoodPos);
         multiTelemetry.addData("turret offset (deg)", turretAngleOffsetDeg);

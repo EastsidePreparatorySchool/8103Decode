@@ -57,7 +57,7 @@ public class Common {
     public static double SHOOTER_KS = 0.09; // static friction offset (power)
     public static double SHOOTER_KV = 0.000155; // power per RPM
     public static double SHOOTER_KA = 0.0; // power per (RPM/s)
-    public static double SHOOTER_KP = 0.003; // P on velocity error (RPM)
+    public static double SHOOTER_KP = 0.008; // P on velocity error (RPM)
     // Hood initial position
     public static double HOOD_INITIAL_POS = 0.70;
     public static double HOOD_MAX_POS = 0.14;
@@ -90,7 +90,6 @@ public class Common {
     public static double ACTUAL_TARGET_X_IN = RIGHT_FIELD_ACTUAL_TARGET_X_IN;
     public static double ACTUAL_TARGET_Y_IN = RIGHT_FIELD_TARGET_Y_IN;
     // Auto-intake ball detection
-    public static double BALL_DETECTION_DISTANCE_IN = 1.0;
 
     // Ball color detection thresholds
     public static double PURPLE_HUE_MIN = 200.0;
