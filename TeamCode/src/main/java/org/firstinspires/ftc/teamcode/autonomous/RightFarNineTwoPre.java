@@ -167,7 +167,7 @@ public class RightFarNineTwoPre extends CommandOpMode {
                 .setTangentHeadingInterpolation()
                 .addPath(new BezierLine(
                         new Pose(98, 36),
-                        new Pose(135, 36)))
+                        new Pose(136, 36)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
@@ -175,7 +175,7 @@ public class RightFarNineTwoPre extends CommandOpMode {
         // (130, 36) → (90, 11) linear interp from 0° to 90°
         returnFromPreset1 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(135, 36),
+                        new Pose(136, 36),
                         new Pose(90, 11)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(90))
                 .build();
@@ -190,7 +190,7 @@ public class RightFarNineTwoPre extends CommandOpMode {
                 .setTangentHeadingInterpolation()
                 .addPath(new BezierLine(
                         new Pose(98, 60),
-                        new Pose(135, 60)))
+                        new Pose(136, 60)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
@@ -198,7 +198,7 @@ public class RightFarNineTwoPre extends CommandOpMode {
         // (130, 60) → (90, 11)
         returnFromPreset2 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(135, 60),
+                        new Pose(136, 60),
                         new Pose(90, 11)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();

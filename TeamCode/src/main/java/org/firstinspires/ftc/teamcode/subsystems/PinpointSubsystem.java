@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 @Config
-public class PinpointSubsystem extends SubsystemBase {
+public class  PinpointSubsystem extends SubsystemBase {
     private final RobotHardware robot;
     private Pose2D pose = new Pose2D(DistanceUnit.INCH, 0.0, 0.0, AngleUnit.DEGREES, 0.0);
     private double defaultXInches = 0.0;
