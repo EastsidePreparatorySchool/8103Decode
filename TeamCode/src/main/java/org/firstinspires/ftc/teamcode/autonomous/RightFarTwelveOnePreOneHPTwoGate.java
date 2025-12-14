@@ -173,14 +173,14 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                 .setTangentHeadingInterpolation()
                 .addPath(new BezierLine(
                         new Pose(98, 36),
-                        new Pose(130, 36)))
+                        new Pose(135, 36)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         // Path 3: (130, 36) → (90, 11), constant heading at 0°
         path3 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        new Pose(130, 36),
+                        new Pose(135, 36),
                         new Pose(90, 11)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
