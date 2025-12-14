@@ -12,6 +12,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.PerpetualCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.FollowPathCommand;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -98,14 +99,14 @@ public class RightFarNineTwoPre extends CommandOpMode {
                         new IntakeWhileFollowingPathCommand(follower, intakePreset1),
                         // Return to shooting position and tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, returnFromPreset1),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, returnFromPreset1), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Intake second preset (like close auto path2 area, tangential intake)
                         new IntakeWhileFollowingPathCommand(follower, intakePreset2),
                         // Return to shooting position and tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, returnFromPreset2),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, returnFromPreset2), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                 )
@@ -162,10 +163,10 @@ public class RightFarNineTwoPre extends CommandOpMode {
                 .addPath(new BezierCurve(
                         new Pose(87, 8.25),
                         new Pose(87, 36),
-                        new Pose(103, 36)))
+                        new Pose(98, 36)))
                 .setTangentHeadingInterpolation()
                 .addPath(new BezierLine(
-                        new Pose(103, 36),
+                        new Pose(98, 36),
                         new Pose(130, 36)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
@@ -185,10 +186,10 @@ public class RightFarNineTwoPre extends CommandOpMode {
                 .addPath(new BezierCurve(
                         new Pose(90, 11),
                         new Pose(90, 60),
-                        new Pose(103, 60)))
+                        new Pose(98, 60)))
                 .setTangentHeadingInterpolation()
                 .addPath(new BezierLine(
-                        new Pose(103, 60),
+                        new Pose(98, 60),
                         new Pose(130, 60)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();

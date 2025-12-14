@@ -12,6 +12,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.PerpetualCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.FollowPathCommand;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -92,30 +93,30 @@ public class LeftCloseTwelveTwoPreOneGate extends CommandOpMode {
                 new SequentialCommandGroup(
                         // Path 1 to shooting position, tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path1),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path1), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Path 2 intake
                         new IntakeWhileFollowingPathCommand(follower, path2),
                         // Path 3 (open gate)
-                        new FollowPathCommand(follower, path3),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path3), new WaitCommand(500)),
                         // Path 4 to shooting, tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path4),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path4), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Paths 5+6 intake
                         new IntakeWhileFollowingPathCommand(follower, path5and6),
                         // Path 7 to shooting, tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path7),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path7), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Paths 8+9+10+11 intake
                         new IntakeWhileFollowingPathCommand(follower, path8to11),
                         // Path 12 to shooting, tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path12),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path12), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                 )
@@ -200,10 +201,10 @@ public class LeftCloseTwelveTwoPreOneGate extends CommandOpMode {
                 .addPath(new BezierCurve(
                         new Pose(54, 84),
                         new Pose(54, 60),
-                        new Pose(44, 60)))
+                        new Pose(46, 60)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(new BezierLine(
-                        new Pose(44, 60),
+                        new Pose(46, 60),
                         new Pose(14, 60)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();

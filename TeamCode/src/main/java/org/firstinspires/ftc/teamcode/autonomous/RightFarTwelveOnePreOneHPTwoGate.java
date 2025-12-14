@@ -12,6 +12,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.PerpetualCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.FollowPathCommand;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -95,21 +96,21 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                         new IntakeWhileFollowingPathCommand(follower, path1and2),
                         // Post-intake: turn on shooter, follow path3, tripleshot                        
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path3),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path3), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Intake while following path4 (ends when path done OR 3 balls collected)
                         new IntakeWhileFollowingPathCommand(follower, path4),
                         // Post-intake: turn on shooter, follow path5, tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path5),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path5), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Intake while following path6to8 (ends when path done OR 3 balls collected)
                         new IntakeWhileFollowingPathCommand(follower, path6to8),
                         // Post-intake: turn on shooter, follow path9, tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new FollowPathCommand(follower, path9),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path9), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                         // // Intake while following path10to12 (ends when path done OR 3 balls collected)
@@ -168,10 +169,10 @@ public class RightFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                 .addPath(new BezierCurve(
                         new Pose(87, 8.25),
                         new Pose(87, 36),
-                        new Pose(103, 36)))
+                        new Pose(98, 36)))
                 .setTangentHeadingInterpolation()
                 .addPath(new BezierLine(
-                        new Pose(103, 36),
+                        new Pose(98, 36),
                         new Pose(130, 36)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();

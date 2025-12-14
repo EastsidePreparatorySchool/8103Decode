@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.PerpetualCommand;
+import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -224,8 +225,10 @@ public class AutoIntakeTeleOp extends CommandOpMode {
                 tripleShotInProgress = true;
                 detectionState = DetectionState.SPINDEXER_MOVING;
                 awaitingColorSlotIndex = -1;
-                schedule(new TripleShotCommand());
-                schedule(new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF));
+                schedule(new SequentialCommandGroup(
+                    new TripleShotCommand(),
+                    new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
+                ));
             }
         }
         prevLB = lb;
@@ -252,18 +255,18 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         prevDpadLeft = dLeft;
         prevDpadRight = dRight;
 
-        boolean dUp = gamepad2.dpad_up;
-        boolean dDn = gamepad2.dpad_down;
-        if (dUp && !prevDpadUp) {
-            Common.HOOD_INITIAL_POS += 0.005;
-            hoodOffset += 0.005;
-        }
-        if (dDn && !prevDpadDown) {
-            Common.HOOD_INITIAL_POS -= 0.005;
-            hoodOffset -= 0.005;
-        }
-        prevDpadUp = dUp;
-        prevDpadDown = dDn;
+        // boolean dUp = gamepad2.dpad_up;
+        // boolean dDn = gamepad2.dpad_down;
+        // if (dUp && !prevDpadUp) {
+        //     Common.HOOD_INITIAL_POS += 0.005;
+        //     hoodOffset += 0.005;
+        // }
+        // if (dDn && !prevDpadDown) {
+        //     Common.HOOD_INITIAL_POS -= 0.005;
+        //     hoodOffset -= 0.005;
+        // }
+        // prevDpadUp = dUp;
+        // prevDpadDown = dDn;
 
         // Auto-disable intake, turn on shooter, and switch to OUTTAKE_ONE when all slots are full
         if (isAllSlotsFull() && robot.intakeSubsystem.state == IntakeSubsystem.IntakeState.FORWARD) {
