@@ -23,12 +23,14 @@ import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoHoodPositi
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.AutoShooterRPMCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.IntakeWhileFollowingPathCommand;
 import org.firstinspires.ftc.teamcode.commandbase.complexcommands.TripleShotCommand;
+import org.firstinspires.ftc.teamcode.commandbase.safecommands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.ShooterStateCommand;
 import org.firstinspires.ftc.teamcode.commandbase.safecommands.TurretStateCommand;
 import org.firstinspires.ftc.teamcode.lib.Common;
 import org.firstinspires.ftc.teamcode.lib.PersistentState;
 import org.firstinspires.ftc.teamcode.lib.RobotHardware;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TurretSubsystem;
 
@@ -94,23 +96,27 @@ public class LeftFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Intake while following path1and2 (ends when path done OR 3 balls collected)
                         new IntakeWhileFollowingPathCommand(follower, path1and2),
-                        // Post-intake: turn on shooter, follow path3, tripleshot                        
+                        // Post-intake: turn on shooter, follow path3, tripleshot
+                        new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new SequentialCommandGroup(new FollowPathCommand(follower, path3), new WaitCommand(500)),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path3), new WaitCommand(750)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Intake while following path4 (ends when path done OR 3 balls collected)
                         new IntakeWhileFollowingPathCommand(follower, path4),
+                        new WaitCommand(750),
+                        new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
                         // Post-intake: turn on shooter, follow path5, tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new SequentialCommandGroup(new FollowPathCommand(follower, path5), new WaitCommand(500)),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path5), new WaitCommand(750)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
                         // Intake while following path6to8 (ends when path done OR 3 balls collected)
                         new IntakeWhileFollowingPathCommand(follower, path6to8),
+                        new IntakeStateCommand(IntakeSubsystem.IntakeState.STOPPED),
                         // Post-intake: turn on shooter, follow path9, tripleshot
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.ON),
-                        new SequentialCommandGroup(new FollowPathCommand(follower, path9), new WaitCommand(500)),
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path9), new WaitCommand(750)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF)
                 )
@@ -162,10 +168,10 @@ public class LeftFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                 .addPath(new BezierCurve(
                         new Pose(57, 8.25),
                         new Pose(57, 36),
-                        new Pose(46, 36)))
+                        new Pose(48, 36)))
                 .setTangentHeadingInterpolation()
                 .addPath(new BezierLine(
-                        new Pose(46, 36),
+                        new Pose(48, 36),
                         new Pose(8, 36)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
@@ -178,12 +184,13 @@ public class LeftFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        // Path 4: (54, 11) → (10, 8.5), constant heading at 180°
+        // Path 4: (54, 11) → (10, 8.5), constanpt heading at 180°
         path4 = follower.pathBuilder()
-                .addPath(new BezierLine(
+                .addPath(new BezierCurve(
                         new Pose(54, 11),
+                        new Pose(10, 30),
                         new Pose(10, 8.5)))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(270))
                 .build();
 
         // Path 5: (10, 8.5) → (54, 11), constant heading at 180°
@@ -191,7 +198,7 @@ public class LeftFarTwelveOnePreOneHPTwoGate extends CommandOpMode {
                 .addPath(new BezierLine(
                         new Pose(10, 8.5),
                         new Pose(54, 11)))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(180))
                 .build();
 
         // Paths 6, 8a, 8b combined: (54, 11) → (9, 12) → (9, 20) → (9, 28)

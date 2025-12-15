@@ -10,18 +10,18 @@ public class ShooterHoodData {
         lut.add(0, 3500);
         lut.add(40, 3500);
         lut.add(50, 3700);
-        lut.add(60, 3900);
-        lut.add(70, 4100);
-        lut.add(80, 4300);
-        lut.add(90, 4400);
-        lut.add(100, 4500);
-        lut.add(110, 4700);
-        lut.add(120, 4800);
+        lut.add(60, 3800);
+        lut.add(70, 4000);
+        lut.add(80, 4200);
+        lut.add(90, 4300);
+        lut.add(100, 4400);
+        lut.add(110, 4600);
+        lut.add(120, 4700);
         lut.add(130, 4800);
         lut.add(140, 4950);
         lut.add(150, 5050);
-        lut.add(160, 5200);
-        lut.add(500, 5300);
+        lut.add(160, 5120);
+        lut.add(500, 5250);
         lut.createLUT();
         return lut;
     }

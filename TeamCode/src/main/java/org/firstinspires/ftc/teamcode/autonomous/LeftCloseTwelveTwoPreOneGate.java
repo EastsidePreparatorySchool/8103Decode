@@ -43,7 +43,7 @@ public class LeftCloseTwelveTwoPreOneGate extends CommandOpMode {
     private AutoHoodPositionCommand hoodPositionCommand;
     
     // PathChains
-    private PathChain path1, path2, path3, path4, path5and6, path7, path8to11, path12;
+    private PathChain path1, path2, path3, path4, path4b, path5and6, path7, path8to11, path12;
 
     @Override
     public void initialize() {
@@ -105,6 +105,8 @@ public class LeftCloseTwelveTwoPreOneGate extends CommandOpMode {
                         new SequentialCommandGroup(new FollowPathCommand(follower, path4), new WaitCommand(500)),
                         new TripleShotCommand(),
                         new ShooterStateCommand(ShooterSubsystem.ShooterState.OFF),
+                        // Path 4b (second gate open)
+                        new SequentialCommandGroup(new FollowPathCommand(follower, path4b), new WaitCommand(500)),
                         // Paths 5+6 intake
                         new IntakeWhileFollowingPathCommand(follower, path5and6),
                         // Path 7 to shooting, tripleshot
@@ -194,6 +196,14 @@ public class LeftCloseTwelveTwoPreOneGate extends CommandOpMode {
                         new Pose(14, 75),
                         new Pose(54, 84)))
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
+                .build();
+
+        // Path 4b: (54, 84) → (14, 75), linear 180° → 90° (second gate open)
+        path4b = follower.pathBuilder()
+                .addPath(new BezierLine(
+                        new Pose(54, 84),
+                        new Pose(14, 75)))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(90))
                 .build();
 
         // Paths 5+6 combined: (54, 84) → (44, 60) → (14, 60)
