@@ -58,6 +58,19 @@ public class  PinpointSubsystem extends SubsystemBase {
         robot.robotHeadingDeg = pose.getHeading(AngleUnit.DEGREES);
     }
 
+    // Velocity getters (converted from Pinpoint mm/s to in/s)
+    public double getVelXInPerSec() {
+        return robot.pinpoint.getVelX() / 25.4;  // mm to inches
+    }
+
+    public double getVelYInPerSec() {
+        return robot.pinpoint.getVelY() / 25.4;
+    }
+
+    public double getVelHeadingRadPerSec() {
+        return robot.pinpoint.getHeadingVelocity();  // already rad/s
+    }
+
     public void resetToConfiguredStart() {
         initializePose(defaultXInches, defaultYInches, defaultHeadingDeg);
     }
