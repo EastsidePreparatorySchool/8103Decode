@@ -68,9 +68,8 @@ public class  PinpointSubsystem extends SubsystemBase {
     }
 
     public double getVelHeadingRadPerSec() {
-        return robot.pinpoint.getHeadingVelocity();  // already rad/s
+        return robot.pinpoint.getHeadingVelocity();  
     }
-
     public void resetToConfiguredStart() {
         initializePose(defaultXInches, defaultYInches, defaultHeadingDeg);
     }
