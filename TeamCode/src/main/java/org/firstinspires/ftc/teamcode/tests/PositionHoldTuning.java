@@ -124,7 +124,7 @@ public class PositionHoldTuning extends CommandOpMode {
     private void applyDashboardValues() {
         PositionHoldDriveCommand.VELOCITY_THRESHOLD = VELOCITY_THRESHOLD;
         PositionHoldDriveCommand.OMEGA_THRESHOLD = OMEGA_THRESHOLD;
-        // PositionHoldDriveCommand.CAPTURE_DELAY = CAPTURE_DELAY_MS; // Needs to be added to command
+        PositionHoldDriveCommand.HOLD_CAPTURE_DELAY_MS = CAPTURE_DELAY_MS;
         
         PositionHoldDriveCommand.HOLD_KP = HOLD_KP;
         PositionHoldDriveCommand.HOLD_KD = HOLD_KD;
@@ -152,7 +152,15 @@ public class PositionHoldTuning extends CommandOpMode {
         
         // --- CONTROL LOOP ---
         multiTelemetry.addLine("\n=== CONTROL LOOP ===");
-        multiTelemetry.addData("Mode", driveCommand.isHolding() ? "HOLDING" : "DRIVING");
+        
+        // Fallback status (critical warning)
+        if (driveCommand.isFallbackMode()) {
+            multiTelemetry.addData("⚠️ FALLBACK", driveCommand.getFallbackReason());
+            multiTelemetry.addLine("Press BACK to toggle fallback mode");
+        }
+        
+        multiTelemetry.addData("Mode", driveCommand.isFallbackMode() ? "FALLBACK" : 
+                              (driveCommand.isHolding() ? "HOLDING" : "DRIVING"));
         multiTelemetry.addData("Dt (ms)", "%.1f", driveCommand.getDt() * 1000);
         multiTelemetry.addData("Alpha", "%.3f", driveCommand.getFilterAlpha());
         
