@@ -1,238 +1,155 @@
 package org.firstinspires.ftc.teamcode.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Port Tester - Tests motors and servos one by one to verify wiring
- * 
- * CONTROLS:
- * - D-pad Up/Down: Select hub (Control Hub / Expansion Hub / Servo Hub)
- * - D-pad Left/Right: Select port (0-3 for motors, 0-5 for servos)
- * - Left Stick Y: Run motor (when motor port selected)
- * - Right Stick Y: Move servo (when servo hub selected)
- * - A: Toggle motor direction
- * - B: Center servo (0.5)
- * - X: Min servo (0.0)
- * - Y: Max servo (1.0)
+ * Port Tester - Control every motor and servo individually via FTC Dashboard
+ * All motors have FLOAT zero power behavior for easy port identification.
  */
+@Config
 @TeleOp(name = "Port Tester", group = "Tuning")
 public class PortTester extends OpMode {
 
-    private enum Hub {
-        CONTROL_HUB("Control Hub"),
-        EXPANSION_HUB("Expansion Hub"),
-        SERVO_HUB("Servo Hub");
+    // === DASHBOARD VARIABLES ===
+    // Control Hub Motors (ports 0-3)
+    public static double port0_FL_power = 0.0;
+    public static double port1_FR_power = 0.0;
+    public static double port2_BL_power = 0.0;
+    public static double port3_BR_power = 0.0;
 
-        final String name;
-        Hub(String name) { this.name = name; }
-    }
+    // Expansion Hub Motors (ports 0-3)
+    public static double port0_intake_power = 0.0;
+    public static double port1_turret_power = 0.0;
+    public static double port2_flywheel2_power = 0.0;
+    public static double port3_flywheel_power = 0.0;
 
-    // State
-    private Hub selectedHub = Hub.CONTROL_HUB;
-    private int selectedPort = 0;
-    private boolean motorReversed = false;
-    private double servoPosition = 0.5;
+    // Servo Hub Servos (ports 0-5)
+    public static double port0_hood_pos = 0.5;
+    public static double port1_spindexer_pos = 0.5;
+    public static double port2_transfer_pos = 0.5;
+    public static double port5_hood2_pos = 0.5;
 
-    // Hardware - generic by port
-    private DcMotorEx[] controlHubMotors = new DcMotorEx[4];
-    private DcMotorEx[] expansionHubMotors = new DcMotorEx[4];
-    private Servo[] servos = new Servo[6];
+    // Hardware
+    private DcMotorEx FL, FR, BL, BR;
+    private DcMotorEx intake, turret, flywheel2, flywheel;
+    private Servo hood, spindexer, transfer, hood2;
 
-    // Telemetry
-    private MultipleTelemetry multiTelemetry;
-
-    // Debounce for button presses
-    private boolean lastDpadUp = false;
-    private boolean lastDpadDown = false;
-    private boolean lastDpadLeft = false;
-    private boolean lastDpadRight = false;
-    private boolean lastA = false;
-    private boolean lastB = false;
-    private boolean lastX = false;
-    private boolean lastY = false;
+    private MultipleTelemetry telem;
 
     @Override
     public void init() {
-        multiTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        // Initialize Control Hub motors (ports 0-3)
-        String[] controlHubNames = {"FL", "FR", "BL", "BR"};
-        for (int i = 0; i < 4; i++) {
-            try {
-                controlHubMotors[i] = hardwareMap.get(DcMotorEx.class, controlHubNames[i]);
-                controlHubMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                controlHubMotors[i].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                controlHubMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            } catch (Exception e) {
-                controlHubMotors[i] = null;
-            }
+        // Control Hub Motors
+        FL = initMotor("FL");
+        FR = initMotor("FR");
+        BL = initMotor("BL");
+        BR = initMotor("BR");
+
+        // Expansion Hub Motors
+        intake = initMotor("intake");
+        turret = initMotor("turret");
+        flywheel2 = initMotor("flywheel2");
+        flywheel = initMotor("flywheel");
+
+        // Servo Hub Servos
+        hood = initServo("hood");
+        spindexer = initServo("spindexer");
+        transfer = initServo("transfer");
+        hood2 = initServo("hood2");
+
+        telem.addLine("Port Tester Ready - Use FTC Dashboard to control");
+        telem.update();
+    }
+
+    private DcMotorEx initMotor(String name) {
+        try {
+            DcMotorEx motor = hardwareMap.get(DcMotorEx.class, name);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            return motor;
+        } catch (Exception e) {
+            return null;
         }
+    }
 
-        // Initialize Expansion Hub motors (ports 0-3)
-        String[] expansionHubNames = {"turret", "flywheel", "flywheel2", "intake"};
-        for (int i = 0; i < 4; i++) {
-            try {
-                expansionHubMotors[i] = hardwareMap.get(DcMotorEx.class, expansionHubNames[i]);
-                expansionHubMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                expansionHubMotors[i].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                expansionHubMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            } catch (Exception e) {
-                expansionHubMotors[i] = null;
-            }
+    private Servo initServo(String name) {
+        try {
+            return hardwareMap.get(Servo.class, name);
+        } catch (Exception e) {
+            return null;
         }
-
-        // Initialize Servo Hub servos (ports 0-5)
-        String[] servoNames = {"hood", "hood2", "spindexer", "transfer", "servo4", "servo5"};
-        for (int i = 0; i < 6; i++) {
-            try {
-                servos[i] = hardwareMap.get(Servo.class, servoNames[i]);
-            } catch (Exception e) {
-                servos[i] = null;
-            }
-        }
-
-        multiTelemetry.addLine("Port Tester Ready");
-        multiTelemetry.addLine("D-pad: Select Hub/Port | Sticks: Run Motor/Servo");
-        multiTelemetry.update();
     }
 
     @Override
     public void loop() {
-        // --- Input Handling ---
-        
-        // Hub selection (D-pad Up/Down)
-        if (gamepad1.dpad_up && !lastDpadUp) {
-            selectedHub = Hub.values()[(selectedHub.ordinal() + Hub.values().length - 1) % Hub.values().length];
-            selectedPort = 0;
-            motorReversed = false;
-        }
-        if (gamepad1.dpad_down && !lastDpadDown) {
-            selectedHub = Hub.values()[(selectedHub.ordinal() + 1) % Hub.values().length];
-            selectedPort = 0;
-            motorReversed = false;
-        }
+        // Apply Control Hub motor powers
+        if (FL != null) FL.setPower(port0_FL_power);
+        if (FR != null) FR.setPower(port1_FR_power);
+        if (BL != null) BL.setPower(port2_BL_power);
+        if (BR != null) BR.setPower(port3_BR_power);
 
-        // Port selection (D-pad Left/Right)
-        int maxPort = (selectedHub == Hub.SERVO_HUB) ? 5 : 3;
-        if (gamepad1.dpad_right && !lastDpadRight) {
-            selectedPort = (selectedPort + 1) % (maxPort + 1);
-        }
-        if (gamepad1.dpad_left && !lastDpadLeft) {
-            selectedPort = (selectedPort + maxPort) % (maxPort + 1);
-        }
+        // Apply Expansion Hub motor powers
+        if (intake != null) intake.setPower(port0_intake_power);
+        if (turret != null) turret.setPower(port1_turret_power);
+        if (flywheel2 != null) flywheel2.setPower(port2_flywheel2_power);
+        if (flywheel != null) flywheel.setPower(port3_flywheel_power);
 
-        // Motor direction toggle (A button)
-        if (gamepad1.a && !lastA) {
-            motorReversed = !motorReversed;
-        }
+        // Apply servo positions
+        if (hood != null) hood.setPosition(port0_hood_pos);
+        if (spindexer != null) spindexer.setPosition(port1_spindexer_pos);
+        if (transfer != null) transfer.setPosition(port2_transfer_pos);
+        if (hood2 != null) hood2.setPosition(port5_hood2_pos);
 
-        // Servo presets
-        if (gamepad1.b && !lastB) servoPosition = 0.5;
-        if (gamepad1.x && !lastX) servoPosition = 0.0;
-        if (gamepad1.y && !lastY) servoPosition = 1.0;
+        // Telemetry
+        telem.addLine("=== CONTROL HUB MOTORS ===");
+        telem.addData("Port 0 (FL)", motorStatus(FL, port0_FL_power));
+        telem.addData("Port 1 (FR)", motorStatus(FR, port1_FR_power));
+        telem.addData("Port 2 (BL)", motorStatus(BL, port2_BL_power));
+        telem.addData("Port 3 (BR)", motorStatus(BR, port3_BR_power));
 
-        // Update debounce states
-        lastDpadUp = gamepad1.dpad_up;
-        lastDpadDown = gamepad1.dpad_down;
-        lastDpadLeft = gamepad1.dpad_left;
-        lastDpadRight = gamepad1.dpad_right;
-        lastA = gamepad1.a;
-        lastB = gamepad1.b;
-        lastX = gamepad1.x;
-        lastY = gamepad1.y;
+        telem.addLine("=== EXPANSION HUB MOTORS ===");
+        telem.addData("Port 0 (intake)", motorStatus(intake, port0_intake_power));
+        telem.addData("Port 1 (turret)", motorStatus(turret, port1_turret_power));
+        telem.addData("Port 2 (flywheel2)", motorStatus(flywheel2, port2_flywheel2_power));
+        telem.addData("Port 3 (flywheel)", motorStatus(flywheel, port3_flywheel_power));
 
-        // --- Motor/Servo Control ---
-        
-        // Stop all motors first
-        for (DcMotorEx motor : controlHubMotors) {
-            if (motor != null) motor.setPower(0);
-        }
-        for (DcMotorEx motor : expansionHubMotors) {
-            if (motor != null) motor.setPower(0);
-        }
+        telem.addLine("=== SERVO HUB SERVOS ===");
+        telem.addData("Port 0 (hood)", servoStatus(hood, port0_hood_pos));
+        telem.addData("Port 1 (spindexer)", servoStatus(spindexer, port1_spindexer_pos));
+        telem.addData("Port 2 (transfer)", servoStatus(transfer, port2_transfer_pos));
+        telem.addData("Port 5 (hood2)", servoStatus(hood2, port5_hood2_pos));
 
-        // Control based on selected hub
-        double motorPower = -gamepad1.left_stick_y; // Invert for intuitive control
-        if (motorReversed) motorPower = -motorPower;
+        telem.update();
+    }
 
-        String deviceStatus = "NOT FOUND";
-        int encoderValue = 0;
+    private String motorStatus(DcMotorEx motor, double power) {
+        if (motor == null) return "NOT FOUND";
+        return String.format("pwr=%.2f enc=%d", power, motor.getCurrentPosition());
+    }
 
-        if (selectedHub == Hub.CONTROL_HUB) {
-            DcMotorEx motor = controlHubMotors[selectedPort];
-            if (motor != null) {
-                motor.setPower(motorPower);
-                encoderValue = motor.getCurrentPosition();
-                deviceStatus = String.format("Power: %.2f | Enc: %d", motorPower, encoderValue);
-            }
-        } else if (selectedHub == Hub.EXPANSION_HUB) {
-            DcMotorEx motor = expansionHubMotors[selectedPort];
-            if (motor != null) {
-                motor.setPower(motorPower);
-                encoderValue = motor.getCurrentPosition();
-                deviceStatus = String.format("Power: %.2f | Enc: %d", motorPower, encoderValue);
-            }
-        } else if (selectedHub == Hub.SERVO_HUB) {
-            // Continuous servo control with right stick
-            servoPosition += -gamepad1.right_stick_y * 0.01;
-            servoPosition = Math.max(0.0, Math.min(1.0, servoPosition));
-            
-            Servo servo = servos[selectedPort];
-            if (servo != null) {
-                servo.setPosition(servoPosition);
-                deviceStatus = String.format("Position: %.3f", servoPosition);
-            }
-        }
-
-        // --- Telemetry ---
-        multiTelemetry.addLine("=== PORT TESTER ===");
-        multiTelemetry.addLine("");
-        
-        // Hub selection display
-        for (Hub hub : Hub.values()) {
-            String marker = (hub == selectedHub) ? ">> " : "   ";
-            multiTelemetry.addLine(marker + hub.name);
-        }
-        multiTelemetry.addLine("");
-
-        // Port selection display
-        multiTelemetry.addData("Selected Port", selectedPort);
-        multiTelemetry.addData("Status", deviceStatus);
-        
-        if (selectedHub != Hub.SERVO_HUB) {
-            multiTelemetry.addData("Direction", motorReversed ? "REVERSED" : "FORWARD");
-        }
-        
-        multiTelemetry.addLine("");
-        multiTelemetry.addLine("--- CONTROLS ---");
-        multiTelemetry.addLine("D-pad Up/Down: Change Hub");
-        multiTelemetry.addLine("D-pad Left/Right: Change Port");
-        if (selectedHub == Hub.SERVO_HUB) {
-            multiTelemetry.addLine("Right Stick Y: Move Servo");
-            multiTelemetry.addLine("X=0.0 | B=0.5 | Y=1.0");
-        } else {
-            multiTelemetry.addLine("Left Stick Y: Run Motor");
-            multiTelemetry.addLine("A: Toggle Direction");
-        }
-
-        multiTelemetry.update();
+    private String servoStatus(Servo servo, double pos) {
+        if (servo == null) return "NOT FOUND";
+        return String.format("pos=%.3f", pos);
     }
 
     @Override
     public void stop() {
-        // Stop all motors
-        for (DcMotorEx motor : controlHubMotors) {
-            if (motor != null) motor.setPower(0);
-        }
-        for (DcMotorEx motor : expansionHubMotors) {
-            if (motor != null) motor.setPower(0);
-        }
+        if (FL != null) FL.setPower(0);
+        if (FR != null) FR.setPower(0);
+        if (BL != null) BL.setPower(0);
+        if (BR != null) BR.setPower(0);
+        if (intake != null) intake.setPower(0);
+        if (turret != null) turret.setPower(0);
+        if (flywheel2 != null) flywheel2.setPower(0);
+        if (flywheel != null) flywheel.setPower(0);
     }
 }

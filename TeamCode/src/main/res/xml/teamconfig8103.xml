@@ -1,44 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <Robot type="FirstInspires-FTC">
-    <!-- Control Hub Portal -->
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
-        
-        <!-- Control Hub (embedded module) - Drivetrain and sensors -->
-        <LynxModule name="Control Hub" port="173">
-            <!-- Drivetrain Motors (goBILDA 5202 Series) -->
-            <Motor name="FL" port="0" />
-            <Motor name="FR" port="1" />
-            <Motor name="BL" port="2" />
-            <Motor name="BR" port="3" />
-
-            <!-- I2C Bus 0: GoBilda Pinpoint Odometry Computer -->
-            <LynxI2cDeviceSynch name="pinpoint" port="0" bus="0" />
-
-            <!-- I2C Bus 1: REV Color Sensor V3 (ColorRangeSensor) -->
-            <RevColorSensorV3 name="color" port="0" bus="1" />
-
-            <!-- I2C Bus 3: REV Servo Hub with 4 servos -->
-            <RevServoHub name="Servo Hub" port="0" bus="3">
-                <Servo name="hood" port="0" />
-                <Servo name="hood2" port="1" />
-                <Servo name="spindexer" port="2" />
-                <Servo name="transfer" port="3" />
-            </RevServoHub>
-
-            <!-- Digital I/O Port 0: Brushland Distance Sensor -->
-            <DigitalDevice name="digital0" port="0" />
+        <LynxModule name="Expansion Hub 1" port="1">
+            <goBILDA5201SeriesMotor name="intake" port="0" />
+            <goBILDA5201SeriesMotor name="turret" port="1" />
+            <goBILDA5201SeriesMotor name="flywheel" port="2" />
+            <goBILDA5201SeriesMotor name="flywheel2" port="3" />
         </LynxModule>
-
-        <!-- Expansion Hub 2 - Mechanism motors -->
-        <LynxModule name="Expansion Hub 2" port="2">
-            <!-- Mechanism Motors (goBILDA 5202 Series) -->
-            <Motor name="turret" port="0" />
-            <Motor name="flywheel" port="1" />
-            <Motor name="flywheel2" port="2" />
-            <Motor name="intake" port="3" />
+        <ServoHub name="Servo Hub 3" port="3">
+            <Servo name="hood" port="0" />
+            <Servo name="spindexer" port="1" />
+            <Servo name="transfer" port="2" />
+            <Servo name="hood2" port="5" />
+        </ServoHub>
+        <LynxModule name="Control Hub" port="173">
+            <goBILDA5201SeriesMotor name="FL" port="0" />
+            <goBILDA5201SeriesMotor name="FR" port="1" />
+            <goBILDA5201SeriesMotor name="BL" port="2" />
+            <goBILDA5201SeriesMotor name="BR" port="3" />
+            <DigitalDevice name="digital0" port="0" />
+            <RevColorSensorV3 name="color" port="0" bus="2" />
+            <goBILDAPinpoint name="pinpoint" port="0" bus="0" />
         </LynxModule>
     </LynxUsbDevice>
-
-    <!-- Limelight 3A Vision Sensor (USB device) -->
     <Limelight3A name="limelight" serialNumber="*" />
 </Robot>
