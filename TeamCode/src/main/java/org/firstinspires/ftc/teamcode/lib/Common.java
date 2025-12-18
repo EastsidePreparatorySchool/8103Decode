@@ -115,6 +115,33 @@ public class Common {
         NONE  // Empty slot
     }
 
+    // Ball pattern enum detected via Limelight AprilTags
+    // Pipeline 2 = GPP, Pipeline 3 = PGP, Pipeline 4 = PPG
+    public enum BallPattern {
+        GPP,     // Green Purple Purple (Pipeline 2)
+        PGP,     // Purple Green Purple (Pipeline 3)
+        PPG,     // Purple Purple Green (Pipeline 4)
+        UNKNOWN  // No pattern detected
+    }
+
+    // Limelight AprilTag pipeline constants
+    public static final int LIMELIGHT_PIPELINE_BLUE = 0;
+    public static final int LIMELIGHT_PIPELINE_RED = 1;
+
+    // Limelight pipeline constants for ball pattern detection
+    public static final int LIMELIGHT_PIPELINE_GPP = 2;
+    public static final int LIMELIGHT_PIPELINE_PGP = 3;
+    public static final int LIMELIGHT_PIPELINE_PPG = 4;
+    // Timeout for pattern detection during init loop (ms)
+    public static long LIMELIGHT_PATTERN_DETECT_TIMEOUT_MS = 200;
+    
+    // Target offset from AprilTag center (inches) - for shooter tuning
+    // These offsets adjust where the robot aims relative to the AprilTag center
+    // X offset: Positive = right of AprilTag, Negative = left
+    // Y offset: Positive = above AprilTag, Negative = below (typically 0 for turret)
+    public static double LIMELIGHT_TARGET_OFFSET_X_IN = 0.0;
+    public static double LIMELIGHT_TARGET_OFFSET_Y_IN = 0.0;
+
     // Interpolation Tables
     public static InterpLUT shooterInterpLUT = ShooterHoodData.getShooterInterpLUT();
     public static InterpLUT hoodInterpLUT = ShooterHoodData.getHoodInterpLUT();

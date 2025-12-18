@@ -12,6 +12,10 @@ public class PersistentState {
     public static boolean hasSavedTurret = false;
     public static double savedTurretDegrees = 0.0;
 
+    // Ball pattern persistence (detected via Limelight AprilTags)
+    public static boolean hasSavedBallPattern = false;
+    public static Common.BallPattern savedBallPattern = Common.BallPattern.UNKNOWN;
+
     public static void saveFromRobot() {
         RobotHardware robot = RobotHardware.getInstance();
             savedXInches = robot.robotX;
@@ -23,6 +27,16 @@ public class PersistentState {
             savedTurretDegrees = robot.turretSubsystem.deg;
             hasSavedTurret = true;
         }
+    }
+
+    public static void saveBallPattern(Common.BallPattern pattern) {
+        savedBallPattern = pattern;
+        hasSavedBallPattern = true;
+    }
+
+    public static void clearBallPattern() {
+        hasSavedBallPattern = false;
+        savedBallPattern = Common.BallPattern.UNKNOWN;
     }
 }
 

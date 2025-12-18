@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.lib;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.subsystems.DistanceSensorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.HoodSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -54,6 +56,7 @@ public class RobotHardware {
     public PinpointSubsystem pinpointSubsystem;
     public ColorSensorSubsystem colorSensorSubsystem;
     public DistanceSensorSubsystem distanceSensorSubsystem;
+    public LimelightSubsystem limelightSubsystem;
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
@@ -80,6 +83,8 @@ public class RobotHardware {
     public ColorRangeSensor colorSensor;
     // distance sensor (returns true when object within 50mm)
     public DigitalChannel distanceSensor;
+    // Limelight3A vision sensor
+    public Limelight3A limelight;
     // Battery voltage
     public java.util.List<VoltageSensor> voltageSensors;
     private ElapsedTime voltageTimer;
@@ -214,6 +219,14 @@ public class RobotHardware {
         distanceSensorSubsystem = new DistanceSensorSubsystem();
         distanceSensorSubsystem.state = distanceSensorSubsystem.state = DistanceSensorSubsystem.DistanceSensorState.ON;
         CommandScheduler.getInstance().registerSubsystem(distanceSensorSubsystem);
+    }
+
+    public void initLimelight() {
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(100);
+        limelight.start();
+        limelightSubsystem = new LimelightSubsystem();
+        CommandScheduler.getInstance().registerSubsystem(limelightSubsystem);
     }
 
     public void initLynx() {

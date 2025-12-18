@@ -61,6 +61,10 @@ public class RightFarNineTwoPre extends CommandOpMode {
         robot.initSpindexer();
         robot.initDistanceSensor();
         robot.initColorSensor();
+        robot.initLimelight();
+        
+        // Clear any previously saved ball pattern for fresh detection
+        PersistentState.clearBallPattern();
         
         // Reset IMU on auto init for fresh calibration
         Common.PINPOINT_RESET_IMU_ON_INIT = true;
@@ -117,9 +121,20 @@ public class RightFarNineTwoPre extends CommandOpMode {
     public void initialize_loop() {
         robot.periodic();
         robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, Common.START_X_IN, Common.START_Y_IN, AngleUnit.DEGREES, Common.START_HEADING_DEG));
+        
+        // Detect ball pattern via Limelight during init loop
+        if (!PersistentState.hasSavedBallPattern) {
+            Common.BallPattern detectedPattern = robot.limelightSubsystem.checkForPattern();
+            if (detectedPattern != Common.BallPattern.UNKNOWN) {
+                PersistentState.saveBallPattern(detectedPattern);
+            }
+        }
+        
         multiTelemetry.addData("follower x", follower.getPose().getX());
         multiTelemetry.addData("follower y", follower.getPose().getY());
         multiTelemetry.addData("follower heading", Math.toDegrees(follower.getPose().getHeading()));
+        multiTelemetry.addData("Ball Pattern", PersistentState.hasSavedBallPattern ? 
+                PersistentState.savedBallPattern.toString() : "DETECTING...");
         multiTelemetry.update();
     }
 

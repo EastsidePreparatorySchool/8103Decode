@@ -117,6 +117,7 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         robot.initSpindexer();
         robot.initDistanceSensor();
         robot.initColorSensor();
+        robot.initLimelight();
 
         // Pinpoint IMU handling
         Common.PINPOINT_RESET_IMU_ON_INIT = true;
@@ -162,8 +163,19 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, Common.START_X_IN, Common.START_Y_IN, AngleUnit.DEGREES, Common.START_HEADING_DEG));
         aimCommand.setTargetPoint(Common.TARGET_X_IN, Common.TARGET_Y_IN);
         aimCommand.setAngleOffsetDegrees(turretAngleOffsetDeg);
+        
+        // Check for saved ball pattern from auto, or detect fresh during init loop
+        if (!PersistentState.hasSavedBallPattern) {
+            Common.BallPattern detectedPattern = robot.limelightSubsystem.checkForPattern();
+            if (detectedPattern != Common.BallPattern.UNKNOWN) {
+                PersistentState.saveBallPattern(detectedPattern);
+            }
+        }
+        
         multiTelemetry.addData("aim target x (in)", Common.TARGET_X_IN);
         multiTelemetry.addData("aim target y (in)", Common.TARGET_Y_IN);
+        multiTelemetry.addData("Ball Pattern", PersistentState.hasSavedBallPattern ? 
+                PersistentState.savedBallPattern.toString() : "DETECTING...");
         multiTelemetry.update();
     }
 
@@ -288,6 +300,7 @@ public class AutoIntakeTeleOp extends CommandOpMode {
         multiTelemetry.addData("Slot 3", slotColors[2].toString());
         multiTelemetry.addData("All Slots Full", isAllSlotsFull());
         multiTelemetry.addData("Detection State", detectionState.toString());
+        multiTelemetry.addData("Ball Pattern", PersistentState.savedBallPattern.toString());
 
         multiTelemetry.addData("pose x (in)", robot.pinpointSubsystem.getXInches());
         multiTelemetry.addData("pose y (in)", robot.pinpointSubsystem.getYInches());
