@@ -13,12 +13,24 @@ public class DriveWithGamepadCommand extends CommandBase {
     private final MecanumSubsystem mecanumSubsystem;
     private final Gamepad gamepad;
     private final Boolean side;
+    private final Double angleOffsetRadians; // Custom angle offset for field-centric driving
+    private final boolean swapSticks; // If true, right stick = drive/strafe, left stick X = turn
 
-    public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad, Boolean side) {
+    public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad, Boolean side, Double angleOffsetRadians, boolean useRightStickTurn) {
         this.mecanumSubsystem = mecanumSubsystem;
         this.gamepad = gamepad;
         this.side = side;
+        this.angleOffsetRadians = angleOffsetRadians;
+        this.swapSticks = useRightStickTurn;
         addRequirements(mecanumSubsystem);
+    }
+
+    public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad, Boolean side, Double angleOffsetRadians) {
+        this(mecanumSubsystem, gamepad, side, angleOffsetRadians, false);
+    }
+
+    public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad, Boolean side) {
+        this(mecanumSubsystem, gamepad, side, null);
     }
 
     public DriveWithGamepadCommand(MecanumSubsystem mecanumSubsystem, Gamepad gamepad) {
@@ -41,18 +53,73 @@ public class DriveWithGamepadCommand extends CommandBase {
         );
     }
 
+    /**
+     * Constructor with custom angle offset for rotated field-centric driving.
+     * @param gamepad The gamepad to read inputs from
+     * @param angleOffsetRadians The angle offset in radians (e.g., PI/2 for 90° rotation)
+     */
+    public DriveWithGamepadCommand(Gamepad gamepad, double angleOffsetRadians) {
+        this(
+                RobotHardware.getInstance().mecanumSubsystem,
+                gamepad,
+                null,
+                angleOffsetRadians,
+                false
+        );
+    }
+
+    /**
+     * Constructor with custom angle offset and swapped sticks for field-centric driving.
+     * @param gamepad The gamepad to read inputs from
+     * @param angleOffsetRadians The angle offset in radians (e.g., PI/2 for 90° rotation)
+     * @param swapSticks If true, right stick = drive/strafe, left stick X = turn
+     */
+    public DriveWithGamepadCommand(Gamepad gamepad, double angleOffsetRadians, boolean swapSticks) {
+        this(
+                RobotHardware.getInstance().mecanumSubsystem,
+                gamepad,
+                null,
+                angleOffsetRadians,
+                swapSticks
+        );
+    }
+
     @Override
     public void execute() {
-        double forward = -gamepad.left_stick_y;
-        double strafe = gamepad.left_stick_x;
-        double turn = gamepad.right_trigger - gamepad.left_trigger; // trigger turning: right is +, left is -
+        double forward, strafe, turn;
+        
+        if (swapSticks) {
+            // Swapped: right stick for drive/strafe, left stick X for turn
+            forward = -gamepad.right_stick_y;
+            strafe = gamepad.right_stick_x;
+            turn = gamepad.left_stick_x;
+        } else {
+            // Default: left stick for drive/strafe, triggers for turn
+            forward = -gamepad.left_stick_y;
+            strafe = gamepad.left_stick_x;
+            turn = gamepad.right_trigger - gamepad.left_trigger;
+        }
 
         // Cubed control for finer low-end response
         forward = Math.pow(forward, 3);
         strafe = Math.pow(strafe, 3);
         turn = Math.pow(turn, 3) / 1.5; // reduce turning sensitivity a bit
 
-        if (side != null) {
+        // Apply field-centric transformation if custom angle offset is provided
+        // This ONLY rotates joystick inputs - does not affect robot internal coordinates
+        // Using standard gm0 field-centric formula
+        if (angleOffsetRadians != null) {
+            // Get heading from pinpoint (already set in PinpointSubsystem.periodic())
+            double botHeading = Math.toRadians(RobotHardware.getInstance().robotHeadingDeg) - angleOffsetRadians;
+            
+            // Rotate the joystick inputs by the negative of bot heading
+            double rotX = strafe * Math.cos(-botHeading) - forward * Math.sin(-botHeading);
+            double rotY = strafe * Math.sin(-botHeading) + forward * Math.cos(-botHeading);
+            
+            strafe = rotX;
+            forward = rotY;
+        } else if (side != null) {
+            // Legacy field-centric mode using side boolean
             double heading = Math.toRadians(RobotHardware.getInstance().robotHeadingDeg);
             double offset = side ? 0 : Math.PI;
             double angle = -(heading - offset);
