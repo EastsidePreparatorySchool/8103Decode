@@ -89,10 +89,13 @@ public class DriveWithGamepadCommand extends CommandBase {
         double forward, strafe, turn;
         
         if (swapSticks) {
-            // Swapped: right stick for drive/strafe, left stick X for turn
+            // Swapped: right stick for drive/strafe, left stick for turn (angle-based)
             forward = -gamepad.right_stick_y;
             strafe = gamepad.right_stick_x;
-            turn = gamepad.left_stick_x;
+            // Use angle of left stick for yaw - this way 45° still gives full turn
+            // Magnitude determines power, X direction determines left/right
+            double leftMagnitude = Math.hypot(gamepad.left_stick_x, gamepad.left_stick_y);
+            turn = leftMagnitude * Math.signum(gamepad.left_stick_x);
         } else {
             // Default: left stick for drive/strafe, triggers for turn
             forward = -gamepad.left_stick_y;

@@ -65,7 +65,7 @@ public class Common {
     public static double NOMINAL_BATTERY_VOLTAGE = 12.0;
     public static double BATTERY_VOLTAGE_SAMPLE_PERIOD_SEC = 0.5;
 
-    public static double DRIVE_DEFAULT_MULT = 0.8;
+    public static double DRIVE_DEFAULT_MULT = 1.0;
     public static double DRIVE_SLOW_MULT = 0.5;
     // Field starting positions (inches) and headings (degrees)
     public static double RIGHT_FAR_START_X_IN = 87.0;
